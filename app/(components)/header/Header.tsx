@@ -1,0 +1,28 @@
+'use client';
+
+import Link from 'next/link';
+import { NavLinkItem } from './NavLinkItem';
+import BriefcaseIcon from '../icons/BriefcaseIcon';
+
+const Header = () => {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b">
+      <div className="container flex h-16 items-center justify-between">
+        <Link className="flex items-center space-x-2" href="/">
+          <BriefcaseIcon className="h-6 w-6 text-primary" />
+          <span className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            IWant
+          </span>
+        </Link>
+        <nav className="hidden md:flex items-center space-x-6">
+          <NavLinkItem href="/">채용공고</NavLinkItem>
+          <NavLinkItem href="/mypage">마이페이지</NavLinkItem>
+          <NavLinkItem href="/favorites">북마크</NavLinkItem>
+        </nav>
+        <div className="flex items-center space-x-3">로그인</div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
