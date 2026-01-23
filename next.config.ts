@@ -1,7 +1,17 @@
-import type { NextConfig } from "next";
+const IMAGE_DOMAINS = ['static.wanted.co.kr', 'image.wanted.co.kr'];
+const IMAGE_REMOTE_PATTERNS = [
+  {
+    protocol: 'https',
+    hostname: '*.wanted.co.kr',
+  },
+];
 
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: IMAGE_DOMAINS,
+    remotePatterns: IMAGE_REMOTE_PATTERNS,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
