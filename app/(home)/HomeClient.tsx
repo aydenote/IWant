@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Hero from './Hero';
 import JobListClient from '../(components)/JobListClient';
-import type { JobListResponse } from '../types/apis';
+import type { JobListResponse } from '../(types)/apis';
 
 interface HomeClientProps {
   initialJobList: JobListResponse[];

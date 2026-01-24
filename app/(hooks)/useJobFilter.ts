@@ -1,4 +1,4 @@
-import { JobListResponse } from '../types/apis';
+import { JobListResponse } from '../(types)/apis';
 
 const useJobFilter = (jobList: JobListResponse[], query: string) => {
   return jobList.filter((job) => {

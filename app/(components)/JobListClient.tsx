@@ -2,7 +2,7 @@
 
 import Text from './Text';
 import JobCard from './JobCard';
-import type { JobListResponse } from '../types/apis';
+import type { JobListResponse } from '../(types)/apis';
 import useJobFilter from '../(hooks)/useJobFilter';
 
 interface JobListClientProps {
