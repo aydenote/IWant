@@ -3,20 +3,26 @@
 import Text from './Text';
 import JobCard from './JobCard';
 import type { JobListResponse } from '../types/apis';
+import useJobFilter from '../(hooks)/useJobFilter';
 
 interface JobListClientProps {
   jobList: JobListResponse[];
+  query: string;
 }
 
-const JobListClient = ({ jobList }: JobListClientProps) => {
+const JobListClient = ({ jobList, query }: JobListClientProps) => {
+  const filteredJobList = useJobFilter(jobList, query);
+
   return (
     <section className="p-12">
       <Text textSize="2xl" textBold="lg" textColor="black">
-        전체 공고{jobList.length}
+        {query.trim()
+          ? `검색 결과(${filteredJobList.length})`
+          : `전체 공고(${filteredJobList.length})`}
       </Text>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
-        {jobList.map((job) => (
+        {filteredJobList.map((job) => (
           <JobCard
             key={job.id}
             jobId={job.id}
