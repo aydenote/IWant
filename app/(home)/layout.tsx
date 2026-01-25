@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import '../(styles)/global.css';
 import Provider from './provider';
-import { authOptions } from '../lib/auth';
+import { authOptions } from '../(lib)/auth';
 
 export const metadata = {
   title: 'IWant',
