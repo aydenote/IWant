@@ -1,5 +1,8 @@
-import '../(styles)/global.css';
 import type { ReactNode } from 'react';
+import { getServerSession } from 'next-auth';
+import '../(styles)/global.css';
+import Provider from './provider';
+import { authOptions } from '../lib/auth';
 
 export const metadata = {
   title: 'IWant',
@@ -12,9 +15,13 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <Provider session={session}>{children}</Provider>
+      </body>
     </html>
   );
 }
