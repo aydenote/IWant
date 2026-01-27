@@ -33,14 +33,11 @@ const getButtonClasses = (
 };
 
 const BasicButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className = '', variant = 'default', size = 'default', ...props },
-    ref
-  ) => {
+  ({ className = '', variant, size = 'default', ...props }, ref) => {
     return (
       <button
         ref={ref}
-        className={`${getButtonClasses(variant, size)} ${className}`}
+        className={`${variant && getButtonClasses(variant, size)} ${className}`}
         {...props}
       />
     );
