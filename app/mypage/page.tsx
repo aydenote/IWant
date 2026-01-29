@@ -45,7 +45,7 @@ const MyPageClient = () => {
             </div>
 
             <div className="mt-2 outline-none space-y-6">
-              {activeTab === 'profile' && <Profile />}
+              {activeTab === 'profile' ? <Profile /> : <Resume />}
             </div>
           </section>
         </div>
