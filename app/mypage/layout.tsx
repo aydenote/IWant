@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
-import '../(styles)/global.css';
-import { authOptions } from '../(lib)/auth';
 import Provider from '../(home)/provider';
+import '../(styles)/global.css';
 
 export const metadata = {
   title: 'IWant 마이페이지',
@@ -14,7 +13,7 @@ export default async function MyPageLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   return (
     <html lang="ko">

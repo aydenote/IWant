@@ -1,4 +1,4 @@
-import { JobListResponse } from '../(types)/apis';
+import { JobListResponse } from '../../(types)/apis';
 
 export const getJobList = async (): Promise<JobListResponse[]> => {
   const res = await fetch(
