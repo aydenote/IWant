@@ -8,11 +8,13 @@ import BasicButton from '../../(components)/buttons/BasicButton';
 import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/Pill';
+import { saveProfile } from '../../api/client/mypage/profile';
+import { TechStackType } from '../../(types)/common';
 
 const Profile = () => {
   const [name, setName] = useState('');
   const [newSkill, setNewSkill] = useState('');
-  const [techStack, setTechStack] = useState<string[]>([]);
+  const [techStack, setTechStack] = useState<TechStackType>([]);
 
   const addSkill = () => {
     const value = newSkill.trim();
@@ -23,10 +25,6 @@ const Profile = () => {
 
   const removeSkill = (skill: string) => {
     setTechStack((prev) => prev.filter((s) => s !== skill));
-  };
-
-  const saveProfile = () => {
-    console.log(`프로필 저장: 이름 ${name} 기술 ${techStack}`);
   };
 
   return (
@@ -100,7 +98,7 @@ const Profile = () => {
       <div className="pt-6 border-t border-border">
         <BasicButton
           variant="default"
-          onClick={saveProfile}
+          onClick={() => saveProfile({ techStack, name })}
           className="w-full bg-gradient-hero cursor-pointer"
           size="lg"
         >

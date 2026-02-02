@@ -1,5 +1,5 @@
 import Header from '../(components)/header/Header';
-import { getJobList } from '../api/jobs/route';
+import { getJobList } from '../api/client/jobs/route';
 import HomeClient from './HomeClient';
 
 export default async function Page() {

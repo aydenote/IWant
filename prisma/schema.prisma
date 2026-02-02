@@ -16,6 +16,8 @@ model User {
 
   accounts Account[]
   sessions Session[]
+
+  profile   Profile?
 }
 
 model Account {
@@ -55,4 +57,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  techStack String[]     @default(["React", "Typescript", "Javascript"])
+  resumeUrl String?
+  resumeName String?
+
+  updatedAt DateTime @updatedAt
 }
