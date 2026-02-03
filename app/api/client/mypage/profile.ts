@@ -14,3 +14,19 @@ export const saveProfile = async ({ techStack, name }: SaveProfileType) => {
     console.log('프로필 저장 실패', err);
   }
 };
+
+export const getProfile = async () => {
+  try {
+    const res = await fetch('/api/server/mypage', {
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+    });
+    if (res.ok) {
+      console.log('프로필 불러오기 성공');
+    }
+    const profile = await res.json();
+    return profile;
+  } catch (err) {
+    console.log('프로필 불러오기 실패', err);
+  }
+};

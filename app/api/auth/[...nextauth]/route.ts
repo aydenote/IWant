@@ -14,6 +14,14 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.KAKAO_CLIENT_SECRET!,
     }),
   ],
+  callbacks: {
+    session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

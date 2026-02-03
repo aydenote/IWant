@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Text from '../../(components)/Text';
 import Input from '../../(components)/forms/Input';
 import Label from '../../(components)/forms/Label';
@@ -8,13 +8,25 @@ import BasicButton from '../../(components)/buttons/BasicButton';
 import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/Pill';
-import { saveProfile } from '../../api/client/mypage/profile';
+import { getProfile, saveProfile } from '../../api/client/mypage/profile';
 import { TechStackType } from '../../(types)/common';
+import { useSession } from 'next-auth/react';
 
 const Profile = () => {
+  const { status } = useSession();
   const [name, setName] = useState('');
   const [newSkill, setNewSkill] = useState('');
   const [techStack, setTechStack] = useState<TechStackType>([]);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    const loadProfile = async () => {
+      const res = await getProfile();
+      setName(res.profile.user.name ?? '');
+      setTechStack(res.profile.techStack);
+    };
+    loadProfile();
+  }, [status]);
 
   const addSkill = () => {
     const value = newSkill.trim();
