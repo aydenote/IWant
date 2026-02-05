@@ -22,6 +22,15 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  events: {
+    async signIn({ user }) {
+      await prisma.profile.upsert({
+        where: { userId: user.id },
+        update: {},
+        create: { userId: user.id },
+      });
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
