@@ -79,3 +79,35 @@ export const POST = async (req: Request) => {
     resumeName: file.name,
   });
 };
+
+export const DELETE = async () => {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
+  if (!userId) return NextResponse.json({ ok: false }, { status: 401 });
+
+  const profile = await prisma.profile.findUnique({ where: { userId } });
+  if (!profile?.resumeUrl) {
+    return NextResponse.json({ ok: true, resumeUrl: null, resumeName: null });
+  }
+  const { error } = await supabase.storage
+    .from('resumes')
+    .remove([profile.resumeUrl]);
+
+  if (error) {
+    return NextResponse.json(
+      { ok: false, message: error.message },
+      { status: 500 }
+    );
+  }
+
+  await prisma.profile.upsert({
+    where: { userId },
+    update: { resumeUrl: null, resumeName: null },
+    create: { userId, resumeUrl: null, resumeName: null },
+  });
+
+  return NextResponse.json({
+    ok: true,
+  });
+};

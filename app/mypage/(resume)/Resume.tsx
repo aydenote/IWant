@@ -9,7 +9,11 @@ import UploadIcon from '../../(components)/icons/UploadIcon';
 import { UploadedFileType } from '../../(types)/common';
 import { INIT_EMPTY_FILE } from '../../(constants)/resume';
 import { formatDate } from '../../(utils)/common';
-import { getResume, saveResume } from '../../api/client/mypage/resume';
+import {
+  deleteResume,
+  getResume,
+  saveResume,
+} from '../../api/client/mypage/resume';
 
 const Resume = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,14 +42,17 @@ const Resume = () => {
     loadProfile();
   }, [status]);
 
-  const deleteResume = async () => {
+  const removeResume = async () => {
     const hasUploaded =
       !!resumeUrl ||
       uploadFile.name !== INIT_EMPTY_FILE.name ||
       uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
     if (!hasUploaded) return;
-    setFromProfile(null, null);
+
+    await deleteResume();
+    await setFromProfile(null, null);
   };
+
   const selectResume = () => {
     fileInputRef.current?.click();
   };
@@ -160,7 +167,7 @@ const Resume = () => {
                   variant="ghost"
                   size="sm"
                   className="cursor-pointer text-destructive"
-                  onClick={deleteResume}
+                  onClick={removeResume}
                 >
                   삭제
                 </BasicButton>
