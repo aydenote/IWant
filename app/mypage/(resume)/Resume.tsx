@@ -1,6 +1,7 @@
 'use client';
 
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Text from '../../(components)/Text';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import Input from '../../(components)/forms/Input';
@@ -8,13 +9,34 @@ import UploadIcon from '../../(components)/icons/UploadIcon';
 import { UploadedFileType } from '../../(types)/common';
 import { INIT_EMPTY_FILE } from '../../(constants)/resume';
 import { formatDate } from '../../(utils)/common';
+import { getResume, saveResume } from '../../api/client/mypage/resume';
 
 const Resume = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { status } = useSession();
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [resumeName, setResumeName] = useState<string | null>(null);
   const [uploadFile, setUploadFile] =
     useState<UploadedFileType>(INIT_EMPTY_FILE);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    const loadProfile = async () => {
+      const { resumeUrl, resumeName } = await getResume();
+      setResumeUrl(resumeUrl ?? null);
+      setResumeName(resumeName ?? null);
+
+      if (resumeUrl || resumeName) {
+        setUploadFile({
+          name: resumeName ?? '업로드된 이력서.pdf',
+          lastModified: Date.now(),
+        });
+      } else {
+        setUploadFile(INIT_EMPTY_FILE);
+      }
+    };
+    loadProfile();
+  }, [status]);
 
   const deleteResume = async () => {
     const hasUploaded =
@@ -28,17 +50,22 @@ const Resume = () => {
     fileInputRef.current?.click();
   };
 
-  const uploadResume = (e: ChangeEvent<HTMLInputElement>) => {
+  const uploadResume = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const formData = new FormData();
+    formData.append('resume', file);
+
+    const { resumeUrl, resumeName } = await saveResume(formData);
+
+    setResumeUrl(resumeUrl);
+    setResumeName(resumeName ?? file.name);
+
     setUploadFile({
-      name: file.name,
+      name: resumeName ?? file.name,
       lastModified: file.lastModified,
     });
-    const url = URL.createObjectURL(file);
-    setResumeUrl(url);
-    setResumeName(file.name);
   };
 
   const setFromProfile = useCallback(
