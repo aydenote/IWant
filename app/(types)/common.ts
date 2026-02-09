@@ -10,3 +10,13 @@ export interface SaveProfileType {
   techStack: TechStackType;
   name: ProfileNameType;
 }
+
+export interface JobType {
+  jobId: number;
+  jobName: string;
+  companyName: string;
+  imageSrc?: string | null;
+  place: string;
+  career: string;
+  employmentType: string;
+}

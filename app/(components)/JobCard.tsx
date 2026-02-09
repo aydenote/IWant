@@ -4,16 +4,10 @@ import BuildingIcon from './icons/BuildingIcon';
 import MapPinIcon from './icons/MapPinIcon';
 import UsersIcon from './icons/UsersIcon';
 import BasicButton from './buttons/BasicButton';
+import BookmarkButton from './buttons/BookmarkButton';
+import { JobType } from '../(types)/common';
 
-interface JobCardProps {
-  jobId: number;
-  jobName: string;
-  companyName: string;
-  imageSrc?: string | null;
-  place: string;
-  career: string;
-  employmentType: string;
-}
+interface JobCardProps extends JobType {}
 
 const JobCard = ({
   jobId,
@@ -53,6 +47,17 @@ const JobCard = ({
               <span className="font-medium">{companyName}</span>
             </div>
           </div>
+          <BookmarkButton
+            job={{
+              jobId,
+              jobName,
+              companyName,
+              imageSrc: safeSrc,
+              place,
+              career,
+              employmentType,
+            }}
+          />
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">

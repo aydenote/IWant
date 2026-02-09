@@ -16,6 +16,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  favorites     Favorite[]
 
   profile   Profile?
 }
@@ -69,4 +70,22 @@ model Profile {
   resumeName String?
 
   updatedAt DateTime @updatedAt
+}
+
+model Favorite {
+  id             String   @id @default(cuid())
+  userId         String
+  jobId          Int
+  jobName        String
+  companyName    String
+  imageSrc       String?
+  place          String
+  career         String
+  employmentType String
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@index([userId])
 }

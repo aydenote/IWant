@@ -8,7 +8,6 @@ export const saveResume = async (resumeForm: FormData) => {
       console.log('이력서 저장 성공');
     }
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
     console.log('이력서 저장 실패', err);
