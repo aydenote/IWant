@@ -35,7 +35,6 @@ export const POST = async (req: Request) => {
     employmentType,
   } = body ?? {};
 
-  console.log(body);
   if (typeof jobId !== 'number') {
     return NextResponse.json(
       { ok: false, message: 'Invalid jobId' },

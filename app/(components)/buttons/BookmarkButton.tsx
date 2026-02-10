@@ -1,44 +1,41 @@
-import { useEffect, useState } from 'react';
+'use client';
+
 import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
-import {
-  addBookmark,
-  deleteBookmark,
-  getBookmark,
-} from '../../api/client/bookmark';
+import { addBookmark, deleteBookmark } from '../../api/client/bookmark';
 import { JobType } from '../../(types)/common';
 
 interface BookmarkButtonProps {
   job: JobType;
+  bookmarkList: JobType[];
+  setBookmarkList: React.Dispatch<React.SetStateAction<JobType[]>>;
 }
 
-const BookmarkButton = ({ job }: BookmarkButtonProps) => {
-  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
-  const isBookmarked = favoriteIds.has(job.jobId);
-
-  useEffect(() => {
-    const loadFavoritedJobs = async () => {
-      const favorites = await getBookmark();
-      setFavoriteIds(new Set(favorites));
-    };
-    loadFavoritedJobs();
-  }, []);
+const BookmarkButton = ({
+  job,
+  bookmarkList,
+  setBookmarkList,
+}: BookmarkButtonProps) => {
+  const bookmarkJobIds = bookmarkList.map(
+    (bookmark: JobType) => bookmark.jobId
+  );
+  const isBookmarked = bookmarkJobIds.includes(job.jobId);
 
   const toggleBookmark = async () => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (isBookmarked) next.delete(job.jobId);
-      else next.add(job.jobId);
-      return next;
-    });
-
-    if (isBookmarked) await deleteBookmark(job.jobId);
-    else await addBookmark(job);
+    if (isBookmarked) {
+      await deleteBookmark(job.jobId);
+      setBookmarkList((prev) =>
+        prev.filter((bookmark) => bookmark.jobId !== job.jobId)
+      );
+    } else {
+      await addBookmark(job);
+      setBookmarkList((prev) => [...prev, job]);
+    }
   };
 
   return (
     <BasicButton
-      variant={favoriteIds.has(job.jobId) ? 'secondary' : 'outline'}
+      variant={isBookmarked ? 'secondary' : 'outline'}
       className="cursor-pointer"
       onClick={() => toggleBookmark()}
     >

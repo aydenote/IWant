@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import BuildingIcon from './icons/BuildingIcon';
@@ -7,7 +9,10 @@ import BasicButton from './buttons/BasicButton';
 import BookmarkButton from './buttons/BookmarkButton';
 import { JobType } from '../(types)/common';
 
-interface JobCardProps extends JobType {}
+interface JobCardProps extends JobType {
+  bookmarkList: JobType[];
+  setBookmarkList: React.Dispatch<React.SetStateAction<JobType[]>>;
+}
 
 const JobCard = ({
   jobId,
@@ -17,6 +22,8 @@ const JobCard = ({
   place,
   career,
   employmentType,
+  bookmarkList,
+  setBookmarkList,
 }: JobCardProps) => {
   const safeSrc =
     imageSrc && imageSrc.length > 0
@@ -57,6 +64,8 @@ const JobCard = ({
               career,
               employmentType,
             }}
+            bookmarkList={bookmarkList}
+            setBookmarkList={setBookmarkList}
           />
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">

@@ -4,13 +4,21 @@ import Text from './Text';
 import JobCard from './JobCard';
 import type { JobListResponse } from '../(types)/apis';
 import useJobFilter from '../(hooks)/useJobFilter';
+import { JobType } from '../(types)/common';
 
 interface JobListClientProps {
   jobList: JobListResponse[];
+  bookmarkList: JobType[];
+  setBookmarkList: React.Dispatch<React.SetStateAction<JobType[]>>;
   query: string;
 }
 
-const JobListClient = ({ jobList, query }: JobListClientProps) => {
+const JobListClient = ({
+  jobList,
+  query,
+  bookmarkList,
+  setBookmarkList,
+}: JobListClientProps) => {
   const filteredJobList = useJobFilter(jobList, query);
 
   return (
@@ -32,6 +40,8 @@ const JobListClient = ({ jobList, query }: JobListClientProps) => {
             place={job.address.location + ' ' + job.address.district}
             career={`경력 ${job.annual_from}-${job.annual_to}년`}
             employmentType={job.employment_type}
+            bookmarkList={bookmarkList}
+            setBookmarkList={setBookmarkList}
           />
         ))}
       </div>
