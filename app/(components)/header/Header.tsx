@@ -21,7 +21,7 @@ const Header = () => {
         <nav className="hidden md:flex items-center space-x-6">
           <NavLinkItem href="/">채용공고</NavLinkItem>
           <NavLinkItem href="/mypage">마이페이지</NavLinkItem>
-          <NavLinkItem href="/favorites">북마크</NavLinkItem>
+          <NavLinkItem href="/bookmark">북마크</NavLinkItem>
         </nav>
         <div className="flex items-center space-x-3">
           <AuthToggleButton status={status} />
