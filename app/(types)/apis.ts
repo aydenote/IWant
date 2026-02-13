@@ -12,3 +12,46 @@ export interface JobListResponse {
   };
   annual_to: number;
 }
+
+export interface JobDetailResponse {
+  title_images: string[];
+  detail: {
+    benefits: string;
+    hire_rounds: string;
+    intro: string;
+    main_tasks: string;
+    preferred_points: string;
+    requirements: string;
+    position: string;
+  };
+  company: {
+    name: string;
+  };
+  skill_tags: {
+    tag_type_id: number;
+    text: string;
+  }[];
+  address: {
+    district: string;
+    location: string;
+  };
+  employment_type: 'regular' | 'intern';
+  annual_to: number;
+  annual_from: number;
+}
+
+export interface ProfileResponse {
+  id: string;
+  resumeName: string | null;
+  resumeUrl: string | null;
+  techStack: string[];
+  updatedAt: Date | null;
+  user: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
+    emailVerified: Date | null;
+  };
+  userId: string;
+}
