@@ -1,4 +1,7 @@
+import { getServerSession } from 'next-auth';
+import { prisma } from '../../../(lib)/prisma';
 import { SaveProfileType } from '../../../(types)/common';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 export const saveProfile = async ({ techStack, name }: SaveProfileType) => {
   try {
@@ -16,17 +19,14 @@ export const saveProfile = async ({ techStack, name }: SaveProfileType) => {
 };
 
 export const getProfile = async () => {
-  try {
-    const res = await fetch('/api/server/mypage', {
-      method: 'GET',
-      headers: { 'content-type': 'application/json' },
-    });
-    if (res.ok) {
-      console.log('프로필 불러오기 성공');
-    }
-    const profile = await res.json();
-    return profile;
-  } catch (err) {
-    console.log('프로필 불러오기 실패', err);
-  }
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  if (!userId) return null;
+
+  const profile = await prisma.profile.findUnique({
+    where: { userId },
+    include: { user: true },
+  });
+
+  return profile;
 };

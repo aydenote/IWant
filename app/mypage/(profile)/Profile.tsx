@@ -8,7 +8,7 @@ import BasicButton from '../../(components)/buttons/BasicButton';
 import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/Pill';
-import { getProfile, saveProfile } from '../../api/client/mypage/profile';
+import { saveProfile } from '../../api/client/mypage/profile';
 import { TechStackType } from '../../(types)/common';
 import { useSession } from 'next-auth/react';
 
@@ -21,9 +21,13 @@ const Profile = () => {
   useEffect(() => {
     if (status !== 'authenticated') return;
     const loadProfile = async () => {
-      const res = await getProfile();
-      setName(res.profile.user.name ?? '');
-      setTechStack(res.profile.techStack);
+      const res = await fetch('/api/server/mypage', {
+        method: 'GET',
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      setName(data.profile.user.name ?? '');
+      setTechStack(data.profile.techStack);
     };
     loadProfile();
   }, [status]);
