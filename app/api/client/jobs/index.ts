@@ -1,4 +1,4 @@
-import { JobListResponse } from '../../../(types)/apis';
+import { JobDetailResponse, JobListResponse } from '../../../(types)/apis';
 
 export const getJobList = async (): Promise<JobListResponse[]> => {
   const res = await fetch(
@@ -10,4 +10,15 @@ export const getJobList = async (): Promise<JobListResponse[]> => {
 
   const data = await res.json();
   return data.data as JobListResponse[];
+};
+
+export const getJobDetail = async (id: number): Promise<JobDetailResponse> => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE}/jobs/v2/${id}/details`,
+    { cache: 'no-store' }
+  );
+
+  if (!res.ok) throw new Error('Failed to fetch job detail');
+  const data = await res.json();
+  return data.job as JobDetailResponse;
 };
