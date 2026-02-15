@@ -5,6 +5,7 @@ import JobCard from './JobCard';
 import type { JobListResponse } from '../(types)/apis';
 import useJobFilter from '../(hooks)/useJobFilter';
 import { JobType } from '../(types)/common';
+import { useInfiniteScroll } from '../(hooks)/useInfiniteScroll';
 
 interface JobListClientProps {
   jobList: JobListResponse[];
@@ -19,7 +20,8 @@ const JobListClient = ({
   bookmarkList,
   setBookmarkList,
 }: JobListClientProps) => {
-  const filteredJobList = useJobFilter(jobList, query);
+  const { jobs, isLoading, anchorRef } = useInfiniteScroll(jobList, query);
+  const filteredJobList = useJobFilter(jobs, query);
 
   return (
     <section className="p-12">
@@ -45,6 +47,8 @@ const JobListClient = ({
           />
         ))}
       </div>
+      <div ref={anchorRef} className="h-8" />
+      {isLoading && <p className="text-center text-sm">불러오는 중...</p>}
     </section>
   );
 };
