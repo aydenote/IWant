@@ -8,6 +8,7 @@ import BriefcaseIcon from '../icons/BriefcaseIcon';
 
 const Header = () => {
   const { status } = useSession();
+  const isAuthed = status === 'authenticated';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -20,8 +21,8 @@ const Header = () => {
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           <NavLinkItem href="/">채용공고</NavLinkItem>
-          <NavLinkItem href="/mypage">마이페이지</NavLinkItem>
-          <NavLinkItem href="/bookmark">북마크</NavLinkItem>
+          {isAuthed && <NavLinkItem href="/mypage">마이페이지</NavLinkItem>}
+          {isAuthed && <NavLinkItem href="/bookmark">북마크</NavLinkItem>}
         </nav>
         <div className="flex items-center space-x-3">
           <AuthToggleButton status={status} />
