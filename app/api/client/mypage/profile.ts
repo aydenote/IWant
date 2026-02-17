@@ -10,11 +10,10 @@ export const saveProfile = async ({ techStack, name }: SaveProfileType) => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ techStack, name }),
     });
-    if (res.ok) {
-      console.log('프로필 저장됨');
-    }
+    return res.ok;
   } catch (err) {
-    console.log('프로필 저장 실패', err);
+    console.error(err);
+    return false;
   }
 };
 

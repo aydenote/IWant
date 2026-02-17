@@ -4,13 +4,11 @@ export const saveResume = async (resumeForm: FormData) => {
       method: 'POST',
       body: resumeForm,
     });
-    if (res.ok) {
-      console.log('이력서 저장 성공');
-    }
+
     const data = await res.json();
     return data;
   } catch (err) {
-    console.log('이력서 저장 실패', err);
+    console.error('이력서 저장 실패', err);
   }
 };
 
@@ -20,13 +18,10 @@ export const getResume = async () => {
       method: 'GET',
       headers: { 'content-type': 'application/json' },
     });
-    if (res.ok) {
-      console.log('이력서 불러오기 성공');
-    }
     const data = await res.json();
     return data;
   } catch (err) {
-    console.log('이력서 불러오기 실패', err);
+    console.error('이력서 불러오기 실패', err);
   }
 };
 
@@ -36,12 +31,10 @@ export const deleteResume = async () => {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
     });
-    if (res.ok) {
-      console.log('이력서 삭제 성공');
-    }
+
     const data = await res.json();
     return data;
   } catch (err) {
-    console.log('이력서 삭제 실패', err);
+    console.error('이력서 삭제 실패', err);
   }
 };

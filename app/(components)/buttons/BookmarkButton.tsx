@@ -4,6 +4,7 @@ import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
 import { addBookmark, deleteBookmark } from '../../api/client/bookmark';
 import { JobType } from '../../(types)/common';
+import { useToast } from '../toast/Toast';
 
 interface BookmarkButtonProps {
   job: JobType;
@@ -20,16 +21,27 @@ const BookmarkButton = ({
     (bookmark: JobType) => bookmark.jobId
   );
   const isBookmarked = bookmarkJobIds.includes(job.jobId);
+  const { showToast } = useToast();
 
   const toggleBookmark = async () => {
     if (isBookmarked) {
-      await deleteBookmark(job.jobId);
+      const success = await deleteBookmark(job.jobId);
       setBookmarkList((prev) =>
         prev.filter((bookmark) => bookmark.jobId !== job.jobId)
       );
+      if (success) {
+        showToast('북마크가 성공적으로 제거되었습니다!', 'success');
+      } else {
+        showToast('북마크 제거에 실패했습니다.', 'error');
+      }
     } else {
-      await addBookmark(job);
+      const success = await addBookmark(job);
       setBookmarkList((prev) => [...prev, job]);
+      if (success) {
+        showToast('북마크가 성공적으로 저장되었습니다!', 'success');
+      } else {
+        showToast('북마크 저장에 실패했습니다.', 'error');
+      }
     }
   };
 

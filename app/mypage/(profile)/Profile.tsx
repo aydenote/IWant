@@ -9,14 +9,16 @@ import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/Pill';
 import { saveProfile } from '../../api/client/mypage/profile';
-import { TechStackType } from '../../(types)/common';
+import { SaveProfileType, TechStackType } from '../../(types)/common';
 import { useSession } from 'next-auth/react';
+import { useToast } from '../../(components)/toast/Toast';
 
 const Profile = () => {
   const { status } = useSession();
   const [name, setName] = useState('');
   const [newSkill, setNewSkill] = useState('');
   const [techStack, setTechStack] = useState<TechStackType>([]);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (status !== 'authenticated') return;
@@ -41,6 +43,15 @@ const Profile = () => {
 
   const removeSkill = (skill: string) => {
     setTechStack((prev) => prev.filter((s) => s !== skill));
+  };
+
+  const saveClicked = async ({ techStack, name }: SaveProfileType) => {
+    const success = await saveProfile({ techStack, name });
+    if (success) {
+      showToast('프로필이 성공적으로 저장되었습니다!', 'success');
+    } else {
+      showToast('프로필 저장에 실패했습니다.', 'error');
+    }
   };
 
   return (
@@ -114,7 +125,7 @@ const Profile = () => {
       <div className="pt-6 border-t border-border">
         <BasicButton
           variant="default"
-          onClick={() => saveProfile({ techStack, name })}
+          onClick={() => saveClicked({ techStack, name })}
           className="w-full bg-gradient-hero cursor-pointer"
           size="lg"
         >

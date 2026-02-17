@@ -17,24 +17,26 @@ export const getBookmark = async () => {
 
 export const addBookmark = async (job: JobType) => {
   try {
-    await fetch(`/api/server/bookmark`, {
+    const res = await fetch(`/api/server/bookmark`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(job),
     });
+    return res.ok;
   } catch (err) {
-    console.log('북마크 실패', err);
+    console.error(err);
   }
 };
 
 export const deleteBookmark = async (jobId: number) => {
   try {
-    await fetch('/api/server/bookmark', {
+    const res = await fetch('/api/server/bookmark', {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ jobId }),
     });
+    return res.ok;
   } catch (err) {
-    console.log('북마크 제거 실패', err);
+    console.error('북마크 제거 실패', err);
   }
 };

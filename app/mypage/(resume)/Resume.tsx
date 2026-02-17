@@ -14,6 +14,7 @@ import {
   getResume,
   saveResume,
 } from '../../api/client/mypage/resume';
+import { useToast } from '../../(components)/toast/Toast';
 
 const Resume = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -22,6 +23,7 @@ const Resume = () => {
   const [resumeName, setResumeName] = useState<string | null>(null);
   const [uploadFile, setUploadFile] =
     useState<UploadedFileType>(INIT_EMPTY_FILE);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (status !== 'authenticated') return;
@@ -49,7 +51,12 @@ const Resume = () => {
       uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
     if (!hasUploaded) return;
 
-    await deleteResume();
+    const success = await deleteResume();
+    if (success) {
+      showToast('이력서가 성공적으로 삭제되었습니다!', 'success');
+    } else {
+      showToast('이력서 삭제에 실패했습니다.', 'error');
+    }
     await setFromProfile(null, null);
   };
 
@@ -64,11 +71,15 @@ const Resume = () => {
     const formData = new FormData();
     formData.append('resume', file);
 
-    const { resumeUrl, resumeName } = await saveResume(formData);
+    const { resumeUrl, resumeName, ok: success } = await saveResume(formData);
 
     setResumeUrl(resumeUrl);
     setResumeName(resumeName ?? file.name);
-
+    if (success) {
+      showToast('이력서가 성공적으로 업로드되었습니다!', 'success');
+    } else {
+      showToast('이력서 업로드에 실패했습니다.', 'error');
+    }
     setUploadFile({
       name: resumeName ?? file.name,
       lastModified: file.lastModified,

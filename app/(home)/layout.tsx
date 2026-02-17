@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import Provider from './provider';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import '../(styles)/global.css';
+import { ToastProvider } from '../(components)/toast/Toast';
 
 export const metadata = {
   title: 'IWant',
@@ -20,7 +21,9 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <Provider session={session}>{children}</Provider>
+        <Provider session={session}>
+          <ToastProvider>{children}</ToastProvider>
+        </Provider>
       </body>
     </html>
   );
