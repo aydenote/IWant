@@ -44,7 +44,23 @@ const Resume = () => {
     loadProfile();
   }, [status]);
 
-  const removeResume = async () => {
+  const handleSetProfile = useCallback(
+    (url: string | null, name: string | null) => {
+      setResumeUrl(url);
+      setResumeName(name);
+      if (url || name) {
+        setUploadFile({
+          name: name ?? '업로드된 이력서.pdf',
+          lastModified: Date.now(),
+        });
+      } else {
+        setUploadFile(INIT_EMPTY_FILE);
+      }
+    },
+    []
+  );
+
+  const handleRemoveResume = async () => {
     const hasUploaded =
       !!resumeUrl ||
       uploadFile.name !== INIT_EMPTY_FILE.name ||
@@ -57,14 +73,14 @@ const Resume = () => {
     } else {
       showToast('이력서 삭제에 실패했습니다.', 'error');
     }
-    await setFromProfile(null, null);
+    await handleSetProfile(null, null);
   };
 
-  const selectResume = () => {
+  const handleSelectResume = () => {
     fileInputRef.current?.click();
   };
 
-  const uploadResume = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAddResume = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -86,22 +102,6 @@ const Resume = () => {
     });
   };
 
-  const setFromProfile = useCallback(
-    (url: string | null, name: string | null) => {
-      setResumeUrl(url);
-      setResumeName(name);
-      if (url || name) {
-        setUploadFile({
-          name: name ?? '업로드된 이력서.pdf',
-          lastModified: Date.now(),
-        });
-      } else {
-        setUploadFile(INIT_EMPTY_FILE);
-      }
-    },
-    []
-  );
-
   return (
     <section className="p-8 space-y-6 bg-gradient-card shadow-lg">
       <div className="space-y-4">
@@ -122,7 +122,7 @@ const Resume = () => {
           <BasicButton
             variant="outline"
             className="mt-4 cursor-pointer"
-            onClick={selectResume}
+            onClick={handleSelectResume}
           >
             파일 선택
           </BasicButton>
@@ -131,7 +131,7 @@ const Resume = () => {
             type="file"
             accept=".pdf"
             className="hidden"
-            onChange={uploadResume}
+            onChange={handleAddResume}
           />
         </div>
 
@@ -178,7 +178,7 @@ const Resume = () => {
                   variant="ghost"
                   size="sm"
                   className="cursor-pointer text-destructive"
-                  onClick={removeResume}
+                  onClick={handleRemoveResume}
                 >
                   삭제
                 </BasicButton>

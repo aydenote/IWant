@@ -34,18 +34,18 @@ const Profile = () => {
     loadProfile();
   }, [status]);
 
-  const addSkill = () => {
+  const handleAddSkill = () => {
     const value = newSkill.trim();
     if (!value || techStack.includes(value)) return;
     setTechStack((prev) => [...prev, value]);
     setNewSkill('');
   };
 
-  const removeSkill = (skill: string) => {
+  const handleRemoveSkill = (skill: string) => {
     setTechStack((prev) => prev.filter((s) => s !== skill));
   };
 
-  const saveClicked = async ({ techStack, name }: SaveProfileType) => {
+  const handleSaveProfile = async ({ techStack, name }: SaveProfileType) => {
     const success = await saveProfile({ techStack, name });
     if (success) {
       showToast('프로필이 성공적으로 저장되었습니다!', 'success');
@@ -86,14 +86,14 @@ const Profile = () => {
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                addSkill();
+                handleAddSkill();
               }
             }}
             placeholder="기술 스택 추가 (예: React, Python)"
           />
           <BasicButton
             variant="default"
-            onClick={addSkill}
+            onClick={handleAddSkill}
             className="gap-2 cursor-pointer"
           >
             <PlusIcon className="h-4 w-4" />
@@ -111,7 +111,7 @@ const Profile = () => {
               <Pill key={skill} className="text-sm py-1.5 px-3 gap-2">
                 {skill}
                 <BasicButton
-                  onClick={() => removeSkill(skill)}
+                  onClick={() => handleRemoveSkill(skill)}
                   className="hover:text-destructive"
                 >
                   <CloseIcon className="h-3 w-3 cursor-pointer" />
@@ -125,7 +125,7 @@ const Profile = () => {
       <div className="pt-6 border-t border-border">
         <BasicButton
           variant="default"
-          onClick={() => saveClicked({ techStack, name })}
+          onClick={() => handleSaveProfile({ techStack, name })}
           className="w-full bg-gradient-hero cursor-pointer"
           size="lg"
         >
