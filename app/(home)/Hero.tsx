@@ -2,7 +2,7 @@
 
 import { FormEvent } from 'react';
 import { SearchIcon } from '../(components)/icons/SearchIcon';
-import Text from '../(components)/Text';
+import Text from '../(components)/commons/Text';
 import BasicButton from '../(components)/buttons/BasicButton';
 
 interface heroProps {

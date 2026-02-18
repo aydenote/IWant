@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Text from '../../(components)/Text';
+import Text from '../../(components)/commons/Text';
 import Input from '../../(components)/forms/Input';
 import Label from '../../(components)/forms/Label';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
-import Pill from '../../(components)/Pill';
+import Pill from '../../(components)/commons/Pill';
 import { saveProfile } from '../../api/client/mypage/profile';
 import { SaveProfileType, TechStackType } from '../../(types)/common';
 import { useSession } from 'next-auth/react';

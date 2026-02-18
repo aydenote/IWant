@@ -1,6 +1,6 @@
 'use client';
 
-import Text from '../(components)/Text';
+import Text from '../(components)/commons/Text';
 import type { JobListResponse } from '../(types)/apis';
 import useJobFilter from '../(hooks)/useJobFilter';
 import { JobType } from '../(types)/common';

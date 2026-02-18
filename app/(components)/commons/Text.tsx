@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { TEXT_BOLD, TEXT_COLOR, TEXT_SIZE } from './constants/TextStyles';
+import { TEXT_BOLD, TEXT_COLOR, TEXT_SIZE } from '../constants/TextStyles';
 
 interface TextProps<T extends React.ElementType> {
   textColor?: keyof typeof TEXT_COLOR;

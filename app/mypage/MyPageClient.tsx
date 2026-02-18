@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Text from '../(components)/Text';
+import Text from '../(components)/commons/Text';
 import TabButton from '../(components)/buttons/TabButton';
 import Profile from './(profile)/Profile';
 import Resume from './(resume)/Resume';

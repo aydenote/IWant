@@ -1,4 +1,4 @@
-import Text from '../../(components)/Text';
+import Text from '../../(components)/commons/Text';
 import BuildingIcon from '../../(components)/icons/BuildingIcon';
 import MapPinIcon from '../../(components)/icons/MapPinIcon';
 import UsersIcon from '../../(components)/icons/UsersIcon';

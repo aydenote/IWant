@@ -1,5 +1,5 @@
 import AlertBox from './AlertBox';
-import Pill from '../../(components)/Pill';
+import Pill from '../../(components)/commons/Pill';
 
 interface SkillAlertProps {
   title: string;

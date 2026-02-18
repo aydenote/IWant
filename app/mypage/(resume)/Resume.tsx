@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Text from '../../(components)/Text';
+import Text from '../../(components)/commons/Text';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import Input from '../../(components)/forms/Input';
 import UploadIcon from '../../(components)/icons/UploadIcon';
