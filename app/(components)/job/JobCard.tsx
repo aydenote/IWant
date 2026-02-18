@@ -2,12 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import BuildingIcon from './icons/BuildingIcon';
-import MapPinIcon from './icons/MapPinIcon';
-import UsersIcon from './icons/UsersIcon';
-import BasicButton from './buttons/BasicButton';
-import BookmarkButton from './buttons/BookmarkButton';
-import { JobType } from '../(types)/common';
+import { JobType } from '../../(types)/common';
+import BuildingIcon from '../icons/BuildingIcon';
+import BookmarkButton from '../buttons/BookmarkButton';
+import MapPinIcon from '../icons/MapPinIcon';
+import UsersIcon from '../icons/UsersIcon';
+import BasicButton from '../buttons/BasicButton';
 
 interface JobCardProps extends JobType {
   bookmarkList: JobType[];

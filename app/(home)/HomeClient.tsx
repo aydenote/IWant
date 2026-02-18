@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Hero from './Hero';
-import JobListClient from '../(components)/JobListClient';
+import JobListClient from './JobListClient';
 import type { JobListResponse } from '../(types)/apis';
 import { JobType } from '../(types)/common';
 

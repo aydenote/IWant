@@ -1,11 +1,11 @@
 'use client';
 
-import Text from './Text';
-import JobCard from './JobCard';
+import Text from '../(components)/Text';
 import type { JobListResponse } from '../(types)/apis';
 import useJobFilter from '../(hooks)/useJobFilter';
 import { JobType } from '../(types)/common';
 import { useInfiniteScroll } from '../(hooks)/useInfiniteScroll';
+import JobCard from '../(components)/job/JobCard';
 
 interface JobListClientProps {
   jobList: JobListResponse[];

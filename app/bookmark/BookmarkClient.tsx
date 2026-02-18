@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import JobCard from '../(components)/JobCard';
 import { JobType } from '../(types)/common';
+import JobCard from '../(components)/job/JobCard';
 
 interface BookmarkClientProps {
   bookmarkJobList: JobType[];
