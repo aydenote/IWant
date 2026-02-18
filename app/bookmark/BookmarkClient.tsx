@@ -24,11 +24,8 @@ const BookmarkClient = ({ bookmarkJobList }: BookmarkClientProps) => {
           즐겨찾기한 공고가 없습니다.
         </div>
       ) : (
-        bookmarkList.map((bookmark: JobType) => (
-          <div
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10"
-            key={bookmark.jobId}
-          >
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
+          {bookmarkList.map((bookmark: JobType) => (
             <JobCard
               key={bookmark.jobId}
               jobId={bookmark.jobId}
@@ -41,8 +38,8 @@ const BookmarkClient = ({ bookmarkJobList }: BookmarkClientProps) => {
               bookmarkList={bookmarkList}
               setBookmarkList={setBookmarkList}
             />
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );
