@@ -1,5 +1,5 @@
 import { FRONTEND_SKILL_KEYWORDS } from '../(constants)/skills';
-import { JobDetailResponse, ProfileResponse } from '../(types)/apis';
+import { JobDetailResponse } from '../(types)/apis';
 
 export const extractSkillKeywords = (job: JobDetailResponse): string[] => {
   const jobDescription = [
