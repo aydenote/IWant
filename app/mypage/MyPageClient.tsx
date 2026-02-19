@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import Text from '../(components)/commons/Text';
-import TabButton from '../(components)/buttons/TabButton';
 import Profile from './(profile)/Profile';
 import Resume from './(resume)/Resume';
+import TabButton from './TabButton';
 
 const MyPageClient = () => {
   const [activeTab, setActiveTab] = useState('profile');
