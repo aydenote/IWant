@@ -1,5 +1,3 @@
-import { ProfileResponse } from '../../(types)/apis';
-
 interface JobDetailSectionsProps {
   sections: {
     title: string;
