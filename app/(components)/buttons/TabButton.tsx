@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 import BasicButton from './BasicButton';
 
 interface TabButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
