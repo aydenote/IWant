@@ -1,7 +1,6 @@
 'use client';
 
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import Text from '../../(components)/commons/Text';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import Input from '../../(components)/forms/Input';
@@ -9,40 +8,25 @@ import UploadIcon from '../../(components)/icons/UploadIcon';
 import { UploadedFileType } from '../../(types)/common';
 import { INIT_EMPTY_FILE } from '../../(constants)/resume';
 import { formatDate } from '../../(utils)/common';
-import {
-  deleteResume,
-  getResume,
-  saveResume,
-} from '../../api/client/mypage/resume';
+import { deleteResume, saveResume } from '../../api/client/mypage/resume';
 import { useToast } from '../../(components)/toast/Toast';
+import { ResumeResponse } from '../../(types)/apis';
 
-const Resume = () => {
+interface ResumeProps {
+  resume: ResumeResponse | null;
+}
+
+const Resume = ({ resume }: ResumeProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { status } = useSession();
-  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
-  const [resumeName, setResumeName] = useState<string | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(
+    resume?.resumeUrl ?? null
+  );
+  const [resumeName, setResumeName] = useState<string | null>(
+    resume?.resumeName ?? null
+  );
   const [uploadFile, setUploadFile] =
     useState<UploadedFileType>(INIT_EMPTY_FILE);
   const { showToast } = useToast();
-
-  useEffect(() => {
-    if (status !== 'authenticated') return;
-    const loadProfile = async () => {
-      const { resumeUrl, resumeName } = await getResume();
-      setResumeUrl(resumeUrl ?? null);
-      setResumeName(resumeName ?? null);
-
-      if (resumeUrl || resumeName) {
-        setUploadFile({
-          name: resumeName ?? '업로드된 이력서.pdf',
-          lastModified: Date.now(),
-        });
-      } else {
-        setUploadFile(INIT_EMPTY_FILE);
-      }
-    };
-    loadProfile();
-  }, [status]);
 
   const handleSetProfile = useCallback(
     (url: string | null, name: string | null) => {

@@ -4,32 +4,28 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 import { supabase } from '../../../(lib)/supabase';
 import { prisma } from '../../../(lib)/prisma';
 
-export const GET = async () => {
+export const getResume = async () => {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
-  if (!userId) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!userId) return null;
 
   const profile = await prisma.profile.findUnique({ where: { userId } });
   if (!profile?.resumeUrl) {
-    return NextResponse.json({ ok: true, resumeUrl: null, resumeName: null });
+    return { ok: true, resumeUrl: null, resumeName: null };
   }
 
   const { data, error } = await supabase.storage
     .from('resumes')
     .createSignedUrl(profile.resumeUrl, 60);
-
   if (error) {
-    return NextResponse.json(
-      { ok: false, message: error.message },
-      { status: 500 }
-    );
+    return { ok: false, message: error.message };
   }
 
-  return NextResponse.json({
+  return {
     ok: true,
     resumeUrl: data.signedUrl,
     resumeName: profile.resumeName ?? null,
-  });
+  };
 };
 
 export const POST = async (req: Request) => {

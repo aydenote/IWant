@@ -5,13 +5,14 @@ import Text from '../(components)/commons/Text';
 import Profile from './(profile)/Profile';
 import Resume from './(resume)/Resume';
 import TabButton from './TabButton';
-import { ProfileResponse } from '../(types)/apis';
+import { ProfileResponse, ResumeResponse } from '../(types)/apis';
 
 interface MyPageClientProps {
   profile: ProfileResponse | null;
+  resume: ResumeResponse | null;
 }
 
-const MyPageClient = ({ profile }: MyPageClientProps) => {
+const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
   const [activeTab, setActiveTab] = useState('profile');
 
   return (
@@ -47,7 +48,7 @@ const MyPageClient = ({ profile }: MyPageClientProps) => {
             {activeTab === 'profile' ? (
               <Profile profile={profile} />
             ) : (
-              <Resume />
+              <Resume resume={resume} />
             )}
           </div>
         </section>

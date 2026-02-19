@@ -55,3 +55,10 @@ export interface ProfileResponse {
   };
   userId: string;
 }
+
+export interface ResumeResponse {
+  ok: boolean;
+  resumeName?: string | null;
+  resumeUrl?: string | null;
+  message?: string;
+}
