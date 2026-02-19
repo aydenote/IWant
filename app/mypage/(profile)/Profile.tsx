@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Text from '../../(components)/commons/Text';
 import Input from '../../(components)/forms/Input';
 import Label from '../../(components)/forms/Label';
@@ -10,29 +10,20 @@ import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/commons/Pill';
 import { saveProfile } from '../../api/client/mypage/profile';
 import { SaveProfileType, TechStackType } from '../../(types)/common';
-import { useSession } from 'next-auth/react';
 import { useToast } from '../../(components)/toast/Toast';
+import { ProfileResponse } from '../../(types)/apis';
 
-const Profile = () => {
-  const { status } = useSession();
-  const [name, setName] = useState('');
+interface ProfileProps {
+  profile: ProfileResponse | null;
+}
+
+const Profile = ({ profile }: ProfileProps) => {
+  const [name, setName] = useState(profile?.user.name ?? '');
   const [newSkill, setNewSkill] = useState('');
-  const [techStack, setTechStack] = useState<TechStackType>([]);
+  const [techStack, setTechStack] = useState<TechStackType>(
+    profile?.techStack ?? []
+  );
   const { showToast } = useToast();
-
-  useEffect(() => {
-    if (status !== 'authenticated') return;
-    const loadProfile = async () => {
-      const res = await fetch('/api/server/mypage', {
-        method: 'GET',
-        cache: 'no-store',
-      });
-      const data = await res.json();
-      setName(data.profile.user.name ?? '');
-      setTechStack(data.profile.techStack);
-    };
-    loadProfile();
-  }, [status]);
 
   const handleAddSkill = () => {
     const value = newSkill.trim();
