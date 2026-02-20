@@ -1,11 +1,11 @@
 import Header from '../(components)/header/Header';
-import { getBookmark } from '../api/client/bookmark';
-import { getJobList } from '../api/client/jobs';
+import { getBookmarkServer } from '../apis/server/bookmark';
+import { getJobListServer } from '../apis/server/job';
 import HomeClient from './HomeClient';
 
 export default async function Page() {
-  const jobList = await getJobList();
-  const bookmarkJobList = await getBookmark();
+  const jobList = await getJobListServer();
+  const bookmarkJobList = await getBookmarkServer();
 
   return (
     <main>

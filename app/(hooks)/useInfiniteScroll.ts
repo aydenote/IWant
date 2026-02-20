@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { JobListResponse } from '../(types)/apis';
-import { fetchJobs } from '../api/client/jobs';
 import { PAGE_ITEM_LIMIT } from '../(constants)/job';
+import { getJobListServer } from '../apis/server/job';
 
 export const useInfiniteScroll = (
   initialJobs: JobListResponse[],
@@ -22,7 +22,7 @@ export const useInfiniteScroll = (
       (entries) => {
         if (entries[0].isIntersecting && !isLoading) {
           setIsLoading(true);
-          fetchJobs(offset, query).then((nextJobs) => {
+          getJobListServer(offset, query).then((nextJobs) => {
             setJobs((prev) => [...prev, ...nextJobs]);
             setPage((prev) => prev + 1);
             setOffset((prev) => prev + PAGE_ITEM_LIMIT);
