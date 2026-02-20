@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { authOptions } from '../../apis/auth/[...nextauth]/route';
 import Provider from '../../(home)/provider';
 import '../../(styles)/global.css';
 

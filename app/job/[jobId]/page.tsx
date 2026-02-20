@@ -1,13 +1,13 @@
 import Header from '../../(components)/header/Header';
-import { getJobDetail } from '../../api/client/jobs';
-import { getProfile } from '../../api/client/mypage/profile';
+import { getJobDetailClient } from '../../apis/client/job';
+import { getProfileServer } from '../../apis/server/profile';
 import JobDetailClient from './JobDetailClient';
 
 export default async function Page({ params }: { params: { jobId: string } }) {
   const { jobId } = await params;
   const [jobDetail, profile] = await Promise.all([
-    getJobDetail(Number(jobId)),
-    getProfile(),
+    getJobDetailClient(Number(jobId)),
+    getProfileServer(),
   ]);
 
   return (
