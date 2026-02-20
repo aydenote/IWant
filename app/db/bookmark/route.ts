@@ -1,23 +1,7 @@
-import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
-import { prisma } from '../../../(lib)/prisma';
-
-export const GET = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    return NextResponse.json({ ok: true, favorites: [] });
-  }
-
-  const favorites = await prisma.favorite.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  return NextResponse.json({ ok: true, favorites });
-};
+import { authOptions } from '../../apis/auth/[...nextauth]/route';
+import { NextResponse } from 'next/server';
+import { prisma } from '../../(lib)/prisma';
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);

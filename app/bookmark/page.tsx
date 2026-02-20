@@ -1,9 +1,9 @@
 import Header from '../(components)/header/Header';
 import BookmarkClient from './BookmarkClient';
-import { getBookmark } from '../api/client/bookmark/index';
+import { getBookmarkServer } from '../apis/server/bookmark';
 
 export default async function Page() {
-  const bookmarkJobList = await getBookmark();
+  const bookmarkJobList = await getBookmarkServer();
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
