@@ -1,10 +1,13 @@
 import Header from '../(components)/header/Header';
-import { getProfile } from '../api/client/mypage/profile';
-import { getResume } from '../api/server/resume/route';
+import { getProfileServer } from '../apis/server/profile';
+import { getResumeServer } from '../apis/server/resume';
 import MyPageClient from './MyPageClient';
 
 export default async function Page() {
-  const [resume, profile] = await Promise.all([getResume(), getProfile()]);
+  const [resume, profile] = await Promise.all([
+    getResumeServer(),
+    getProfileServer(),
+  ]);
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">

@@ -8,10 +8,10 @@ import BasicButton from '../../(components)/buttons/BasicButton';
 import CloseIcon from '../../(components)/icons/CloseIcon';
 import PlusIcon from '../../(components)/icons/PlusIcon';
 import Pill from '../../(components)/commons/Pill';
-import { saveProfile } from '../../api/client/mypage/profile';
 import { SaveProfileType, TechStackType } from '../../(types)/common';
 import { useToast } from '../../(components)/toast/Toast';
 import { ProfileResponse } from '../../(types)/apis';
+import { updateProfileClient } from '../../apis/client/profile';
 
 interface ProfileProps {
   profile: ProfileResponse | null;
@@ -36,8 +36,8 @@ const Profile = ({ profile }: ProfileProps) => {
     setTechStack((prev) => prev.filter((s) => s !== skill));
   };
 
-  const handleSaveProfile = async ({ techStack, name }: SaveProfileType) => {
-    const success = await saveProfile({ techStack, name });
+  const handleUpdateProfile = async ({ techStack, name }: SaveProfileType) => {
+    const success = await updateProfileClient({ techStack, name });
     if (success) {
       showToast('프로필이 성공적으로 저장되었습니다!', 'success');
     } else {
@@ -116,7 +116,7 @@ const Profile = ({ profile }: ProfileProps) => {
       <div className="pt-6 border-t border-border">
         <BasicButton
           variant="default"
-          onClick={() => handleSaveProfile({ techStack, name })}
+          onClick={() => handleUpdateProfile({ techStack, name })}
           className="w-full bg-gradient-hero cursor-pointer"
           size="lg"
         >
