@@ -8,9 +8,12 @@ import UploadIcon from '../../(components)/icons/UploadIcon';
 import { UploadedFileType } from '../../(types)/common';
 import { INIT_EMPTY_FILE } from '../../(constants)/resume';
 import { formatDate } from '../../(utils)/common';
-import { deleteResume, saveResume } from '../../api/client/mypage/resume';
 import { useToast } from '../../(components)/toast/Toast';
 import { ResumeResponse } from '../../(types)/apis';
+import {
+  deleteResumeClient,
+  updateResumeClient,
+} from '../../apis/client/resume';
 
 interface ResumeProps {
   resume: ResumeResponse | null;
@@ -51,7 +54,7 @@ const Resume = ({ resume }: ResumeProps) => {
       uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
     if (!hasUploaded) return;
 
-    const success = await deleteResume();
+    const success = await deleteResumeClient();
     if (success) {
       showToast('이력서가 성공적으로 삭제되었습니다!', 'success');
     } else {
@@ -71,7 +74,11 @@ const Resume = ({ resume }: ResumeProps) => {
     const formData = new FormData();
     formData.append('resume', file);
 
-    const { resumeUrl, resumeName, ok: success } = await saveResume(formData);
+    const {
+      resumeUrl,
+      resumeName,
+      ok: success,
+    } = await updateResumeClient(formData);
 
     setResumeUrl(resumeUrl);
     setResumeName(resumeName ?? file.name);

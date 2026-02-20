@@ -1,32 +1,8 @@
-import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
-import { supabase } from '../../../(lib)/supabase';
-import { prisma } from '../../../(lib)/prisma';
-
-export const getResume = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  if (!userId) return null;
-
-  const profile = await prisma.profile.findUnique({ where: { userId } });
-  if (!profile?.resumeUrl) {
-    return { ok: true, resumeUrl: null, resumeName: null };
-  }
-
-  const { data, error } = await supabase.storage
-    .from('resumes')
-    .createSignedUrl(profile.resumeUrl, 60);
-  if (error) {
-    return { ok: false, message: error.message };
-  }
-
-  return {
-    ok: true,
-    resumeUrl: data.signedUrl,
-    resumeName: profile.resumeName ?? null,
-  };
-};
+import { authOptions } from '../../apis/auth/[...nextauth]/route';
+import { NextResponse } from 'next/server';
+import { supabase } from '../../(lib)/supabase';
+import { prisma } from '../../(lib)/prisma';
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
@@ -51,7 +27,6 @@ export const POST = async (req: Request) => {
     );
   }
 
-  // 업로드 직후 파일 URL 생성
   const { data, error: urlErr } = await supabase.storage
     .from('resumes')
     .createSignedUrl(path, 60);
