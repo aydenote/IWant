@@ -155,24 +155,26 @@ const Resume = ({ resume }: ResumeProps) => {
               </div>
               <div className="flex gap-2">
                 {resumeUrl && (
-                  <a
-                    href={resumeUrl}
-                    download={resumeName ?? undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 gap-2"
-                  >
-                    다운로드
-                  </a>
+                  <>
+                    <a
+                      href={resumeUrl}
+                      download={resumeName ?? undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 gap-2"
+                    >
+                      다운로드
+                    </a>
+                    <BasicButton
+                      variant="ghost"
+                      size="sm"
+                      className="cursor-pointer text-destructive"
+                      onClick={handleRemoveResume}
+                    >
+                      삭제
+                    </BasicButton>
+                  </>
                 )}
-                <BasicButton
-                  variant="ghost"
-                  size="sm"
-                  className="cursor-pointer text-destructive"
-                  onClick={handleRemoveResume}
-                >
-                  삭제
-                </BasicButton>
               </div>
             </div>
           </div>
