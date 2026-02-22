@@ -154,7 +154,7 @@ const Resume = ({ resume }: ResumeProps) => {
                 </div>
               </div>
               <div className="flex gap-2">
-                {resumeUrl ? (
+                {resumeUrl && (
                   <a
                     href={resumeUrl}
                     download={resumeName ?? undefined}
@@ -164,7 +164,7 @@ const Resume = ({ resume }: ResumeProps) => {
                   >
                     다운로드
                   </a>
-                ) : null}
+                )}
                 <BasicButton
                   variant="ghost"
                   size="sm"
