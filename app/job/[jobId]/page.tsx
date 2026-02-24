@@ -1,6 +1,6 @@
 import Header from '../../(components)/header/Header';
-import { getJobDetailClient } from '../../apis/client/job';
-import { getProfileServer } from '../../apis/server/profile';
+import { getJobDetailClient } from '../../api/client/job';
+import { getProfileServer } from '../../api/server/profile';
 import JobDetailClient from './JobDetailClient';
 
 export default async function Page({ params }: { params: { jobId: string } }) {

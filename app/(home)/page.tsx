@@ -1,6 +1,6 @@
 import Header from '../(components)/header/Header';
-import { getBookmarkServer } from '../apis/server/bookmark';
-import { getJobListServer } from '../apis/server/job';
+import { getBookmarkServer } from '../api/server/bookmark';
+import { getJobListServer } from '../api/server/job';
 import HomeClient from './HomeClient';
 
 export default async function Page() {

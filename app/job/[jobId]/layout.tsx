@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../apis/auth/[...nextauth]/route';
 import Provider from '../../(home)/provider';
 import '../../(styles)/global.css';
+import { authOptions } from '../../api/auth/[...nextauth]/route';
 
 export const metadata = {
   title: 'IWant 공고 상세',

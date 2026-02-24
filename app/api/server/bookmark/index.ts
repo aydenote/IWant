@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../../apis/auth/[...nextauth]/route';
 import { prisma } from '../../../(lib)/prisma';
 
 export const getBookmarkServer = async () => {

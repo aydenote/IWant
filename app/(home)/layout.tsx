@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import Provider from './provider';
-import { authOptions } from '../apis/auth/[...nextauth]/route';
 import '../(styles)/global.css';
 import { ToastProvider } from '../(components)/toast/Toast';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export const metadata = {
   title: 'IWant',

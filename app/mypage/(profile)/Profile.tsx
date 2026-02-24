@@ -11,7 +11,7 @@ import Pill from '../../(components)/commons/Pill';
 import { SaveProfileType, TechStackType } from '../../(types)/common';
 import { useToast } from '../../(components)/toast/Toast';
 import { ProfileResponse } from '../../(types)/apis';
-import { updateProfileClient } from '../../apis/client/profile';
+import { updateProfileClient } from '../../api/client/profile';
 
 interface ProfileProps {
   profile: ProfileResponse | null;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { JobListResponse } from '../(types)/apis';
 import { PAGE_ITEM_LIMIT } from '../(constants)/job';
-import { getJobListServer } from '../apis/server/job';
+import { getJobListServer } from '../api/server/job';
 
 export const useInfiniteScroll = (
   initialJobs: JobListResponse[],

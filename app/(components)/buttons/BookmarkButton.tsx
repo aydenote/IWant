@@ -7,7 +7,7 @@ import { useToast } from '../toast/Toast';
 import {
   addBookmarkClient,
   deleteBookmarkClient,
-} from '../../apis/client/bookmark';
+} from '../../api/client/bookmark';
 
 interface BookmarkButtonProps {
   job: JobType;
