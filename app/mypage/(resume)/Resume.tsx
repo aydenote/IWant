@@ -1,5 +1,6 @@
 'use client';
 
+import { createPortal } from 'react-dom';
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import Text from '../../(components)/commons/Text';
 import BasicButton from '../../(components)/buttons/BasicButton';
@@ -13,7 +14,8 @@ import { ResumeResponse } from '../../(types)/apis';
 import {
   deleteResumeClient,
   updateResumeClient,
-} from '../../apis/client/resume';
+} from '../../api/client/resume';
+import Spinner from '../../(components)/commons/Spinner';
 
 interface ResumeProps {
   resume: ResumeResponse | null;
@@ -30,6 +32,8 @@ const Resume = ({ resume }: ResumeProps) => {
   const [uploadFile, setUploadFile] =
     useState<UploadedFileType>(INIT_EMPTY_FILE);
   const { showToast } = useToast();
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [statusText, setStatusText] = useState('');
 
   const handleSetProfile = useCallback(
     (url: string | null, name: string | null) => {
@@ -48,19 +52,26 @@ const Resume = ({ resume }: ResumeProps) => {
   );
 
   const handleRemoveResume = async () => {
-    const hasUploaded =
-      !!resumeUrl ||
-      uploadFile.name !== INIT_EMPTY_FILE.name ||
-      uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
-    if (!hasUploaded) return;
+    setIsLoading(true);
+    setStatusText('삭제 중입니다...');
+    try {
+      const hasUploaded =
+        !!resumeUrl ||
+        uploadFile.name !== INIT_EMPTY_FILE.name ||
+        uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
+      if (!hasUploaded) return;
 
-    const success = await deleteResumeClient();
-    if (success) {
-      showToast('이력서가 성공적으로 삭제되었습니다!', 'success');
-    } else {
+      const success = await deleteResumeClient();
+      if (success) {
+        showToast('이력서가 성공적으로 삭제되었습니다!', 'success');
+        await handleSetProfile(null, null);
+      }
+    } catch (err) {
       showToast('이력서 삭제에 실패했습니다.', 'error');
+    } finally {
+      setIsLoading(false);
+      setStatusText('');
     }
-    await handleSetProfile(null, null);
   };
 
   const handleSelectResume = () => {
@@ -68,29 +79,36 @@ const Resume = ({ resume }: ResumeProps) => {
   };
 
   const handleAddResume = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    setIsLoading(true);
+    setStatusText('업로드 중입니다...');
 
-    const formData = new FormData();
-    formData.append('resume', file);
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    const {
-      resumeUrl,
-      resumeName,
-      ok: success,
-    } = await updateResumeClient(formData);
+      const formData = new FormData();
+      formData.append('resume', file);
 
-    setResumeUrl(resumeUrl);
-    setResumeName(resumeName ?? file.name);
-    if (success) {
-      showToast('이력서가 성공적으로 업로드되었습니다!', 'success');
-    } else {
+      const {
+        resumeUrl,
+        resumeName,
+        ok: success,
+      } = await updateResumeClient(formData);
+      setResumeUrl(resumeUrl);
+      setResumeName(resumeName ?? file.name);
+      if (success) {
+        showToast('이력서가 성공적으로 업로드되었습니다!', 'success');
+        setUploadFile({
+          name: resumeName ?? file.name,
+          lastModified: file.lastModified,
+        });
+      }
+    } catch (err) {
       showToast('이력서 업로드에 실패했습니다.', 'error');
+    } finally {
+      setIsLoading(false);
+      setStatusText('');
     }
-    setUploadFile({
-      name: resumeName ?? file.name,
-      lastModified: file.lastModified,
-    });
   };
 
   return (
@@ -99,7 +117,6 @@ const Resume = ({ resume }: ResumeProps) => {
         <Text as="h2" textSize="2xl" textBold="lg" textColor="black">
           이력서 관리
         </Text>
-
         <div className="border-2 border-dashed border-border rounded-lg p-12 text-center space-y-4 hover:border-primary transition-colors">
           <UploadIcon className="h-12 w-12 mx-auto text-muted-foreground" />
           <div className="space-y-2">
@@ -180,6 +197,21 @@ const Resume = ({ resume }: ResumeProps) => {
           </div>
         </div>
       </div>
+      {isLoading &&
+        createPortal(
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3 rounded-2xl bg-black/60 px-6 py-5 shadow-2xl">
+              <Spinner
+                className="border-t-transparent border-white/80"
+                size="lg"
+              />
+              <p className="text-base font-semibold text-white/90">
+                {statusText}
+              </p>
+            </div>
+          </div>,
+          document.body
+        )}
     </section>
   );
 };
