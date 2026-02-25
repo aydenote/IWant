@@ -17,7 +17,7 @@ const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
   const [resumeData, setResumeData] = useState(resume);
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 pt-12">
       <div className="max-w-4xl mx-auto">
         <Text
           as="h1"
