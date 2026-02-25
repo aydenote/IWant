@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import { JobDetailResponse, ProfileResponse } from '../../(types)/apis';
 import ProfileSidebar from './ProfileSidebar';
@@ -8,6 +7,7 @@ import JobDetailSections from './JobDetailSections';
 import JobSummaryCard from './JobSummaryCard';
 import ApplyButton from './ApplyButton';
 import { ArrowLeftIcon } from '../../(components)/icons/ArrowLeftIcon';
+import { useRouter } from 'next/navigation';
 
 interface JobDetailClientProps {
   jobId: number;
@@ -16,6 +16,8 @@ interface JobDetailClientProps {
 }
 
 const JobDetailClient = ({ jobId, job, profile }: JobDetailClientProps) => {
+  const router = useRouter();
+
   const detailSections = [
     { title: '소개', content: job.detail.intro },
     { title: '주요 업무', content: job.detail.main_tasks },
@@ -27,16 +29,16 @@ const JobDetailClient = ({ jobId, job, profile }: JobDetailClientProps) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <Link href="/">
-        <BasicButton
-          variant="ghost"
-          size="sm"
-          className="cursor-pointer mb-6 gap-2"
-        >
-          <ArrowLeftIcon />
-          목록으로
-        </BasicButton>
-      </Link>
+      <BasicButton
+        onClick={() => router.back()}
+        variant="ghost"
+        size="sm"
+        className="cursor-pointer mb-6 gap-2"
+      >
+        <ArrowLeftIcon />
+        목록으로
+      </BasicButton>
+
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <div className="rounded-lg border text-card-foreground p-8 space-y-6 bg-gradient-card shadow-lg">
