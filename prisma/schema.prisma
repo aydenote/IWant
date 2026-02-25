@@ -68,6 +68,7 @@ model Profile {
   techStack String[]     @default(["React", "Typescript", "Javascript"])
   resumeUrl String?
   resumeName String?
+  modifiedDate BigInt?
 
   updatedAt DateTime @updatedAt
 }

@@ -40,14 +40,24 @@ export const POST = async (req: Request) => {
 
   await prisma.profile.upsert({
     where: { userId },
-    update: { resumeUrl: path, resumeName: file.name },
-    create: { userId, resumeUrl: path, resumeName: file.name },
+    update: {
+      resumeUrl: path,
+      resumeName: file.name,
+      modifiedDate: file.lastModified,
+    },
+    create: {
+      userId,
+      resumeUrl: path,
+      resumeName: file.name,
+      modifiedDate: file.lastModified,
+    },
   });
 
   return NextResponse.json({
     ok: true,
     resumeUrl: data.signedUrl,
     resumeName: file.name,
+    modifiedDate: file.lastModified,
   });
 };
 
@@ -59,7 +69,12 @@ export const DELETE = async () => {
 
   const profile = await prisma.profile.findUnique({ where: { userId } });
   if (!profile?.resumeUrl) {
-    return NextResponse.json({ ok: true, resumeUrl: null, resumeName: null });
+    return NextResponse.json({
+      ok: true,
+      resumeUrl: null,
+      resumeName: null,
+      modifiedDate: null,
+    });
   }
   const { error } = await supabase.storage
     .from('resumes')
@@ -74,11 +89,14 @@ export const DELETE = async () => {
 
   await prisma.profile.upsert({
     where: { userId },
-    update: { resumeUrl: null, resumeName: null },
-    create: { userId, resumeUrl: null, resumeName: null },
+    update: { resumeUrl: null, resumeName: null, modifiedDate: null },
+    create: { userId, resumeUrl: null, resumeName: null, modifiedDate: null },
   });
 
   return NextResponse.json({
     ok: true,
+    resumeUrl: null,
+    resumeName: null,
+    modifiedDate: null,
   });
 };

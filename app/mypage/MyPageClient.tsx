@@ -9,11 +9,12 @@ import { ProfileResponse, ResumeResponse } from '../(types)/apis';
 
 interface MyPageClientProps {
   profile: ProfileResponse | null;
-  resume: ResumeResponse | null;
+  resume: ResumeResponse;
 }
 
 const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
   const [activeTab, setActiveTab] = useState('profile');
+  const [resumeData, setResumeData] = useState(resume);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -48,7 +49,7 @@ const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
             {activeTab === 'profile' ? (
               <Profile profile={profile} />
             ) : (
-              <Resume resume={resume} />
+              <Resume resume={resumeData} setResume={setResumeData} />
             )}
           </div>
         </section>

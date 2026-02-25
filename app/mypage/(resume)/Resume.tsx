@@ -1,13 +1,11 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import Text from '../../(components)/commons/Text';
 import BasicButton from '../../(components)/buttons/BasicButton';
 import Input from '../../(components)/forms/Input';
 import UploadIcon from '../../(components)/icons/UploadIcon';
-import { UploadedFileType } from '../../(types)/common';
-import { INIT_EMPTY_FILE } from '../../(constants)/resume';
 import { formatDate } from '../../(utils)/common';
 import { useToast } from '../../(components)/toast/Toast';
 import { ResumeResponse } from '../../(types)/apis';
@@ -18,53 +16,24 @@ import {
 import Spinner from '../../(components)/commons/Spinner';
 
 interface ResumeProps {
-  resume: ResumeResponse | null;
+  resume: ResumeResponse;
+  setResume: React.Dispatch<React.SetStateAction<ResumeResponse>>;
 }
 
-const Resume = ({ resume }: ResumeProps) => {
+const Resume = ({ resume, setResume }: ResumeProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [resumeUrl, setResumeUrl] = useState<string | null>(
-    resume?.resumeUrl ?? null
-  );
-  const [resumeName, setResumeName] = useState<string | null>(
-    resume?.resumeName ?? null
-  );
-  const [uploadFile, setUploadFile] =
-    useState<UploadedFileType>(INIT_EMPTY_FILE);
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [statusText, setStatusText] = useState('');
-
-  const handleSetProfile = useCallback(
-    (url: string | null, name: string | null) => {
-      setResumeUrl(url);
-      setResumeName(name);
-      if (url || name) {
-        setUploadFile({
-          name: name ?? '업로드된 이력서.pdf',
-          lastModified: Date.now(),
-        });
-      } else {
-        setUploadFile(INIT_EMPTY_FILE);
-      }
-    },
-    []
-  );
 
   const handleRemoveResume = async () => {
     setIsLoading(true);
     setStatusText('삭제 중입니다...');
     try {
-      const hasUploaded =
-        !!resumeUrl ||
-        uploadFile.name !== INIT_EMPTY_FILE.name ||
-        uploadFile.lastModified !== INIT_EMPTY_FILE.lastModified;
-      if (!hasUploaded) return;
-
-      const success = await deleteResumeClient();
+      const { ok: success, ...updatedResume } = await deleteResumeClient();
       if (success) {
         showToast('이력서가 성공적으로 삭제되었습니다!', 'success');
-        await handleSetProfile(null, null);
+        setResume({ ok: success, ...updatedResume });
       }
     } catch (err) {
       showToast('이력서 삭제에 실패했습니다.', 'error');
@@ -89,20 +58,9 @@ const Resume = ({ resume }: ResumeProps) => {
       const formData = new FormData();
       formData.append('resume', file);
 
-      const {
-        resumeUrl,
-        resumeName,
-        ok: success,
-      } = await updateResumeClient(formData);
-      setResumeUrl(resumeUrl);
-      setResumeName(resumeName ?? file.name);
-      if (success) {
-        showToast('이력서가 성공적으로 업로드되었습니다!', 'success');
-        setUploadFile({
-          name: resumeName ?? file.name,
-          lastModified: file.lastModified,
-        });
-      }
+      const { ok: success, ...updatedResume } =
+        await updateResumeClient(formData);
+      setResume({ ok: success, ...updatedResume });
     } catch (err) {
       showToast('이력서 업로드에 실패했습니다.', 'error');
     } finally {
@@ -161,21 +119,21 @@ const Resume = ({ resume }: ResumeProps) => {
                 </div>
                 <div>
                   <Text textSize="sm" textBold="lg" textColor="black">
-                    {uploadFile.name}
+                    {resume.resumeName ?? '빈 파일.pdf'}
                   </Text>
                   <Text textSize="xs" textColor="bluegray500">
-                    {typeof uploadFile.lastModified === 'string'
-                      ? '알 수 없음'
-                      : formatDate(uploadFile.lastModified)}
+                    {resume.modifiedDate
+                      ? formatDate(resume.modifiedDate)
+                      : '알 수 없음'}
                   </Text>
                 </div>
               </div>
               <div className="flex gap-2">
-                {resumeUrl && (
+                {resume?.resumeUrl && (
                   <>
                     <a
-                      href={resumeUrl}
-                      download={resumeName ?? undefined}
+                      href={resume.resumeUrl}
+                      download={resume.resumeName ?? undefined}
                       target="_blank"
                       rel="noreferrer"
                       className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 gap-2"

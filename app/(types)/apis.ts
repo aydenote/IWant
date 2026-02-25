@@ -60,5 +60,6 @@ export interface ResumeResponse {
   ok: boolean;
   resumeName?: string | null;
   resumeUrl?: string | null;
-  message?: string;
+  modifiedDate?: bigint | null;
+  message?: string | null;
 }
