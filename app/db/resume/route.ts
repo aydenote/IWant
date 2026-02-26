@@ -3,15 +3,20 @@ import { NextResponse } from 'next/server';
 import { supabase } from '../../(lib)/supabase';
 import { prisma } from '../../(lib)/prisma';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { checkAuth } from '../../api/server/common';
 
 export const POST = async (req: Request) => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  if (!userId) return NextResponse.json({ ok: false }, { status: 401 });
+  const { isAuth, userId } = await checkAuth();
+
+  if (!isAuth || !userId) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
 
   const form = await req.formData();
   const file = form.get('resume') as File | null;
-  if (!file) return NextResponse.json({ ok: false }, { status: 400 });
+  if (!file) {
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
 
   const ext = file.name.split('.').pop();
   const path = `${userId}/${Date.now()}.${ext}`;

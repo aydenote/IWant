@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { prisma } from '../../(lib)/prisma';
-import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { checkAuth } from '../../api/server/common';
 
 export const PUT = async (req: Request) => {
-  const session = await getServerSession(authOptions);
-  const email = session?.user?.email;
+  const { isAuth, email } = await checkAuth();
 
-  if (!email) {
+  if (!isAuth) {
     return NextResponse.json(
       { ok: false, message: 'Unauthorized' },
       { status: 401 }

@@ -1,11 +1,10 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../apis/auth/[...nextauth]/route';
 import { prisma } from '../../../(lib)/prisma';
+import { checkAuth } from '../common';
 
 export const getProfileServer = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  if (!userId) return null;
+  const { isAuth, userId } = await checkAuth();
+
+  if (!isAuth) return null;
 
   const profile = await prisma.profile.findUnique({
     where: { userId },

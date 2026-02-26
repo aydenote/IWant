@@ -1,12 +1,10 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../apis/auth/[...nextauth]/route';
 import { prisma } from '../../../(lib)/prisma';
+import { checkAuth } from '../common';
 
 export const getBookmarkServer = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+  const { isAuth, userId } = await checkAuth();
 
-  if (!userId) return [];
+  if (!isAuth) return [];
 
   return prisma.favorite.findMany({
     where: { userId },

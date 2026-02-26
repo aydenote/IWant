@@ -1,12 +1,10 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../apis/auth/[...nextauth]/route';
 import { prisma } from '../../../(lib)/prisma';
 import { supabase } from '../../../(lib)/supabase';
+import { checkAuth } from '../common';
 
 export const getResumeServer = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  if (!userId) {
+  const { isAuth, userId } = await checkAuth();
+  if (!isAuth) {
     return {
       ok: false,
       resumeUrl: null,

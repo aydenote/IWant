@@ -2,11 +2,14 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { prisma } from '../../(lib)/prisma';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { checkAuth } from '../../api/server/common';
 
 export const POST = async (req: Request) => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  if (!userId) return NextResponse.json({ ok: false }, { status: 401 });
+  const { isAuth, userId } = await checkAuth();
+
+  if (!isAuth || !userId) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
 
   const body = await req.json();
   const {
