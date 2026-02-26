@@ -8,6 +8,7 @@ import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
 import UsersIcon from '../icons/UsersIcon';
 import BasicButton from '../buttons/BasicButton';
+import { useSession } from 'next-auth/react';
 
 interface JobCardProps extends JobType {
   bookmarkList: JobType[];
@@ -29,6 +30,10 @@ const JobCard = ({
     imageSrc && imageSrc.length > 0
       ? imageSrc
       : 'https://static.wanted.co.kr/images/profile_default.png';
+
+  const { status, data: session } = useSession();
+  const isAuthed = status === 'authenticated';
+
   return (
     <div className="rounded-lg text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-border hover:border-primary/30 bg-gradient-card">
       <div className="relative h-40 bg-muted">
@@ -54,19 +59,21 @@ const JobCard = ({
               <span className="font-medium">{companyName}</span>
             </div>
           </div>
-          <BookmarkButton
-            job={{
-              jobId,
-              jobName,
-              companyName,
-              imageSrc: safeSrc,
-              place,
-              career,
-              employmentType,
-            }}
-            bookmarkList={bookmarkList}
-            setBookmarkList={setBookmarkList}
-          />
+          {isAuthed && (
+            <BookmarkButton
+              job={{
+                jobId,
+                jobName,
+                companyName,
+                imageSrc: safeSrc,
+                place,
+                career,
+                employmentType,
+              }}
+              bookmarkList={bookmarkList}
+              setBookmarkList={setBookmarkList}
+            />
+          )}
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
