@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IWant
 
-## Getting Started
+> 원티드 채용공고를 웹 개발 중심으로 탐색하고, 나의 기술 스택과 공고 기술 스택의 매칭률을 확인할 수 있는 서비스
 
-First, run the development server:
+배포 URL: https://i-want-flame.vercel.app
 
-```bash
+---
+
+## 프로젝트 소개
+
+취업 준비 중 원티드의 채용공고를 볼 때, 웹 개발 공고만 집중해서 보기 어렵고 내 기술 스택과 회사 요구사항을 직접 비교하기 불편하다는 경험에서 출발했습니다.
+
+IWant는 웹 개발 공고 탐색에 특화되어 있으며, 내 기술 스택을 등록하면 공고와의 매칭률을 자동으로 계산해 보여줍니다.
+
+---
+
+## 기술 스택
+
+| 분류      | 기술                       |
+| --------- | -------------------------- |
+| Framework | Next.js 14 (App Router)    |
+| Language  | TypeScript                 |
+| Styling   | Tailwind CSS               |
+| Auth      | NextAuth.js (카카오 OAuth) |
+| ORM       | Prisma                     |
+| DB        | Supabase (PostgreSQL)      |
+| 배포      | Vercel                     |
+
+---
+
+## 주요 기능
+
+- 채용공고 탐색 - 웹 개발 공고 중심 필터링 (경력, 회사명 검색)
+- 기술 스택 매칭 - 내 기술 스택과 공고 요구 기술 스택의 매칭률 계산
+- 북마크 - 관심 공고 저장 및 모아보기
+- 마이페이지 - 이름, 기술 스택, 이력서(PDF) 관리
+- 카카오 로그인 - NextAuth.js 기반 소셜 인증
+
+## 기술적 의사결정
+
+### SSR + CSR 혼합 전략
+
+SEO와 초기 렌더링 속도가 중요한 페이지는 서버 컴포넌트로 데이터를 미리 받아 props로 전달하고, 사용자 인터랙션이 필요한 부분만 클라이언트 컴포넌트로 분리했습니다.
+
+### Tailwind CSS 선택
+
+CSS Modules, Tailwind CSS, CSS-in-JS 중 빠른 UI 개발과 일관성 있는 유틸리티 클래스 활용을 위해 Tailwind CSS를 선택했습니다.
+
+## 문제 해결
+
+### 마이페이지 렌더링 깜빡임 (Flicker) 개선
+
+문제: 클라이언트 컴포넌트에서 useEffect로 API를 호출하여 초기 렌더링 시 빈 상태가 잠깐 보이는 플리커 현상이 발생했습니다.
+
+해결: 서버 컴포넌트(page.tsx)에서 세션과 DB를 직접 조회해 데이터를 미리 준비하고, 클라이언트 컴포넌트에 props로 전달했습니다. 클라이언트 컴포넌트는 전달받은 props를 초기 state로 사용해 플리커 없이 렌더링됩니다.
+
+### 원티드 API skill_tags 데이터 누락 문제
+
+문제: 원티드 API의 skill_tags 필드가 비어있는 경우가 많아 공고 썸네일에 요구 기술을 표시할 수 없었습니다.
+
+해결: 공고 상세 API의 전체 텍스트에서 프론트엔드 관심 기술 키워드를 미리 정의하고, 공고 텍스트에 포함된 기술만 필터링하여 요구 기술로 표시합니다.
+
+### 서버/클라이언트 양쪽에서 동일 API 호출 문제
+
+문제: 클라이언트용 API 함수를 서버 컴포넌트에서 그대로 사용하면, 상대 경로(/api/...)로 인해 URL 오류 또는 CORS 에러가 발생했습니다.
+
+해결: 환경을 감지하여 서버에서는 절대 URL과 쿠키 헤더를, 클라이언트에서는 상대 URL을 사용하는 apiFetch 헬퍼 함수를 구현했습니다. next/headers는 서버 환경에서만 동적 import하여 클라이언트 번들에 포함되지 않도록 했습니다.
+
+### 모바일 환경 헤더 네비게이션 깨짐
+
+문제: 모바일처럼 브라우저 너비가 좁을 때 헤더 링크 텍스트가 깨져 보였습니다.
+
+해결: 헤더 우측에 클릭으로 토글되는 툴팁 메뉴를 구현했습니다. 모바일에서는 hover 이벤트가 없으므로, 아이콘 클릭으로 on/off하는 방식을 채택했습니다.
+
+### 다형성 Text 컴포넌트 구현
+
+문제: p 태그로 고정된 Text 컴포넌트는 시맨틱 태그를 사용할 수 없어 SSR 기반 SEO 장점을 살리지 못했습니다.
+
+해결: as prop으로 렌더링할 HTML 태그를 자유롭게 지정할 수 있도록 제네릭 타입을 활용했습니다.
+
+---
+
+## 로컬 실행
+
+```
+npm install
+cp .env.example .env.local
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+필요한 환경변수:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- DATABASE_URL
+- NEXTAUTH_URL
+- NEXTAUTH_SECRET
+- KAKAO_CLIENT_ID
+- KAKAO_CLIENT_SECRET
