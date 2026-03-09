@@ -10,6 +10,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "types": ["jest", "@testing-library/jest-dom", "node"],
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
@@ -26,9 +27,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
 }
