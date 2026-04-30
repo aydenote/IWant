@@ -1,11 +1,11 @@
-interface JobDetailSectionsProps {
+interface RepoDetailSectionsProps {
   sections: {
     title: string;
     content: string;
   }[];
 }
 
-const JobDetailSections = ({ sections }: JobDetailSectionsProps) => (
+const RepoDetailSections = ({ sections }: RepoDetailSectionsProps) => (
   <div className="space-y-6">
     {sections.map((section) => (
       <div className="space-y-2" key={section.title}>
@@ -18,4 +18,4 @@ const JobDetailSections = ({ sections }: JobDetailSectionsProps) => (
   </div>
 );
 
-export default JobDetailSections;
+export default RepoDetailSections;
