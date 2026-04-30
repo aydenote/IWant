@@ -36,6 +36,12 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
               .join('\n\n')
           : 'good first issue 또는 help wanted 이슈가 없습니다.',
     },
+    {
+      title: '기여 방법',
+      content:
+        repo.contributing?.slice(0, 6000) ??
+        'CONTRIBUTING 문서를 찾을 수 없습니다. README와 이슈 내용을 확인해 주세요.',
+    },
   ];
 
   return (

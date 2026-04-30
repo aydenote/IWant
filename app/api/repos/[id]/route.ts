@@ -41,6 +41,40 @@ const githubHeaders = {
 const decodeBase64 = (content: string) =>
   Buffer.from(content.replace(/\n/g, ''), 'base64').toString('utf-8');
 
+const CONTRIBUTING_PATHS = [
+  'CONTRIBUTING.md',
+  '.github/CONTRIBUTING.md',
+  'docs/CONTRIBUTING.md',
+  'CONTRIBUTING',
+];
+
+const fetchContentFile = async (repoFullName: string, path: string, ref: string) => {
+  const res = await fetch(
+    `https://api.github.com/repos/${repoFullName}/contents/${path}?ref=${ref}`,
+    { headers: githubHeaders, next: { revalidate: 300 } }
+  );
+
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as {
+    content?: string;
+    html_url?: string;
+    type?: string;
+  };
+
+  if (data.type && data.type !== 'file') return null;
+  return data;
+};
+
+const fetchContributingGuide = async (repoFullName: string, ref: string) => {
+  for (const path of CONTRIBUTING_PATHS) {
+    const data = await fetchContentFile(repoFullName, path, ref);
+    if (data?.content) return data;
+  }
+
+  return null;
+};
+
 const mapIssue = (issue: GitHubIssue): RepoIssueResponse => ({
   id: issue.id,
   number: issue.number,
@@ -70,11 +104,12 @@ export const GET = async (
   }
 
   const repo = (await repoRes.json()) as GitHubRepoDetail;
-  const [readmeRes, issuesRes] = await Promise.all([
+  const [readmeRes, contributingData, issuesRes] = await Promise.all([
     fetch(
       `https://api.github.com/repos/${repo.full_name}/readme?ref=${repo.default_branch}`,
       { headers: githubHeaders, next: { revalidate: 300 } }
     ),
+    fetchContributingGuide(repo.full_name, repo.default_branch),
     fetch(
       `https://api.github.com/repos/${repo.full_name}/issues?state=open&per_page=10`,
       { headers: githubHeaders, next: { revalidate: 300 } }
@@ -107,6 +142,10 @@ export const GET = async (
     defaultBranch: repo.default_branch,
     readme: readmeData?.content ? decodeBase64(readmeData.content) : null,
     readmeHtmlUrl: readmeData?.html_url ?? null,
+    contributing: contributingData?.content
+      ? decodeBase64(contributingData.content)
+      : null,
+    contributingHtmlUrl: contributingData?.html_url ?? null,
     issues: issuesData.filter((issue) => !issue.pull_request).map(mapIssue),
   };
 

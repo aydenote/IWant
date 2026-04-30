@@ -32,6 +32,8 @@ export interface RepoDetailResponse extends RepoListResponse {
   defaultBranch: string;
   readme: string | null;
   readmeHtmlUrl: string | null;
+  contributing: string | null;
+  contributingHtmlUrl: string | null;
   issues: RepoIssueResponse[];
 }
 
