@@ -1,32 +1,49 @@
 import { useEffect, useRef, useState } from 'react';
-import { JobListResponse } from '../(types)/apis';
-import { PAGE_ITEM_LIMIT } from '../(constants)/job';
-import { getJobListServer } from '../api/server/job';
+import { RepoListResponse } from '../(types)/apis';
+import { PAGE_ITEM_LIMIT } from '../(constants)/repo';
+import { getRepoListServer } from '../api/server/repo';
+
+const mergeReposById = (
+  prevRepos: RepoListResponse[],
+  nextRepos: RepoListResponse[]
+) => {
+  const repoMap = new Map<number, RepoListResponse>();
+
+  [...prevRepos, ...nextRepos].forEach((repo) => {
+    repoMap.set(repo.id, repo);
+  });
+
+  return Array.from(repoMap.values());
+};
 
 export const useInfiniteScroll = (
-  initialJobs: JobListResponse[],
+  initialRepos: RepoListResponse[],
   query?: string
 ) => {
-  const [jobs, setJobs] = useState(initialJobs);
+  const [repos, setRepos] = useState(initialRepos);
   const [page, setPage] = useState(1);
-  const [offset, setOffset] = useState(initialJobs.length);
+  const [offset, setOffset] = useState(initialRepos.length);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(true);
 
   const anchorRef = useRef<HTMLDivElement | null>(null);
+  const loadingRef = useRef(false);
 
   useEffect(() => {
     if (!hasNext) return;
     if (!anchorRef.current) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
+        if (entries[0].isIntersecting && !loadingRef.current) {
+          loadingRef.current = true;
           setIsLoading(true);
-          getJobListServer(offset, query).then((nextJobs) => {
-            setJobs((prev) => [...prev, ...nextJobs]);
+          getRepoListServer(offset, query).then((nextRepos) => {
+            setRepos((prev) => mergeReposById(prev, nextRepos));
             setPage((prev) => prev + 1);
             setOffset((prev) => prev + PAGE_ITEM_LIMIT);
-            setHasNext(nextJobs.length > 0);
+            setHasNext(nextRepos.length > 0);
+          }).finally(() => {
+            loadingRef.current = false;
             setIsLoading(false);
           });
         }
@@ -35,7 +52,7 @@ export const useInfiniteScroll = (
     );
     observer.observe(anchorRef.current);
     return () => observer.disconnect();
-  }, [page, isLoading, offset]);
+  }, [page, offset, query, hasNext]);
 
-  return { jobs, isLoading, anchorRef };
+  return { repos, isLoading, anchorRef };
 };
