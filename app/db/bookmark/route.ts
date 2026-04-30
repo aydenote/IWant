@@ -13,40 +13,40 @@ export const POST = async (req: Request) => {
 
   const body = await req.json();
   const {
-    jobId,
-    jobName,
-    companyName,
+    repoId,
+    repoName,
+    ownerName,
     imageSrc,
-    place,
-    career,
-    employmentType,
+    stars,
+    language,
+    openIssues,
   } = body ?? {};
 
-  if (typeof jobId !== 'number') {
+  if (typeof repoId !== 'number') {
     return NextResponse.json(
-      { ok: false, message: 'Invalid jobId' },
+      { ok: false, message: 'Invalid repoId' },
       { status: 400 }
     );
   }
-  if (!jobName || !companyName || !place || !career || !employmentType) {
+  if (!repoName || !ownerName || !stars || !language || !openIssues) {
     return NextResponse.json(
       { ok: false, message: 'Missing fields' },
       { status: 400 }
     );
   }
 
-  await prisma.favorite.upsert({
-    where: { userId_jobId: { userId, jobId } },
-    update: { jobName, companyName, imageSrc, place, career, employmentType },
+  await prisma.repoBookmark.upsert({
+    where: { userId_repoId: { userId, repoId } },
+    update: { repoName, ownerName, imageSrc, stars, language, openIssues },
     create: {
       userId,
-      jobId,
-      jobName,
-      companyName,
+      repoId,
+      repoName,
+      ownerName,
       imageSrc: imageSrc ?? null,
-      place,
-      career,
-      employmentType,
+      stars,
+      language,
+      openIssues,
     },
   });
 
@@ -58,16 +58,16 @@ export const DELETE = async (req: Request) => {
   const userId = session?.user?.id;
   if (!userId) return NextResponse.json({ ok: false }, { status: 401 });
 
-  const { jobId } = await req.json();
-  if (typeof jobId !== 'number') {
+  const { repoId } = await req.json();
+  if (typeof repoId !== 'number') {
     return NextResponse.json(
-      { ok: false, message: 'Invalid jobId' },
+      { ok: false, message: 'Invalid repoId' },
       { status: 400 }
     );
   }
 
-  await prisma.favorite.deleteMany({
-    where: { userId, jobId },
+  await prisma.repoBookmark.deleteMany({
+    where: { userId, repoId },
   });
 
   return NextResponse.json({ ok: true });

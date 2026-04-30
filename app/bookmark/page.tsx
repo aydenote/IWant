@@ -3,12 +3,12 @@ import BookmarkClient from './BookmarkClient';
 import { getBookmarkServer } from '../api/server/bookmark';
 
 export default async function Page() {
-  const bookmarkJobList = await getBookmarkServer();
+  const bookmarkRepoList = await getBookmarkServer();
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
       <Header />
-      <BookmarkClient bookmarkJobList={bookmarkJobList} />
+      <BookmarkClient bookmarkRepoList={bookmarkRepoList} />
     </div>
   );
 }

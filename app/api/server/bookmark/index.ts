@@ -6,7 +6,7 @@ export const getBookmarkServer = async () => {
 
   if (!isAuth) return [];
 
-  return prisma.favorite.findMany({
+  return prisma.repoBookmark.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
   });

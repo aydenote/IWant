@@ -1,11 +1,11 @@
-import { JobType } from '../../../(types)/common';
+import { RepoType } from '../../../(types)/common';
 
-export const addBookmarkClient = async (job: JobType) => {
+export const addBookmarkClient = async (repo: RepoType) => {
   try {
     const res = await fetch(`/db/bookmark`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(job),
+      body: JSON.stringify(repo),
     });
     return res.ok;
   } catch (err) {
@@ -13,12 +13,12 @@ export const addBookmarkClient = async (job: JobType) => {
   }
 };
 
-export const deleteBookmarkClient = async (jobId: number) => {
+export const deleteBookmarkClient = async (repoId: number) => {
   try {
     const res = await fetch('/db/bookmark', {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ jobId }),
+      body: JSON.stringify({ repoId }),
     });
     return res.ok;
   } catch (err) {

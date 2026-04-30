@@ -2,7 +2,7 @@
 
 import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
-import { JobType } from '../../(types)/common';
+import { RepoType } from '../../(types)/common';
 import { useToast } from '../toast/Toast';
 import {
   addBookmarkClient,
@@ -10,40 +10,40 @@ import {
 } from '../../api/client/bookmark';
 
 interface BookmarkButtonProps {
-  job: JobType;
-  bookmarkList: JobType[];
-  setBookmarkList: React.Dispatch<React.SetStateAction<JobType[]>>;
+  repo: RepoType;
+  bookmarkList: RepoType[];
+  setBookmarkList: React.Dispatch<React.SetStateAction<RepoType[]>>;
 }
 
 const BookmarkButton = ({
-  job,
+  repo,
   bookmarkList,
   setBookmarkList,
 }: BookmarkButtonProps) => {
-  const bookmarkJobIds = bookmarkList.map(
-    (bookmark: JobType) => bookmark.jobId
+  const bookmarkRepoIds = bookmarkList.map(
+    (bookmark: RepoType) => bookmark.repoId
   );
-  const isBookmarked = bookmarkJobIds.includes(job.jobId);
+  const isBookmarked = bookmarkRepoIds.includes(repo.repoId);
   const { showToast } = useToast();
 
   const toggleBookmark = async () => {
     if (isBookmarked) {
-      const success = await deleteBookmarkClient(job.jobId);
+      const success = await deleteBookmarkClient(repo.repoId);
       setBookmarkList((prev) =>
-        prev.filter((bookmark) => bookmark.jobId !== job.jobId)
+        prev.filter((bookmark) => bookmark.repoId !== repo.repoId)
       );
       if (success) {
-        showToast('북마크가 성공적으로 제거되었습니다!', 'success');
+        showToast('관심 레포에서 제거되었습니다.', 'success');
       } else {
-        showToast('북마크 제거에 실패했습니다.', 'error');
+        showToast('관심 레포 제거에 실패했습니다.', 'error');
       }
     } else {
-      const success = await addBookmarkClient(job);
-      setBookmarkList((prev) => [...prev, job]);
+      const success = await addBookmarkClient(repo);
+      setBookmarkList((prev) => [...prev, repo]);
       if (success) {
-        showToast('북마크가 성공적으로 저장되었습니다!', 'success');
+        showToast('관심 레포로 저장되었습니다.', 'success');
       } else {
-        showToast('북마크 저장에 실패했습니다.', 'error');
+        showToast('관심 레포 저장에 실패했습니다.', 'error');
       }
     }
   };
