@@ -59,6 +59,7 @@ const fetchContentFile = async (repoFullName: string, path: string, ref: string)
   const data = (await res.json()) as {
     content?: string;
     html_url?: string;
+    path?: string;
     type?: string;
   };
 
@@ -117,7 +118,11 @@ export const GET = async (
   ]);
 
   const readmeData = readmeRes.ok
-    ? ((await readmeRes.json()) as { content?: string; html_url?: string })
+    ? ((await readmeRes.json()) as {
+        content?: string;
+        html_url?: string;
+        path?: string;
+      })
     : null;
   const issuesData = issuesRes.ok ? ((await issuesRes.json()) as GitHubIssue[]) : [];
 
@@ -142,10 +147,12 @@ export const GET = async (
     defaultBranch: repo.default_branch,
     readme: readmeData?.content ? decodeBase64(readmeData.content) : null,
     readmeHtmlUrl: readmeData?.html_url ?? null,
+    readmePath: readmeData?.path ?? null,
     contributing: contributingData?.content
       ? decodeBase64(contributingData.content)
       : null,
     contributingHtmlUrl: contributingData?.html_url ?? null,
+    contributingPath: contributingData?.path ?? null,
     issues: issuesData.filter((issue) => !issue.pull_request).map(mapIssue),
   };
 
