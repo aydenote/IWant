@@ -16,7 +16,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
-  favorites     Favorite[]
+  repoBookmarks RepoBookmark[]
 
   profile   Profile?
 }
@@ -73,20 +73,20 @@ model Profile {
   updatedAt DateTime @updatedAt
 }
 
-model Favorite {
+model RepoBookmark {
   id             String   @id @default(cuid())
   userId         String
-  jobId          Int
-  jobName        String
-  companyName    String
+  repoId         Int
+  repoName       String
+  ownerName      String
   imageSrc       String?
-  place          String
-  career         String
-  employmentType String
+  stars          String
+  language       String
+  openIssues     String
   createdAt      DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, jobId])
+  @@unique([userId, repoId])
   @@index([userId])
 }
