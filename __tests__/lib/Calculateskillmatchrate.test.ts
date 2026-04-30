@@ -3,7 +3,7 @@ import {
   extractSkillKeywords,
 } from '../../app/(hooks)/useSkillComparison';
 import '@testing-library/jest-dom';
-import { JobDetailResponse } from '../../app/(types)/apis';
+import { RepoDetailResponse } from '../../app/(types)/apis';
 
 describe('스킬 매칭 계산 함수', () => {
   test('매칭되는 스킬이 없으면 매칭률은 0이 반환된다.', () => {
@@ -72,40 +72,62 @@ describe('스킬 매칭 계산 함수', () => {
 });
 
 describe('extractSkillKeywords', () => {
-  const makeJob = (text: string) =>
+  const makeRepo = (
+    overrides: Partial<Pick<RepoDetailResponse, 'language' | 'description' | 'readme' | 'topics'>>
+  ) =>
     ({
-      detail: {
-        main_tasks: text,
-        requirements: '',
-        preferred_points: '',
+      id: 1,
+      name: 'repo',
+      fullName: 'owner/repo',
+      description: null,
+      htmlUrl: 'https://github.com/owner/repo',
+      owner: {
+        login: 'owner',
+        avatarUrl: 'https://github.com/avatar.png',
+        htmlUrl: 'https://github.com/owner',
       },
-    }) as JobDetailResponse;
+      language: null,
+      topics: [],
+      stars: 0,
+      forks: 0,
+      openIssues: 0,
+      updatedAt: '2026-01-01T00:00:00Z',
+      license: null,
+      defaultBranch: 'main',
+      readme: null,
+      readmeHtmlUrl: null,
+      issues: [],
+      ...overrides,
+    }) as RepoDetailResponse;
 
-  test('공고 본문에 포함된 기술 키워드가 추출된다.', () => {
-    const job = makeJob('React와 TypeScript를 사용한 프론트엔드 개발');
-    const result = extractSkillKeywords(job);
+  test('레포 README에 포함된 기술 키워드가 추출된다.', () => {
+    const repo = makeRepo({
+      readme: 'React와 TypeScript를 사용한 프론트엔드 개발',
+    });
+    const result = extractSkillKeywords(repo);
 
     expect(result).toContain('React');
     expect(result).toContain('TypeScript');
   });
 
-  test('공고 본문에 없는 키워드는 추출되지 않는다.', () => {
-    const job = makeJob('Java와 Spring을 사용한 백엔드 개발');
-    const result = extractSkillKeywords(job);
+  test('레포 설명에 없는 키워드는 추출되지 않는다.', () => {
+    const repo = makeRepo({
+      readme: 'Java와 Spring을 사용한 백엔드 개발',
+    });
+    const result = extractSkillKeywords(repo);
 
     expect(result).not.toContain('Java');
     expect(result).not.toContain('Spring');
   });
 
-  test('main_tasks, requirements, preferred_points 세 필드 모두에서 키워드를 추출한다', () => {
-    const job = {
-      detail: {
-        main_tasks: 'React를 활용한 개발',
-        requirements: 'TypeScript 경험자',
-        preferred_points: 'Next.js 경험 우대',
-      },
-    } as JobDetailResponse;
-    const result = extractSkillKeywords(job);
+  test('language, description, readme, topics 모두에서 키워드를 추출한다', () => {
+    const repo = makeRepo({
+      language: 'TypeScript',
+      description: 'React를 활용한 개발',
+      readme: 'Next.js 경험 우대',
+      topics: ['frontend'],
+    });
+    const result = extractSkillKeywords(repo);
 
     expect(result).toContain('React');
     expect(result).toContain('TypeScript');
@@ -113,16 +135,18 @@ describe('extractSkillKeywords', () => {
   });
 
   test('동일한 키워드가 여러 번 등장해도 중복 없이 반환한다', () => {
-    const job = makeJob('React 개발자, React 경험자 우대, React 필수');
-    const result = extractSkillKeywords(job);
+    const repo = makeRepo({
+      readme: 'React 개발자, React 경험자 우대, React 필수',
+    });
+    const result = extractSkillKeywords(repo);
     const reactCount = result.filter((s) => s === 'React').length;
 
     expect(reactCount).toBe(1);
   });
 
-  test('공고 본문이 비어 있으면 빈 배열을 반환한다', () => {
-    const job = makeJob('');
-    const result = extractSkillKeywords(job);
+  test('레포 기술 정보가 비어 있으면 빈 배열을 반환한다', () => {
+    const repo = makeRepo({});
+    const result = extractSkillKeywords(repo);
 
     expect(result).toHaveLength(0);
   });

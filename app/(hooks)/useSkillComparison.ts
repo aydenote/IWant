@@ -1,11 +1,12 @@
 import { FRONTEND_SKILL_KEYWORDS } from '../(constants)/skills';
-import { JobDetailResponse } from '../(types)/apis';
+import { RepoDetailResponse } from '../(types)/apis';
 
-export const extractSkillKeywords = (job: JobDetailResponse): string[] => {
-  const jobDescription = [
-    job.detail.main_tasks,
-    job.detail.requirements,
-    job.detail.preferred_points,
+export const extractSkillKeywords = (repo: RepoDetailResponse): string[] => {
+  const repoDescription = [
+    repo.language,
+    repo.description,
+    repo.readme,
+    ...repo.topics,
   ].join(' ');
   const foundKeywords = new Set<string>();
   const sortedKeywords = [...FRONTEND_SKILL_KEYWORDS].sort(
@@ -22,7 +23,7 @@ export const extractSkillKeywords = (job: JobDetailResponse): string[] => {
       'gi'
     );
 
-    if (pattern.test(jobDescription)) {
+    if (pattern.test(repoDescription)) {
       const originalKeyword = FRONTEND_SKILL_KEYWORDS.find(
         (skill) => skill.toLowerCase() === keyword.toLowerCase()
       );
