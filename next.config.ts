@@ -4,6 +4,10 @@ const IMAGE_REMOTE_PATTERNS = [
     protocol: 'https',
     hostname: '*.wanted.co.kr',
   },
+  {
+    protocol: 'https',
+    hostname: 'avatars.githubusercontent.com',
+  },
 ];
 
 /** @type {import('next').NextConfig} */

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { JobType } from '../../(types)/common';
+import { RepoType } from '../../(types)/common';
 import BuildingIcon from '../icons/BuildingIcon';
 import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
@@ -10,22 +10,22 @@ import UsersIcon from '../icons/UsersIcon';
 import BasicButton from '../buttons/BasicButton';
 import { useSession } from 'next-auth/react';
 
-interface JobCardProps extends JobType {
-  bookmarkList: JobType[];
-  setBookmarkList: React.Dispatch<React.SetStateAction<JobType[]>>;
+interface RepoCardProps extends RepoType {
+  bookmarkList: RepoType[];
+  setBookmarkList: React.Dispatch<React.SetStateAction<RepoType[]>>;
 }
 
-const JobCard = ({
-  jobId,
-  jobName,
-  companyName,
+const RepoCard = ({
+  repoId,
+  repoName,
+  ownerName,
   imageSrc,
-  place,
-  career,
-  employmentType,
+  stars,
+  language,
+  openIssues,
   bookmarkList,
   setBookmarkList,
-}: JobCardProps) => {
+}: RepoCardProps) => {
   const safeSrc =
     imageSrc && imageSrc.length > 0
       ? imageSrc
@@ -41,7 +41,7 @@ const JobCard = ({
           src={safeSrc}
           width={400}
           height={400}
-          alt="회사 이미지"
+          alt="레포지토리 소유자 이미지"
           className="w-full h-full object-cover"
           loading="eager"
         />
@@ -49,26 +49,26 @@ const JobCard = ({
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-2 flex-1">
-            <Link href={`/job/${jobId}`}>
+            <Link href={`/repo/${repoId}`}>
               <h3 className="text-lg font-semibold text-foreground hover:text-primary transition-colors line-clamp-1">
-                {jobName}
+                {repoName}
               </h3>
             </Link>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <BuildingIcon className="h-4 w-4" />
-              <span className="font-medium">{companyName}</span>
+              <span className="font-medium">{ownerName}</span>
             </div>
           </div>
           {isAuthed && (
             <BookmarkButton
-              job={{
-                jobId,
-                jobName,
-                companyName,
+              repo={{
+                repoId,
+                repoName,
+                ownerName,
                 imageSrc: safeSrc,
-                place,
-                career,
-                employmentType,
+                stars,
+                language,
+                openIssues,
               }}
               bookmarkList={bookmarkList}
               setBookmarkList={setBookmarkList}
@@ -78,21 +78,21 @@ const JobCard = ({
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <MapPinIcon className="h-4 w-4" />
-            <span>{place}</span>
+            <span>{stars}</span>
           </div>
           <div className="flex items-center gap-1">
             <UsersIcon className="h-4 w-4" />
-            <span>{employmentType === 'regular' ? '정직원' : '인턴'}</span>
+            <span>{openIssues}</span>
           </div>
         </div>
         <div className="pt-2 border-t border-border" />
         <div className="flex items-center justify-between pt-2">
           <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-accent text-accent">
-            {career}
+            {language}
           </div>
-          <a href={`/job/${jobId}`}>
+          <a href={`/repo/${repoId}`}>
             <BasicButton className="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-gradient-hero">
-              상세보기
+              자세히 보기
             </BasicButton>
           </a>
         </div>
@@ -101,4 +101,4 @@ const JobCard = ({
   );
 };
 
-export default JobCard;
+export default RepoCard;

@@ -8,7 +8,7 @@ import { authOptions } from '../api/auth/[...nextauth]/route';
 export const metadata = {
   title: 'IWant',
   description:
-    'JD와 개인이 입력한 스킬셋으로 본인에게 맞는 포지션을 찾도록 도와주는 서비스입니다',
+    '개인이 입력한 기술스택으로 기여 가능한 오픈소스 레포를 찾도록 도와주는 서비스입니다',
 };
 
 export default async function RootLayout({

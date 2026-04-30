@@ -24,10 +24,10 @@ const Hero = ({ value, onChange, onSubmit, onReset }: heroProps) => {
     <section className="bg-gradient-hero py-20 px-4">
       <div className="container mx-auto text-center space-y-6">
         <Text textSize="4xl" textBold="xl" textColor="white">
-          당신의 커리어를 위한 최고의 기회
+          기여할 오픈소스 레포를 찾아보세요
         </Text>
         <Text textSize="lg" textColor="white">
-          JD와 개인화된 추천으로 완벽한 포지션을 찾아보세요
+          내 기술스택과 맞는 언어, 이슈, README를 한 곳에서 확인하세요
         </Text>
 
         <div className="pt-4">
@@ -39,7 +39,7 @@ const Hero = ({ value, onChange, onSubmit, onReset }: heroProps) => {
                 onChange={(e) => onChange(e.target.value)}
                 type="text"
                 className="flex w-full rounded-md border bg-background px-3 py-2 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-12 pr-40 h-14 text-base shadow-md border-border focus:border-primary"
-                placeholder="회사명을 검색하세요..."
+                placeholder="레포, 언어, 토픽을 검색하세요..."
               />
 
               {isSearch && (

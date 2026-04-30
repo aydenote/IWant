@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import Hero from './Hero';
-import JobListClient from './JobListClient';
-import type { JobListResponse } from '../(types)/apis';
-import { JobType } from '../(types)/common';
+import RepoListClient from './RepoListClient';
+import type { RepoListResponse } from '../(types)/apis';
+import { RepoType } from '../(types)/common';
 
 interface HomeClientProps {
-  initialJobList: JobListResponse[];
-  bookmarkJobList: JobType[];
+  initialRepoList: RepoListResponse[];
+  bookmarkRepoList: RepoType[];
 }
-const HomeClient = ({ initialJobList, bookmarkJobList }: HomeClientProps) => {
+const HomeClient = ({ initialRepoList, bookmarkRepoList }: HomeClientProps) => {
   const [query, setQuery] = useState('');
-  const [bookmarkList, setBookmarkList] = useState<JobType[]>(bookmarkJobList);
+  const [bookmarkList, setBookmarkList] = useState<RepoType[]>(bookmarkRepoList);
 
   return (
     <>
@@ -22,8 +22,8 @@ const HomeClient = ({ initialJobList, bookmarkJobList }: HomeClientProps) => {
         onSubmit={(q) => setQuery(q)}
         onReset={() => setQuery('')}
       />
-      <JobListClient
-        jobList={initialJobList}
+      <RepoListClient
+        repoList={initialRepoList}
         query={query}
         bookmarkList={bookmarkList}
         setBookmarkList={setBookmarkList}

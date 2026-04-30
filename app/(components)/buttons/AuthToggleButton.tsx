@@ -12,9 +12,9 @@ const AuthToggleButton = () => {
 
   const isAuthed = status === 'authenticated';
   const menuList = [
-    { label: '채용공고', href: '/' },
+    { label: '오픈소스 레포', href: '/' },
     { label: '마이페이지', href: '/mypage' },
-    { label: '북마크', href: '/bookmark' },
+    { label: '관심 레포', href: '/bookmark' },
   ];
 
   return (
