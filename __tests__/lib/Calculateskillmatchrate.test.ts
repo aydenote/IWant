@@ -96,6 +96,8 @@ describe('extractSkillKeywords', () => {
       defaultBranch: 'main',
       readme: null,
       readmeHtmlUrl: null,
+      contributing: null,
+      contributingHtmlUrl: null,
       issues: [],
       ...overrides,
     }) as RepoDetailResponse;
