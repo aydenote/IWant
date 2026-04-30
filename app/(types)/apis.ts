@@ -1,43 +1,38 @@
-export interface JobListResponse {
+export interface RepoListResponse {
   id: number;
-  company: { name: string; id: number };
-  address: { location: string; district: string };
-  position: string;
-  annual_from: number;
-  skill_tags: number[];
-  employment_type: 'regular' | 'intern';
-  title_img: {
-    origin: string;
-    thumb: string;
+  name: string;
+  fullName: string;
+  description: string | null;
+  htmlUrl: string;
+  owner: {
+    login: string;
+    avatarUrl: string;
+    htmlUrl: string;
   };
-  annual_to: number;
+  language: string | null;
+  topics: string[];
+  stars: number;
+  forks: number;
+  openIssues: number;
+  updatedAt: string;
+  license: string | null;
 }
 
-export interface JobDetailResponse {
-  title_images: string[];
-  detail: {
-    benefits: string;
-    hire_rounds: string;
-    intro: string;
-    main_tasks: string;
-    preferred_points: string;
-    requirements: string;
-    position: string;
-  };
-  company: {
-    name: string;
-  };
-  skill_tags: {
-    tag_type_id: number;
-    text: string;
-  }[];
-  address: {
-    district: string;
-    location: string;
-  };
-  employment_type: 'regular' | 'intern';
-  annual_to: number;
-  annual_from: number;
+export interface RepoIssueResponse {
+  id: number;
+  number: number;
+  title: string;
+  htmlUrl: string;
+  labels: string[];
+  comments: number;
+  createdAt: string;
+}
+
+export interface RepoDetailResponse extends RepoListResponse {
+  defaultBranch: string;
+  readme: string | null;
+  readmeHtmlUrl: string | null;
+  issues: RepoIssueResponse[];
 }
 
 export interface ProfileResponse {

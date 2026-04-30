@@ -11,12 +11,12 @@ export interface SaveProfileType {
   name: ProfileNameType;
 }
 
-export interface JobType {
-  jobId: number;
-  jobName: string;
-  companyName: string;
+export interface RepoType {
+  repoId: number;
+  repoName: string;
+  ownerName: string;
   imageSrc?: string | null;
-  place: string;
-  career: string;
-  employmentType: string;
+  stars: string;
+  language: string;
+  openIssues: string;
 }
