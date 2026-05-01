@@ -52,9 +52,14 @@ interface GitHubCommunityProfile {
   };
 }
 
-const githubHeaders = {
-  Accept: 'application/vnd.github+json',
-  'X-GitHub-Api-Version': '2022-11-28',
+const getGithubHeaders = () => {
+  const token = process.env.GITHUB_TOKEN ?? process.env.GITHUB_ACCESS_TOKEN;
+
+  return {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 };
 
 const decodeBase64 = (content: string) =>
@@ -81,7 +86,7 @@ const CONTRIBUTING_PATHS = [
 const fetchContentFile = async (repoFullName: string, path: string, ref: string) => {
   const res = await fetch(
     `https://api.github.com/repos/${repoFullName}/contents/${path}?ref=${ref}`,
-    { headers: githubHeaders, next: { revalidate: 300 } }
+    { headers: getGithubHeaders(), next: { revalidate: 300 } }
   );
 
   if (!res.ok) return null;
@@ -108,7 +113,7 @@ const fetchContributingGuide = async (repoFullName: string, ref: string) => {
 
 const fetchContentUrl = async (url: string) => {
   const res = await fetch(url, {
-    headers: githubHeaders,
+    headers: getGithubHeaders(),
     next: { revalidate: 300 },
   });
 
@@ -122,7 +127,7 @@ const fetchContentUrl = async (url: string) => {
 const fetchCommunityContributingGuide = async (repoFullName: string) => {
   const res = await fetch(
     `https://api.github.com/repos/${repoFullName}/community/profile`,
-    { headers: githubHeaders, next: { revalidate: 300 } }
+    { headers: getGithubHeaders(), next: { revalidate: 300 } }
   );
 
   if (!res.ok) return null;
@@ -161,13 +166,14 @@ export const GET = async (
   const { id } = await params;
 
   const repoRes = await fetch(`https://api.github.com/repositories/${id}`, {
-    headers: githubHeaders,
+    headers: getGithubHeaders(),
     next: { revalidate: 300 },
   });
 
   if (!repoRes.ok) {
+    const error = await repoRes.json().catch(() => null);
     return NextResponse.json(
-      { ok: false, message: 'Failed to fetch repository' },
+      { ok: false, message: error?.message ?? 'Failed to fetch repository' },
       { status: repoRes.status }
     );
   }
@@ -176,12 +182,12 @@ export const GET = async (
   const [readmeRes, localContributingData, issuesRes] = await Promise.all([
     fetch(
       `https://api.github.com/repos/${repo.full_name}/readme?ref=${repo.default_branch}`,
-      { headers: githubHeaders, next: { revalidate: 300 } }
+      { headers: getGithubHeaders(), next: { revalidate: 300 } }
     ),
     fetchContributingGuide(repo.full_name, repo.default_branch),
     fetch(
       `https://api.github.com/repos/${repo.full_name}/issues?state=open&per_page=10`,
-      { headers: githubHeaders, next: { revalidate: 300 } }
+      { headers: getGithubHeaders(), next: { revalidate: 300 } }
     ),
   ]);
 

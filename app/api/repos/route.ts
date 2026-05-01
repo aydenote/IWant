@@ -21,6 +21,16 @@ interface GitHubRepo {
   license: { name: string } | null;
 }
 
+const getGithubHeaders = () => {
+  const token = process.env.GITHUB_TOKEN ?? process.env.GITHUB_ACCESS_TOKEN;
+
+  return {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
 const mapRepo = (repo: GitHubRepo): RepoListResponse => ({
   id: repo.id,
   name: repo.name,
@@ -67,16 +77,17 @@ export const GET = async (req: Request) => {
   });
 
   const res = await fetch(`https://api.github.com/search/repositories?${params}`, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
+    headers: getGithubHeaders(),
     next: { revalidate: 300 },
   });
 
   if (!res.ok) {
+    const error = await res.json().catch(() => null);
     return NextResponse.json(
-      { ok: false, message: 'Failed to fetch repositories' },
+      {
+        ok: false,
+        message: error?.message ?? 'Failed to fetch repositories',
+      },
       { status: res.status }
     );
   }
