@@ -21,6 +21,7 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
     {
       title: 'README',
       content: repo.readme?.slice(0, 6000) ?? 'README를 불러올 수 없습니다.',
+      sourcePath: repo.readmePath,
     },
     {
       title: '기여 이슈',
@@ -29,7 +30,7 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
           ? repo.issues
               .map(
                 (issue) =>
-                  `#${issue.number} ${issue.title}\n${issue.htmlUrl}\nLabels: ${
+                  `### Issue #${issue.number}\n\n${issue.title}\n\n${issue.htmlUrl}\n\nLabels: ${
                     issue.labels.join(', ') || '없음'
                   }`
               )
@@ -38,9 +39,14 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
     },
     {
       title: '기여 방법',
-      content:
-        repo.contributing?.slice(0, 6000) ??
-        'CONTRIBUTING 문서를 찾을 수 없습니다. README와 이슈 내용을 확인해 주세요.',
+      content: repo.contributing?.slice(0, 6000) ?? '',
+      fallbackContent: {
+        original:
+          'No CONTRIBUTING document was found. Please check the README and open issues.',
+        ko: 'CONTRIBUTING 문서를 찾을 수 없습니다. README와 이슈 내용을 확인해 주세요.',
+        en: 'No CONTRIBUTING document was found. Please check the README and open issues.',
+      },
+      sourcePath: repo.contributingPath,
     },
   ];
 
@@ -60,7 +66,11 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
         <div className="lg:col-span-2 space-y-6">
           <div className="rounded-lg border text-card-foreground p-8 space-y-6 bg-gradient-card shadow-lg">
             <RepoSummaryCard repo={repo} />
-            <RepoDetailSections sections={detailSections} />
+            <RepoDetailSections
+              defaultBranch={repo.defaultBranch}
+              repoFullName={repo.fullName}
+              sections={detailSections}
+            />
             <div className="pt-6 border-t">
               <a
                 href={repo.htmlUrl}

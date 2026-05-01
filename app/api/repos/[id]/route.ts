@@ -33,6 +33,25 @@ interface GitHubIssue {
   pull_request?: unknown;
 }
 
+interface GitHubContentFile {
+  content?: string;
+  download_url?: string | null;
+  html_url?: string;
+  path?: string;
+  type?: string;
+}
+
+interface GitHubCommunityProfile {
+  files?: {
+    contributing?: {
+      url?: string;
+      download_url?: string | null;
+      html_url?: string;
+      path?: string;
+    } | null;
+  };
+}
+
 const githubHeaders = {
   Accept: 'application/vnd.github+json',
   'X-GitHub-Api-Version': '2022-11-28',
@@ -46,6 +65,17 @@ const CONTRIBUTING_PATHS = [
   '.github/CONTRIBUTING.md',
   'docs/CONTRIBUTING.md',
   'CONTRIBUTING',
+  '.github/CONTRIBUTING',
+  'docs/CONTRIBUTING',
+  'contributing.md',
+  '.github/contributing.md',
+  'docs/contributing.md',
+  'CONTRIBUTING.rst',
+  '.github/CONTRIBUTING.rst',
+  'docs/CONTRIBUTING.rst',
+  'CONTRIBUTING.adoc',
+  '.github/CONTRIBUTING.adoc',
+  'docs/CONTRIBUTING.adoc',
 ];
 
 const fetchContentFile = async (repoFullName: string, path: string, ref: string) => {
@@ -74,6 +104,44 @@ const fetchContributingGuide = async (repoFullName: string, ref: string) => {
   }
 
   return null;
+};
+
+const fetchContentUrl = async (url: string) => {
+  const res = await fetch(url, {
+    headers: githubHeaders,
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as GitHubContentFile;
+  if (data.type && data.type !== 'file') return null;
+  return data;
+};
+
+const fetchCommunityContributingGuide = async (repoFullName: string) => {
+  const res = await fetch(
+    `https://api.github.com/repos/${repoFullName}/community/profile`,
+    { headers: githubHeaders, next: { revalidate: 300 } }
+  );
+
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as GitHubCommunityProfile;
+  const contributing = data.files?.contributing;
+
+  if (!contributing?.url) return null;
+
+  const content = await fetchContentUrl(contributing.url);
+
+  if (!content?.content) return null;
+
+  return {
+    ...content,
+    download_url: contributing.download_url ?? content.download_url,
+    html_url: contributing.html_url ?? content.html_url,
+    path: contributing.path ?? content.path,
+  };
 };
 
 const mapIssue = (issue: GitHubIssue): RepoIssueResponse => ({
@@ -105,7 +173,7 @@ export const GET = async (
   }
 
   const repo = (await repoRes.json()) as GitHubRepoDetail;
-  const [readmeRes, contributingData, issuesRes] = await Promise.all([
+  const [readmeRes, localContributingData, issuesRes] = await Promise.all([
     fetch(
       `https://api.github.com/repos/${repo.full_name}/readme?ref=${repo.default_branch}`,
       { headers: githubHeaders, next: { revalidate: 300 } }
@@ -124,6 +192,9 @@ export const GET = async (
         path?: string;
       })
     : null;
+  const contributingData =
+    localContributingData ??
+    (await fetchCommunityContributingGuide(repo.full_name));
   const issuesData = issuesRes.ok ? ((await issuesRes.json()) as GitHubIssue[]) : [];
 
   const data: RepoDetailResponse = {
