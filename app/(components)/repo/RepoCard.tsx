@@ -90,11 +90,11 @@ const RepoCard = ({
           <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-accent text-accent">
             {language}
           </div>
-          <a href={`/repo/${repoId}`}>
+          <Link href={`/repo/${repoId}`}>
             <BasicButton className="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-gradient-hero">
               자세히 보기
             </BasicButton>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
