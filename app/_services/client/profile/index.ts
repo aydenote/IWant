@@ -1,4 +1,4 @@
-import { SaveProfileType } from '../../../_types/common';
+import { SaveProfileType } from '../../../_types/profile';
 
 export const updateProfileClient = async ({
   techStack,

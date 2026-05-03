@@ -2,7 +2,7 @@ import Text from '../../../_components/commons/Text';
 import BuildingIcon from '../../../_components/icons/BuildingIcon';
 import MapPinIcon from '../../../_components/icons/MapPinIcon';
 import UsersIcon from '../../../_components/icons/UsersIcon';
-import { RepoDetailResponse } from '../../../_types/apis';
+import { RepoDetailResponse } from '../../../_types/repo';
 
 const RepoSummaryCard = ({ repo }: { repo: RepoDetailResponse }) => (
   <div className="space-y-4 pb-6 border-b">

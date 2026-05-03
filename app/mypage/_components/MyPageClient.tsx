@@ -5,7 +5,8 @@ import Text from '../../_components/commons/Text';
 import Profile from './Profile';
 import Resume from './Resume';
 import TabButton from './TabButton';
-import { ProfileResponse, ResumeResponse } from '../../_types/apis';
+import { ProfileResponse } from '../../_types/profile';
+import { ResumeResponse } from '../../_types/resume';
 
 interface MyPageClientProps {
   profile: ProfileResponse | null;

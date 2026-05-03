@@ -8,7 +8,7 @@ import Input from '../../_components/forms/Input';
 import UploadIcon from '../../_components/icons/UploadIcon';
 import { formatDate } from '../../_utils/common';
 import { useToast } from '../../_components/toast/Toast';
-import { ResumeResponse } from '../../_types/apis';
+import { ResumeResponse } from '../../_types/resume';
 import {
   deleteResumeClient,
   updateResumeClient,

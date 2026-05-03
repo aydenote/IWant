@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RepoType } from '../../_types/common';
+import { RepoType } from '../../_types/repo';
 import RepoCard from '../../_components/repo/RepoCard';
 
 interface BookmarkClientProps {

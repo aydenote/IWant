@@ -1,4 +1,4 @@
-import type { RepoDetailResponse, RepoIssueResponse } from '../../../_types/apis';
+import type { RepoDetailResponse, RepoIssueResponse } from '../../../_types/repo';
 import type { GitHubContentFile, GitHubIssue, GitHubRepoDetail } from './types';
 
 const decodeBase64 = (content: string) =>

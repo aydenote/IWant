@@ -1,6 +1,6 @@
 'use server';
 
-import { RepoDetailResponse } from '../../../_types/apis';
+import { RepoDetailResponse } from '../../../_types/repo';
 import { headers } from 'next/headers';
 
 const getOrigin = async () => {

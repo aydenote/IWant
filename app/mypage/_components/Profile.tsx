@@ -8,9 +8,9 @@ import BasicButton from '../../_components/buttons/BasicButton';
 import CloseIcon from '../../_components/icons/CloseIcon';
 import PlusIcon from '../../_components/icons/PlusIcon';
 import Pill from '../../_components/commons/Pill';
-import { SaveProfileType, TechStackType } from '../../_types/common';
+import { SaveProfileType, TechStackType } from '../../_types/profile';
 import { useToast } from '../../_components/toast/Toast';
-import { ProfileResponse } from '../../_types/apis';
+import { ProfileResponse } from '../../_types/profile';
 import { updateProfileClient } from '../../_services/client/profile';
 
 interface ProfileProps {

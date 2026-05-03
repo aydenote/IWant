@@ -1,7 +1,8 @@
 'use client';
 
 import BasicButton from '../../../_components/buttons/BasicButton';
-import { ProfileResponse, RepoDetailResponse } from '../../../_types/apis';
+import { ProfileResponse } from '../../../_types/profile';
+import { RepoDetailResponse } from '../../../_types/repo';
 import ProfileSidebar from './ProfileSidebar';
 import RepoDetailSections from './RepoDetailSections';
 import RepoSummaryCard from './RepoSummaryCard';

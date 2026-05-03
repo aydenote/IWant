@@ -1,9 +1,9 @@
 'use client';
 
 import Text from '../../_components/commons/Text';
-import type { RepoListResponse } from '../../_types/apis';
+import type { RepoListResponse } from '../../_types/repo';
 import useRepoFilter from '../../_hooks/useRepoFilter';
-import { RepoType } from '../../_types/common';
+import { RepoType } from '../../_types/repo';
 import { useInfiniteScroll } from '../../_hooks/useInfiniteScroll';
 import RepoCard from '../../_components/repo/RepoCard';
 

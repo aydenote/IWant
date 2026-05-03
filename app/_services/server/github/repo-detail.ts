@@ -1,4 +1,4 @@
-import type { RepoDetailResponse } from '../../../_types/apis';
+import type { RepoDetailResponse } from '../../../_types/repo';
 import { getGithubHeaders } from './client';
 import { fetchContributingGuide } from './contributing';
 import { mapRepoDetail } from './mappers';

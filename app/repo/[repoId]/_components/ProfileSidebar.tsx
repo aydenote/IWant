@@ -4,7 +4,8 @@ import {
   calculateSkillMatchRate,
   extractSkillKeywords,
 } from '../../../_hooks/useSkillComparison';
-import { ProfileResponse, RepoDetailResponse } from '../../../_types/apis';
+import { ProfileResponse } from '../../../_types/profile';
+import { RepoDetailResponse } from '../../../_types/repo';
 import SkillAlert from './SkillAlert';
 
 interface ProfileSidebarProps {

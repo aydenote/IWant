@@ -39,26 +39,12 @@ export interface RepoDetailResponse extends RepoListResponse {
   issues: RepoIssueResponse[];
 }
 
-export interface ProfileResponse {
-  id: string;
-  resumeName: string | null;
-  resumeUrl: string | null;
-  techStack: string[];
-  updatedAt: Date | null;
-  user: {
-    id: string;
-    name: string | null;
-    email: string | null;
-    image: string | null;
-    emailVerified: Date | null;
-  };
-  userId: string;
-}
-
-export interface ResumeResponse {
-  ok: boolean;
-  resumeName?: string | null;
-  resumeUrl?: string | null;
-  modifiedDate?: bigint | null;
-  message?: string | null;
+export interface RepoType {
+  repoId: number;
+  repoName: string;
+  ownerName: string;
+  imageSrc?: string | null;
+  stars: string;
+  language: string;
+  openIssues: string;
 }

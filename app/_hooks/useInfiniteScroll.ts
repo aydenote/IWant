@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { RepoListResponse } from '../_types/apis';
+import { RepoListResponse } from '../_types/repo';
 import { PAGE_ITEM_LIMIT } from '../_constants/repo';
 
 const getRepoListClient = async (

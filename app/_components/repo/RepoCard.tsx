@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { RepoType } from '../../_types/common';
+import { RepoType } from '../../_types/repo';
 import BuildingIcon from '../icons/BuildingIcon';
 import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
