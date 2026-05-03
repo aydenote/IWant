@@ -1,11 +1,11 @@
 'use client';
 
-import Text from '../_components/commons/Text';
-import type { RepoListResponse } from '../_types/apis';
-import useRepoFilter from '../_hooks/useRepoFilter';
-import { RepoType } from '../_types/common';
-import { useInfiniteScroll } from '../_hooks/useInfiniteScroll';
-import RepoCard from '../_components/repo/RepoCard';
+import Text from '../../_components/commons/Text';
+import type { RepoListResponse } from '../../_types/apis';
+import useRepoFilter from '../../_hooks/useRepoFilter';
+import { RepoType } from '../../_types/common';
+import { useInfiniteScroll } from '../../_hooks/useInfiniteScroll';
+import RepoCard from '../../_components/repo/RepoCard';
 
 interface RepoListClientProps {
   repoList: RepoListResponse[];

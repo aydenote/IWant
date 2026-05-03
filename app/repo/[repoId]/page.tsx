@@ -1,7 +1,7 @@
 import Header from '../../_components/header/Header';
 import { getRepoDetailServer } from '../../_services/server/repo';
 import { getProfileServer } from '../../_services/server/profile';
-import RepoDetailClient from './RepoDetailClient';
+import RepoDetailClient from './_components/RepoDetailClient';
 
 export default async function Page({ params }: { params: { repoId: string } }) {
   const { repoId } = await params;

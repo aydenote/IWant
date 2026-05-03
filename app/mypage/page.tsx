@@ -1,7 +1,7 @@
 import Header from '../_components/header/Header';
 import { getProfileServer } from '../_services/server/profile';
 import { getResumeServer } from '../_services/server/resume';
-import MyPageClient from './MyPageClient';
+import MyPageClient from './_components/MyPageClient';
 
 export default async function Page() {
   const [resume, profile] = await Promise.all([

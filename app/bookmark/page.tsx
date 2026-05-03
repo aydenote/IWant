@@ -1,5 +1,5 @@
 import Header from '../_components/header/Header';
-import BookmarkClient from './BookmarkClient';
+import BookmarkClient from './_components/BookmarkClient';
 import { getBookmarkServer } from '../_services/server/bookmark';
 
 export default async function Page() {

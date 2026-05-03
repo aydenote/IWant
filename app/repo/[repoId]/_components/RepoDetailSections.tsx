@@ -5,8 +5,8 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getTranslate, TranslateTarget } from '../../_services/client/translate';
-import BasicButton from '../../_components/buttons/BasicButton';
+import { getTranslate, TranslateTarget } from '../../../_services/client/translate';
+import BasicButton from '../../../_components/buttons/BasicButton';
 
 type TranslateMode = 'original' | TranslateTarget;
 
