@@ -7,7 +7,7 @@ import { useToast } from '../toast/Toast';
 import {
   addBookmarkClient,
   deleteBookmarkClient,
-} from '../../api/client/bookmark';
+} from '../../_services/client/bookmark';
 
 interface BookmarkButtonProps {
   repo: RepoType;

@@ -1,6 +1,6 @@
 import Header from '../_components/header/Header';
-import { getProfileServer } from '../api/server/profile';
-import { getResumeServer } from '../api/server/resume';
+import { getProfileServer } from '../_services/server/profile';
+import { getResumeServer } from '../_services/server/resume';
 import MyPageClient from './MyPageClient';
 
 export default async function Page() {

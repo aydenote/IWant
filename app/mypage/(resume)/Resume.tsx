@@ -12,7 +12,7 @@ import { ResumeResponse } from '../../_types/apis';
 import {
   deleteResumeClient,
   updateResumeClient,
-} from '../../api/client/resume';
+} from '../../_services/client/resume';
 import Spinner from '../../_components/commons/Spinner';
 
 interface ResumeProps {

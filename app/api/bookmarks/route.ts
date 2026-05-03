@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { prisma } from '../../_lib/prisma';
 import { authOptions } from '../auth/[...nextauth]/route';
-import { checkAuth } from '../server/common';
+import { checkAuth } from '../../_services/server/common';
 
 export const POST = async (req: Request) => {
   const { isAuth, userId } = await checkAuth();

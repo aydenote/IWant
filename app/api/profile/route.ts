@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../_lib/prisma';
-import { checkAuth } from '../server/common';
+import { checkAuth } from '../../_services/server/common';
 
 export const PUT = async (req: Request) => {
   const { isAuth, email } = await checkAuth();

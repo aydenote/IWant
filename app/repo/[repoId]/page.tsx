@@ -1,12 +1,12 @@
 import Header from '../../_components/header/Header';
-import { getRepoDetailClient } from '../../api/client/repo';
-import { getProfileServer } from '../../api/server/profile';
+import { getRepoDetailServer } from '../../_services/server/repo';
+import { getProfileServer } from '../../_services/server/profile';
 import RepoDetailClient from './RepoDetailClient';
 
 export default async function Page({ params }: { params: { repoId: string } }) {
   const { repoId } = await params;
   const [repoDetail, profile] = await Promise.all([
-    getRepoDetailClient(Number(repoId)),
+    getRepoDetailServer(Number(repoId)),
     getProfileServer(),
   ]);
 

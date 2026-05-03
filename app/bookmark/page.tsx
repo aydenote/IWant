@@ -1,6 +1,6 @@
 import Header from '../_components/header/Header';
 import BookmarkClient from './BookmarkClient';
-import { getBookmarkServer } from '../api/server/bookmark';
+import { getBookmarkServer } from '../_services/server/bookmark';
 
 export default async function Page() {
   const bookmarkRepoList = await getBookmarkServer();

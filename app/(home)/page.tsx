@@ -1,6 +1,6 @@
 import Header from '../_components/header/Header';
-import { getBookmarkServer } from '../api/server/bookmark';
-import { getRepoListServer } from '../api/server/repo';
+import { getBookmarkServer } from '../_services/server/bookmark';
+import { getRepoListServer } from '../_services/server/repo';
 import HomeClient from './HomeClient';
 
 export default async function Page() {

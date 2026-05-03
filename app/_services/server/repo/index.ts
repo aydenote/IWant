@@ -1,3 +1,5 @@
+'use server';
+
 import { RepoDetailResponse } from '../../../_types/apis';
 import { headers } from 'next/headers';
 
@@ -13,7 +15,27 @@ const getOrigin = async () => {
   return `${protocol}://${host}`;
 };
 
-export const getRepoDetailClient = async (
+export const getRepoListServer = async (offset = 0, query = '', limit = 20) => {
+  try {
+    const origin = await getOrigin();
+    const params = new URLSearchParams({
+      offset: String(offset),
+      query,
+      limit: String(limit),
+    });
+    const res = await fetch(`${origin}/api/repos?${params}`, {
+      cache: 'no-store',
+    });
+
+    const data = await res.json();
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+export const getRepoDetailServer = async (
   id: number
 ): Promise<RepoDetailResponse> => {
   const origin = await getOrigin();
@@ -21,6 +43,7 @@ export const getRepoDetailClient = async (
   const res = await fetch(url, { cache: 'no-store' });
 
   if (!res.ok) throw new Error('Failed to fetch repository detail');
+
   const data = await res.json();
   return data.data as RepoDetailResponse;
 };
