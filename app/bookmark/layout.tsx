@@ -1,9 +1,4 @@
 import type { ReactNode } from 'react';
-import { getServerSession } from 'next-auth';
-import Provider from '../(home)/provider';
-import '../(styles)/global.css';
-import { ToastProvider } from '../(components)/toast/Toast';
-import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export const metadata = {
   title: 'IWant 관심 레포',
@@ -15,15 +10,5 @@ export default async function MyPageLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
-
-  return (
-    <html lang="ko">
-      <body>
-        <Provider session={session}>
-          <ToastProvider>{children}</ToastProvider>
-        </Provider>
-      </body>
-    </html>
-  );
+  return children;
 }

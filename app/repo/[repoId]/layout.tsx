@@ -1,8 +1,4 @@
 import type { ReactNode } from 'react';
-import { getServerSession } from 'next-auth';
-import Provider from '../../(home)/provider';
-import '../../(styles)/global.css';
-import { authOptions } from '../../api/auth/[...nextauth]/route';
 
 export const metadata = {
   title: 'IWant 레포 상세',
@@ -15,13 +11,5 @@ export default async function RepoDetailLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
-
-  return (
-    <html lang="ko">
-      <body>
-        <Provider session={session}>{children}</Provider>
-      </body>
-    </html>
-  );
+  return children;
 }
