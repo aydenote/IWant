@@ -2,6 +2,7 @@
 
 import { RepoDetailResponse } from '../../../_types/repo';
 import { headers } from 'next/headers';
+import { getGithubRepoDetail } from '../github/repo-detail';
 
 const getOrigin = async () => {
   const headerStore = await headers();
@@ -38,12 +39,15 @@ export const getRepoListServer = async (offset = 0, query = '', limit = 20) => {
 export const getRepoDetailServer = async (
   id: number
 ): Promise<RepoDetailResponse> => {
-  const origin = await getOrigin();
-  const url = `${origin}/api/repos/${id}`;
-  const res = await fetch(url, { cache: 'no-store' });
+  const result = await getGithubRepoDetail(String(id));
 
-  if (!res.ok) throw new Error('Failed to fetch repository detail');
+  if (!result.ok) {
+    console.error('Failed to fetch repository detail', {
+      status: result.status,
+      message: result.message,
+    });
+    throw new Error('Failed to fetch repository detail');
+  }
 
-  const data = await res.json();
-  return data.data as RepoDetailResponse;
+  return result.data;
 };
