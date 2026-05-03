@@ -1,7 +1,7 @@
 export type TranslateTarget = 'ko' | 'en';
 
 export const getTranslate = async (text: string, target: TranslateTarget) => {
-  const res = await fetch('/db/translate', {
+  const res = await fetch('/api/translate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, target }),

@@ -2,7 +2,7 @@ import { RepoType } from '../../../_types/common';
 
 export const addBookmarkClient = async (repo: RepoType) => {
   try {
-    const res = await fetch(`/db/bookmark`, {
+    const res = await fetch('/api/bookmarks', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(repo),
@@ -15,7 +15,7 @@ export const addBookmarkClient = async (repo: RepoType) => {
 
 export const deleteBookmarkClient = async (repoId: number) => {
   try {
-    const res = await fetch('/db/bookmark', {
+    const res = await fetch('/api/bookmarks', {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ repoId }),

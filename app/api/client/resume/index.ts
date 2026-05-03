@@ -1,6 +1,6 @@
 export const updateResumeClient = async (resumeForm: FormData) => {
   try {
-    const res = await fetch('/db/resume', {
+    const res = await fetch('/api/resume', {
       method: 'POST',
       body: resumeForm,
     });
@@ -14,7 +14,7 @@ export const updateResumeClient = async (resumeForm: FormData) => {
 
 export const deleteResumeClient = async () => {
   try {
-    const res = await fetch('/db/resume', {
+    const res = await fetch('/api/resume', {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
     });

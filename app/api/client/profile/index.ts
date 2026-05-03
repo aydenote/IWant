@@ -5,7 +5,7 @@ export const updateProfileClient = async ({
   name,
 }: SaveProfileType) => {
   try {
-    const res = await fetch('/db/profile', {
+    const res = await fetch('/api/profile', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ techStack, name }),
