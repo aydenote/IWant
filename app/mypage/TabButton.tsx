@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import BasicButton from '../(components)/buttons/BasicButton';
+import BasicButton from '../_components/buttons/BasicButton';
 
 interface TabButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isActive?: boolean;

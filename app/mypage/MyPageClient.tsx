@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Text from '../(components)/commons/Text';
+import Text from '../_components/commons/Text';
 import Profile from './(profile)/Profile';
 import Resume from './(resume)/Resume';
 import TabButton from './TabButton';
-import { ProfileResponse, ResumeResponse } from '../(types)/apis';
+import { ProfileResponse, ResumeResponse } from '../_types/apis';
 
 interface MyPageClientProps {
   profile: ProfileResponse | null;

@@ -1,4 +1,4 @@
-import { RepoType } from '../../../(types)/common';
+import { RepoType } from '../../../_types/common';
 
 export const addBookmarkClient = async (repo: RepoType) => {
   try {

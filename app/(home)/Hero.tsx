@@ -1,9 +1,9 @@
 'use client';
 
 import { FormEvent } from 'react';
-import { SearchIcon } from '../(components)/icons/SearchIcon';
-import Text from '../(components)/commons/Text';
-import BasicButton from '../(components)/buttons/BasicButton';
+import { SearchIcon } from '../_components/icons/SearchIcon';
+import Text from '../_components/commons/Text';
+import BasicButton from '../_components/buttons/BasicButton';
 
 interface heroProps {
   value: string;

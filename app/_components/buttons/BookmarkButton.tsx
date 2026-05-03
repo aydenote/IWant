@@ -2,7 +2,7 @@
 
 import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
-import { RepoType } from '../../(types)/common';
+import { RepoType } from '../../_types/common';
 import { useToast } from '../toast/Toast';
 import {
   addBookmarkClient,

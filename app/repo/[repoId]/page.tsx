@@ -1,4 +1,4 @@
-import Header from '../../(components)/header/Header';
+import Header from '../../_components/header/Header';
 import { getRepoDetailClient } from '../../api/client/repo';
 import { getProfileServer } from '../../api/server/profile';
 import RepoDetailClient from './RepoDetailClient';

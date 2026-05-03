@@ -2,18 +2,18 @@
 
 import { createPortal } from 'react-dom';
 import { ChangeEvent, useRef, useState } from 'react';
-import Text from '../../(components)/commons/Text';
-import BasicButton from '../../(components)/buttons/BasicButton';
-import Input from '../../(components)/forms/Input';
-import UploadIcon from '../../(components)/icons/UploadIcon';
-import { formatDate } from '../../(utils)/common';
-import { useToast } from '../../(components)/toast/Toast';
-import { ResumeResponse } from '../../(types)/apis';
+import Text from '../../_components/commons/Text';
+import BasicButton from '../../_components/buttons/BasicButton';
+import Input from '../../_components/forms/Input';
+import UploadIcon from '../../_components/icons/UploadIcon';
+import { formatDate } from '../../_utils/common';
+import { useToast } from '../../_components/toast/Toast';
+import { ResumeResponse } from '../../_types/apis';
 import {
   deleteResumeClient,
   updateResumeClient,
 } from '../../api/client/resume';
-import Spinner from '../../(components)/commons/Spinner';
+import Spinner from '../../_components/commons/Spinner';
 
 interface ResumeProps {
   resume: ResumeResponse;

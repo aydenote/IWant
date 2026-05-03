@@ -1,9 +1,9 @@
 import {
   calculateSkillMatchRate,
   extractSkillKeywords,
-} from '../../app/(hooks)/useSkillComparison';
+} from '../../app/_hooks/useSkillComparison';
 import '@testing-library/jest-dom';
-import { RepoDetailResponse } from '../../app/(types)/apis';
+import { RepoDetailResponse } from '../../app/_types/apis';
 
 describe('스킬 매칭 계산 함수', () => {
   test('매칭되는 스킬이 없으면 매칭률은 0이 반환된다.', () => {

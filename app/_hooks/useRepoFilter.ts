@@ -1,4 +1,4 @@
-import { RepoListResponse } from '../(types)/apis';
+import { RepoListResponse } from '../_types/apis';
 
 const useRepoFilter = (repoList: RepoListResponse[], query: string) => {
   return repoList.filter((repo) => {

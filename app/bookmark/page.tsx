@@ -1,4 +1,4 @@
-import Header from '../(components)/header/Header';
+import Header from '../_components/header/Header';
 import BookmarkClient from './BookmarkClient';
 import { getBookmarkServer } from '../api/server/bookmark';
 

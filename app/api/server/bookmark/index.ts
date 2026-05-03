@@ -1,4 +1,4 @@
-import { prisma } from '../../../(lib)/prisma';
+import { prisma } from '../../../_lib/prisma';
 import { checkAuth } from '../common';
 
 export const getBookmarkServer = async () => {

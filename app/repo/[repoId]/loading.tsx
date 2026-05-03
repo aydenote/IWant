@@ -1,4 +1,4 @@
-import Header from '../../(components)/header/Header';
+import Header from '../../_components/header/Header';
 
 const LoadingBlock = ({ className = '' }: { className?: string }) => (
   <div className={`animate-pulse rounded-md bg-muted ${className}`} />

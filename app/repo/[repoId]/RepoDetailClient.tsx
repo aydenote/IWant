@@ -1,11 +1,11 @@
 'use client';
 
-import BasicButton from '../../(components)/buttons/BasicButton';
-import { ProfileResponse, RepoDetailResponse } from '../../(types)/apis';
+import BasicButton from '../../_components/buttons/BasicButton';
+import { ProfileResponse, RepoDetailResponse } from '../../_types/apis';
 import ProfileSidebar from './ProfileSidebar';
 import RepoDetailSections from './RepoDetailSections';
 import RepoSummaryCard from './RepoSummaryCard';
-import { ArrowLeftIcon } from '../../(components)/icons/ArrowLeftIcon';
+import { ArrowLeftIcon } from '../../_components/icons/ArrowLeftIcon';
 import { useRouter } from 'next/navigation';
 
 interface RepoDetailClientProps {

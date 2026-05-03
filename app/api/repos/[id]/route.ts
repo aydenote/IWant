@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { RepoDetailResponse, RepoIssueResponse } from '../../../(types)/apis';
+import type { RepoDetailResponse, RepoIssueResponse } from '../../../_types/apis';
 
 interface GitHubRepoDetail {
   id: number;

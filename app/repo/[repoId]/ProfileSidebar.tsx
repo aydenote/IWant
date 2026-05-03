@@ -1,10 +1,10 @@
-import { CircleAlertIcon } from '../../(components)/icons/CircleAlertIcon';
-import { CircleCheckIcon } from '../../(components)/icons/CircleCheckIcon';
+import { CircleAlertIcon } from '../../_components/icons/CircleAlertIcon';
+import { CircleCheckIcon } from '../../_components/icons/CircleCheckIcon';
 import {
   calculateSkillMatchRate,
   extractSkillKeywords,
-} from '../../(hooks)/useSkillComparison';
-import { ProfileResponse, RepoDetailResponse } from '../../(types)/apis';
+} from '../../_hooks/useSkillComparison';
+import { ProfileResponse, RepoDetailResponse } from '../../_types/apis';
 import SkillAlert from './SkillAlert';
 
 interface ProfileSidebarProps {

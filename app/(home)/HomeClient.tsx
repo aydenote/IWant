@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Hero from './Hero';
 import RepoListClient from './RepoListClient';
-import type { RepoListResponse } from '../(types)/apis';
-import { RepoType } from '../(types)/common';
+import type { RepoListResponse } from '../_types/apis';
+import { RepoType } from '../_types/common';
 
 interface HomeClientProps {
   initialRepoList: RepoListResponse[];

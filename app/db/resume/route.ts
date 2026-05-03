@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { supabase } from '../../(lib)/supabase';
-import { prisma } from '../../(lib)/prisma';
+import { supabase } from '../../_lib/supabase';
+import { prisma } from '../../_lib/prisma';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import { checkAuth } from '../../api/server/common';
 

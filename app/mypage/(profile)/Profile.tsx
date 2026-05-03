@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import Text from '../../(components)/commons/Text';
-import Input from '../../(components)/forms/Input';
-import Label from '../../(components)/forms/Label';
-import BasicButton from '../../(components)/buttons/BasicButton';
-import CloseIcon from '../../(components)/icons/CloseIcon';
-import PlusIcon from '../../(components)/icons/PlusIcon';
-import Pill from '../../(components)/commons/Pill';
-import { SaveProfileType, TechStackType } from '../../(types)/common';
-import { useToast } from '../../(components)/toast/Toast';
-import { ProfileResponse } from '../../(types)/apis';
+import Text from '../../_components/commons/Text';
+import Input from '../../_components/forms/Input';
+import Label from '../../_components/forms/Label';
+import BasicButton from '../../_components/buttons/BasicButton';
+import CloseIcon from '../../_components/icons/CloseIcon';
+import PlusIcon from '../../_components/icons/PlusIcon';
+import Pill from '../../_components/commons/Pill';
+import { SaveProfileType, TechStackType } from '../../_types/common';
+import { useToast } from '../../_components/toast/Toast';
+import { ProfileResponse } from '../../_types/apis';
 import { updateProfileClient } from '../../api/client/profile';
 
 interface ProfileProps {

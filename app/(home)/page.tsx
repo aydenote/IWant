@@ -1,4 +1,4 @@
-import Header from '../(components)/header/Header';
+import Header from '../_components/header/Header';
 import { getBookmarkServer } from '../api/server/bookmark';
 import { getRepoListServer } from '../api/server/repo';
 import HomeClient from './HomeClient';

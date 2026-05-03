@@ -1,8 +1,8 @@
-import Text from '../../(components)/commons/Text';
-import BuildingIcon from '../../(components)/icons/BuildingIcon';
-import MapPinIcon from '../../(components)/icons/MapPinIcon';
-import UsersIcon from '../../(components)/icons/UsersIcon';
-import { RepoDetailResponse } from '../../(types)/apis';
+import Text from '../../_components/commons/Text';
+import BuildingIcon from '../../_components/icons/BuildingIcon';
+import MapPinIcon from '../../_components/icons/MapPinIcon';
+import UsersIcon from '../../_components/icons/UsersIcon';
+import { RepoDetailResponse } from '../../_types/apis';
 
 const RepoSummaryCard = ({ repo }: { repo: RepoDetailResponse }) => (
   <div className="space-y-4 pb-6 border-b">

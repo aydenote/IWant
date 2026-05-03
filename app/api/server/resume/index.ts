@@ -1,5 +1,5 @@
-import { prisma } from '../../../(lib)/prisma';
-import { supabase } from '../../../(lib)/supabase';
+import { prisma } from '../../../_lib/prisma';
+import { supabase } from '../../../_lib/supabase';
 import { checkAuth } from '../common';
 
 export const getResumeServer = async () => {

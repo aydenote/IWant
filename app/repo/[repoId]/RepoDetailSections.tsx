@@ -6,7 +6,7 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getTranslate, TranslateTarget } from '../../api/client/translate';
-import BasicButton from '../../(components)/buttons/BasicButton';
+import BasicButton from '../../_components/buttons/BasicButton';
 
 type TranslateMode = 'original' | TranslateTarget;
 

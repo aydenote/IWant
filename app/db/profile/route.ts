@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../(lib)/prisma';
+import { prisma } from '../../_lib/prisma';
 import { checkAuth } from '../../api/server/common';
 
 export const PUT = async (req: Request) => {

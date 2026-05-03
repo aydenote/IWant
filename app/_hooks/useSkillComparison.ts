@@ -1,5 +1,5 @@
-import { FRONTEND_SKILL_KEYWORDS } from '../(constants)/skills';
-import { RepoDetailResponse } from '../(types)/apis';
+import { FRONTEND_SKILL_KEYWORDS } from '../_constants/skills';
+import { RepoDetailResponse } from '../_types/apis';
 
 export const extractSkillKeywords = (repo: RepoDetailResponse): string[] => {
   const repoDescription = [

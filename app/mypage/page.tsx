@@ -1,4 +1,4 @@
-import Header from '../(components)/header/Header';
+import Header from '../_components/header/Header';
 import { getProfileServer } from '../api/server/profile';
 import { getResumeServer } from '../api/server/resume';
 import MyPageClient from './MyPageClient';

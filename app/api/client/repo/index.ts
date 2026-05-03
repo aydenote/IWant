@@ -1,4 +1,4 @@
-import { RepoDetailResponse } from '../../../(types)/apis';
+import { RepoDetailResponse } from '../../../_types/apis';
 import { headers } from 'next/headers';
 
 const getOrigin = async () => {
