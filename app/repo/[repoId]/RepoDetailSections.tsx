@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getTranslate, TranslateTarget } from '../../api/client/translate';
@@ -64,6 +66,56 @@ const resolveMarkdownImageSrc = ({
   );
 
   return `https://raw.githubusercontent.com/${repoFullName}/${defaultBranch}/${imagePath}`;
+};
+
+const resolveMarkdownSrcSet = ({
+  srcSet,
+  sourcePath,
+  repoFullName,
+  defaultBranch,
+}: {
+  srcSet?: string;
+  sourcePath?: string | null;
+  repoFullName: string;
+  defaultBranch: string;
+}) => {
+  if (!srcSet) return srcSet;
+
+  return srcSet
+    .split(',')
+    .map((candidate) => {
+      const trimmedCandidate = candidate.trim();
+      const [, src = '', descriptor = ''] =
+        trimmedCandidate.match(/^(\S+)(.*)$/) ?? [];
+      const resolvedSrc = resolveMarkdownImageSrc({
+        src,
+        sourcePath,
+        repoFullName,
+        defaultBranch,
+      });
+
+      return [resolvedSrc, descriptor.trim()].filter(Boolean).join(' ');
+    })
+    .join(', ');
+};
+
+const markdownSanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames ?? []), 'picture', 'source'],
+  attributes: {
+    ...defaultSchema.attributes,
+    '*': [...(defaultSchema.attributes?.['*'] ?? []), 'align'],
+    img: [
+      ...(defaultSchema.attributes?.img ?? []),
+      'src',
+      'alt',
+      'title',
+      'width',
+      'height',
+      'loading',
+    ],
+    source: ['srcSet', 'srcset', 'media', 'type', 'sizes'],
+  },
 };
 
 const getTranslationKey = (sectionTitle: string, target: TranslateTarget) =>
@@ -188,6 +240,7 @@ const RepoDetailSections = ({
 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, [rehypeSanitize, markdownSanitizeSchema]]}
               components={{
                 a: ({ children, ...props }) => (
                   <a
@@ -260,6 +313,17 @@ const RepoDetailSections = ({
                 td: ({ children }) => (
                   <td className="border border-border px-3 py-2">{children}</td>
                 ),
+                picture: ({ children }) => <picture>{children}</picture>,
+                source: ({ srcSet, ...props }) => {
+                  const resolvedSrcSet = resolveMarkdownSrcSet({
+                    srcSet: typeof srcSet === 'string' ? srcSet : undefined,
+                    sourcePath: section.sourcePath,
+                    repoFullName,
+                    defaultBranch,
+                  });
+
+                  return <source {...props} srcSet={resolvedSrcSet} />;
+                },
                 img: ({ src, alt }) => {
                   const resolvedSrc = resolveMarkdownImageSrc({
                     src: typeof src === 'string' ? src : undefined,
