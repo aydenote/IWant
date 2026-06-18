@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 interface RepoCardProps extends RepoType {
   bookmarkList: RepoType[];
   setBookmarkList: React.Dispatch<React.SetStateAction<RepoType[]>>;
+  priorityImage?: boolean;
 }
 
 const RepoCard = ({
@@ -25,6 +26,7 @@ const RepoCard = ({
   openIssues,
   bookmarkList,
   setBookmarkList,
+  priorityImage = false,
 }: RepoCardProps) => {
   const safeSrc =
     imageSrc && imageSrc.length > 0
@@ -43,7 +45,8 @@ const RepoCard = ({
           height={400}
           alt="레포지토리 소유자 이미지"
           className="w-full h-full object-cover"
-          loading="eager"
+          loading={priorityImage ? 'eager' : 'lazy'}
+          priority={priorityImage}
         />
       </div>
       <div className="p-6 space-y-4">

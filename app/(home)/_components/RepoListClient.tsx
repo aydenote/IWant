@@ -32,7 +32,7 @@ const RepoListClient = ({
       </Text>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
-        {filteredRepoList.map((repo) => (
+        {filteredRepoList.map((repo, index) => (
           <RepoCard
             key={repo.id}
             repoId={repo.id}
@@ -44,6 +44,7 @@ const RepoListClient = ({
             openIssues={`${repo.openIssues.toLocaleString()} open issues`}
             bookmarkList={bookmarkList}
             setBookmarkList={setBookmarkList}
+            priorityImage={index < 3}
           />
         ))}
       </div>

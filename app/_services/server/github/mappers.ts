@@ -1,5 +1,14 @@
-import type { RepoDetailResponse, RepoIssueResponse } from '../../../_types/repo';
-import type { GitHubContentFile, GitHubIssue, GitHubRepoDetail } from './types';
+import type {
+  RepoDetailResponse,
+  RepoIssueResponse,
+  RepoListResponse,
+} from '../../../_types/repo';
+import type {
+  GitHubContentFile,
+  GitHubIssue,
+  GitHubRepo,
+  GitHubRepoDetail,
+} from './types';
 
 const decodeBase64 = (content: string) =>
   Buffer.from(content.replace(/\n/g, ''), 'base64').toString('utf-8');
@@ -12,6 +21,26 @@ export const mapIssue = (issue: GitHubIssue): RepoIssueResponse => ({
   labels: issue.labels.map((label) => label.name),
   comments: issue.comments,
   createdAt: issue.created_at,
+});
+
+export const mapRepo = (repo: GitHubRepo): RepoListResponse => ({
+  id: repo.id,
+  name: repo.name,
+  fullName: repo.full_name,
+  description: repo.description,
+  htmlUrl: repo.html_url,
+  owner: {
+    login: repo.owner.login,
+    avatarUrl: repo.owner.avatar_url,
+    htmlUrl: repo.owner.html_url,
+  },
+  language: repo.language,
+  topics: repo.topics ?? [],
+  stars: repo.stargazers_count,
+  forks: repo.forks_count,
+  openIssues: repo.open_issues_count,
+  updatedAt: repo.updated_at,
+  license: repo.license?.name ?? null,
 });
 
 export const mapRepoDetail = ({

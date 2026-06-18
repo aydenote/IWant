@@ -1,39 +1,52 @@
 'use server';
 
-import { RepoDetailResponse } from '../../../_types/repo';
-import { headers } from 'next/headers';
+import { RepoDetailResponse, RepoListResponse } from '../../../_types/repo';
+import { PAGE_ITEM_LIMIT } from '../../../_constants/repo';
+import { getGithubHeaders } from '../github/client';
+import { mapRepo } from '../github/mappers';
 import { getGithubRepoDetail } from '../github/repo-detail';
+import type { GitHubRepo } from '../github/types';
 
-const getOrigin = async () => {
-  const headerStore = await headers();
-  const protocol = headerStore.get('x-forwarded-proto') ?? 'http';
-  const host = headerStore.get('host');
+export const getRepoListServer = async (
+  offset = 0,
+  query = '',
+  limit = PAGE_ITEM_LIMIT
+): Promise<RepoListResponse[]> => {
+  const safeLimit = Math.min(Math.max(limit, 1), 100);
+  const page = Math.floor(offset / safeLimit) + 1;
+  const repoQuery = [
+    query.trim(),
+    'good-first-issues:>0',
+    'archived:false',
+    'is:public',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  if (!host) {
-    return process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXTAUTH_URL ?? '';
-  }
+  const params = new URLSearchParams({
+    q: repoQuery,
+    sort: 'updated',
+    order: 'desc',
+    per_page: String(safeLimit),
+    page: String(page),
+  });
 
-  return `${protocol}://${host}`;
-};
+  const res = await fetch(`https://api.github.com/search/repositories?${params}`, {
+    headers: getGithubHeaders(),
+    next: { revalidate: 300 },
+  });
 
-export const getRepoListServer = async (offset = 0, query = '', limit = 20) => {
-  try {
-    const origin = await getOrigin();
-    const params = new URLSearchParams({
-      offset: String(offset),
-      query,
-      limit: String(limit),
+  if (!res.ok) {
+    const error = await res.json().catch(() => null);
+    console.error('Failed to fetch repositories', {
+      status: res.status,
+      message: error?.message,
     });
-    const res = await fetch(`${origin}/api/repos?${params}`, {
-      cache: 'no-store',
-    });
-
-    const data = await res.json();
-    return data.data;
-  } catch (err) {
-    console.error(err);
     return [];
   }
+
+  const data = (await res.json()) as { items?: GitHubRepo[] };
+  return (data.items ?? []).map(mapRepo);
 };
 
 export const getRepoDetailServer = async (

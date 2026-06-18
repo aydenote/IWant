@@ -1,4 +1,4 @@
-export interface GitHubRepoDetail {
+export interface GitHubRepo {
   id: number;
   name: string;
   full_name: string;
@@ -16,6 +16,9 @@ export interface GitHubRepoDetail {
   open_issues_count: number;
   updated_at: string;
   license: { name: string } | null;
+}
+
+export interface GitHubRepoDetail extends GitHubRepo {
   default_branch: string;
 }
 

@@ -70,6 +70,25 @@ export const useInfiniteScroll = (
       });
   };
 
+  const schedulePrefetchNextPage = (nextOffset: number) => {
+    if (typeof window === 'undefined') return undefined;
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(
+        () => prefetchNextPage(nextOffset),
+        { timeout: 2000 }
+      );
+
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = globalThis.setTimeout(
+      () => prefetchNextPage(nextOffset),
+      500
+    );
+    return () => globalThis.clearTimeout(timeoutId);
+  };
+
   useEffect(() => {
     setRepos(initialRepos);
     setPage(1);
@@ -77,7 +96,7 @@ export const useInfiniteScroll = (
     setHasNext(true);
     prefetchedReposRef.current = null;
     prefetchedOffsetRef.current = null;
-    prefetchNextPage(initialRepos.length);
+    return schedulePrefetchNextPage(initialRepos.length);
   }, [initialRepos, query]);
 
   useEffect(() => {
