@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import Provider from './(home)/provider';
 import './_styles/global.css';
+import { Analytics } from '@vercel/analytics/next';
 import { ToastProvider } from './_components/toast/Toast';
 import { authOptions } from './api/auth/[...nextauth]/route';
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body>
+        <Analytics />
         <Provider session={session}>
           <ToastProvider>{children}</ToastProvider>
         </Provider>
