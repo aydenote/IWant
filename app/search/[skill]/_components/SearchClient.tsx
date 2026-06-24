@@ -1,29 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Hero from './Hero';
-import RepoListClient from './RepoListClient';
-import type { RepoListResponse } from '../../_types/repo';
-import { RepoType } from '../../_types/repo';
-import { ProfileResponse } from '../../_types/profile';
-import { toSearchSkillSlug } from '../../_utils/searchSkill';
+import Hero from '../../../(home)/_components/Hero';
+import RepoListClient from '../../../(home)/_components/RepoListClient';
+import { toSearchSkillSlug } from '../../../_utils/searchSkill';
+import type { RepoListResponse, RepoType } from '../../../_types/repo';
 
-interface HomeClientProps {
+interface SearchClientProps {
   initialRepoList: RepoListResponse[];
   bookmarkRepoList: RepoType[];
-  profile: ProfileResponse | null;
+  skill: string;
 }
-const HomeClient = ({
+
+const SearchClient = ({
   initialRepoList,
   bookmarkRepoList,
-  profile,
-}: HomeClientProps) => {
+  skill,
+}: SearchClientProps) => {
   const router = useRouter();
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(skill);
   const [bookmarkList, setBookmarkList] =
     useState<RepoType[]>(bookmarkRepoList);
-  const techStack = profile?.techStack ?? [];
+
+  useEffect(() => {
+    setSearchValue(skill);
+  }, [skill]);
 
   const handleSearch = (value: string) => {
     const skillSlug = toSearchSkillSlug(value);
@@ -43,7 +45,8 @@ const HomeClient = ({
       <RepoListClient
         repoList={initialRepoList}
         query=""
-        techStack={techStack}
+        techStack={[skill]}
+        heading={`${skill} 오픈소스 레포`}
         bookmarkList={bookmarkList}
         setBookmarkList={setBookmarkList}
       />
@@ -51,4 +54,4 @@ const HomeClient = ({
   );
 };
 
-export default HomeClient;
+export default SearchClient;
