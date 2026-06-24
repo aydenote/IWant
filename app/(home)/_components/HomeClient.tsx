@@ -5,14 +5,22 @@ import Hero from './Hero';
 import RepoListClient from './RepoListClient';
 import type { RepoListResponse } from '../../_types/repo';
 import { RepoType } from '../../_types/repo';
+import { ProfileResponse } from '../../_types/profile';
 
 interface HomeClientProps {
   initialRepoList: RepoListResponse[];
   bookmarkRepoList: RepoType[];
+  profile: ProfileResponse | null;
 }
-const HomeClient = ({ initialRepoList, bookmarkRepoList }: HomeClientProps) => {
+const HomeClient = ({
+  initialRepoList,
+  bookmarkRepoList,
+  profile,
+}: HomeClientProps) => {
   const [query, setQuery] = useState('');
-  const [bookmarkList, setBookmarkList] = useState<RepoType[]>(bookmarkRepoList);
+  const [bookmarkList, setBookmarkList] =
+    useState<RepoType[]>(bookmarkRepoList);
+  const techStack = profile?.techStack ?? [];
 
   return (
     <>
@@ -25,6 +33,7 @@ const HomeClient = ({ initialRepoList, bookmarkRepoList }: HomeClientProps) => {
       <RepoListClient
         repoList={initialRepoList}
         query={query}
+        techStack={techStack}
         bookmarkList={bookmarkList}
         setBookmarkList={setBookmarkList}
       />

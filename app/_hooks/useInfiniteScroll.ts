@@ -5,6 +5,7 @@ import { PAGE_ITEM_LIMIT } from '../_constants/repo';
 const getRepoListClient = async (
   offset: number,
   query = '',
+  techStack: string[] = [],
   limit = PAGE_ITEM_LIMIT
 ) => {
   const params = new URLSearchParams({
@@ -12,6 +13,11 @@ const getRepoListClient = async (
     query,
     limit: String(limit),
   });
+
+  techStack.forEach((skill) => {
+    params.append('techStack', skill);
+  });
+
   const res = await fetch(`/api/repos?${params}`, { cache: 'no-store' });
 
   if (!res.ok) {
@@ -37,7 +43,8 @@ const mergeReposById = (
 
 export const useInfiniteScroll = (
   initialRepos: RepoListResponse[],
-  query?: string
+  query?: string,
+  techStack: string[] = []
 ) => {
   const [repos, setRepos] = useState(initialRepos);
   const [page, setPage] = useState(1);
@@ -50,12 +57,13 @@ export const useInfiniteScroll = (
   const prefetchedReposRef = useRef<RepoListResponse[] | null>(null);
   const prefetchedOffsetRef = useRef<number | null>(null);
   const prefetchingRef = useRef(false);
+  const techStackKey = techStack.join('|');
 
   const prefetchNextPage = (nextOffset: number) => {
     if (prefetchingRef.current) return;
 
     prefetchingRef.current = true;
-    getRepoListClient(nextOffset, query)
+    getRepoListClient(nextOffset, query, techStack)
       .then((nextRepos) => {
         prefetchedReposRef.current = nextRepos;
         prefetchedOffsetRef.current = nextOffset;
@@ -97,7 +105,7 @@ export const useInfiniteScroll = (
     prefetchedReposRef.current = null;
     prefetchedOffsetRef.current = null;
     return schedulePrefetchNextPage(initialRepos.length);
-  }, [initialRepos, query]);
+  }, [initialRepos, query, techStackKey]);
 
   useEffect(() => {
     if (!hasNext) return;
@@ -113,7 +121,7 @@ export const useInfiniteScroll = (
               : null;
           const nextPagePromise = prefetchedRepos
             ? Promise.resolve(prefetchedRepos)
-            : getRepoListClient(offset, query);
+            : getRepoListClient(offset, query, techStack);
 
           prefetchedReposRef.current = null;
           prefetchedOffsetRef.current = null;
@@ -141,7 +149,7 @@ export const useInfiniteScroll = (
     );
     observer.observe(anchorRef.current);
     return () => observer.disconnect();
-  }, [page, offset, query, hasNext]);
+  }, [page, offset, query, techStackKey, hasNext]);
 
   return { repos, isLoading, anchorRef };
 };

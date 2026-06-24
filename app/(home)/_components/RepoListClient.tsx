@@ -12,22 +12,31 @@ interface RepoListClientProps {
   bookmarkList: RepoType[];
   setBookmarkList: React.Dispatch<React.SetStateAction<RepoType[]>>;
   query: string;
+  techStack: string[];
 }
 
 const RepoListClient = ({
   repoList,
   query,
+  techStack,
   bookmarkList,
   setBookmarkList,
 }: RepoListClientProps) => {
-  const { repos, isLoading, anchorRef } = useInfiniteScroll(repoList, query);
+  const { repos, isLoading, anchorRef } = useInfiniteScroll(
+    repoList,
+    query,
+    techStack
+  );
   const filteredRepoList = useRepoFilter(repos, query);
+  const hasTechStack = techStack.length > 0;
 
   return (
     <section className="p-12">
       <Text textSize="2xl" textBold="lg" textColor="black">
         {query.trim()
           ? `검색 결과(${filteredRepoList.length})`
+          : hasTechStack
+          ? `관심 기술 레포(${filteredRepoList.length})`
           : `전체 레포(${filteredRepoList.length})`}
       </Text>
 
