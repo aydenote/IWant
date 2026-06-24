@@ -90,6 +90,27 @@ export const getRepoListServer = async ({
   return mergeReposById(repoGroups).slice(0, safeLimit);
 };
 
+export const getRepoSummaryServer = async (
+  id: number
+): Promise<RepoListResponse | null> => {
+  const res = await fetch(`https://api.github.com/repositories/${id}`, {
+    headers: getGithubHeaders(),
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => null);
+    console.error('Failed to fetch repository summary', {
+      status: res.status,
+      message: error?.message,
+    });
+    return null;
+  }
+
+  const repo = (await res.json()) as GitHubRepo;
+  return mapRepo(repo);
+};
+
 export const getRepoDetailServer = async (
   id: number
 ): Promise<RepoDetailResponse> => {
