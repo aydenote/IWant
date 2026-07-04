@@ -1,9 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { locales } from './_i18n/config';
 import { getAbsoluteLanguageAlternates } from './_utils/localeSeo';
+import { PUBLIC_SEARCH_SKILL_SLUGS } from './_utils/searchSkill';
 import { getSiteUrl } from './_utils/siteUrl';
-
-const PUBLIC_SEARCH_SKILLS = ['react', 'typescript', 'nextjs'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
@@ -20,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: homeAlternates,
       },
     })),
-    ...PUBLIC_SEARCH_SKILLS.flatMap((skill) => {
+    ...PUBLIC_SEARCH_SKILL_SLUGS.flatMap((skill) => {
       const path = `/search/${skill}`;
       const languages = getAbsoluteLanguageAlternates(siteUrl, path);
 

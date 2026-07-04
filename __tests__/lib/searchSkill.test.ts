@@ -1,4 +1,5 @@
 import {
+  PUBLIC_SEARCH_SKILL_SLUGS,
   toSearchSkillLabel,
   toSearchSkillSlug,
 } from '../../app/_utils/searchSkill';
@@ -18,6 +19,18 @@ describe('searchSkill', () => {
 
   test('알려지지 않은 slug는 title case로 표시한다', () => {
     expect(toSearchSkillLabel('react-query')).toBe('React Query');
+  });
+
+  test('사이트맵에 등록하는 기술은 정규화된 slug와 표시명을 제공한다', () => {
+    expect(PUBLIC_SEARCH_SKILL_SLUGS).toHaveLength(22);
+
+    PUBLIC_SEARCH_SKILL_SLUGS.forEach((slug) => {
+      expect(toSearchSkillSlug(slug)).toBe(slug);
+      expect(toSearchSkillLabel(slug)).not.toBe('');
+    });
+
+    expect(toSearchSkillLabel('html')).toBe('HTML');
+    expect(toSearchSkillLabel('php')).toBe('PHP');
   });
 
   test('잘못 인코딩된 slug도 예외 없이 처리한다', () => {
