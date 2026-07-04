@@ -5,6 +5,7 @@ import AuthToggleButton from '../buttons/AuthToggleButton';
 import BriefcaseIcon from '../icons/BriefcaseIcon';
 import { getLocalizedPath } from '../../_i18n/config';
 import { useLocale } from '../../_hooks/useLocale';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Header = () => {
   const locale = useLocale();
@@ -22,7 +23,8 @@ const Header = () => {
           </span>
         </Link>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <AuthToggleButton />
         </div>
       </div>

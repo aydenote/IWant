@@ -32,3 +32,15 @@ export const getLocalizedPath = (locale: Locale, path = '/') => {
 
   return normalizedPath === '/' ? `/${locale}` : `/${locale}${normalizedPath}`;
 };
+
+export const replacePathLocale = (path: string, locale: Locale) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const segments = normalizedPath.split('/');
+
+  if (isLocale(segments[1])) {
+    segments[1] = locale;
+    return segments.join('/');
+  }
+
+  return getLocalizedPath(locale, normalizedPath);
+};

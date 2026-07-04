@@ -25,6 +25,7 @@ export interface AppMessages {
     bookmarks: string;
     signIn: string;
     signOut: string;
+    language: string;
   };
   hero: {
     title: string;
@@ -115,6 +116,7 @@ export const messages = {
       bookmarks: '관심 레포',
       signIn: '로그인',
       signOut: '로그아웃',
+      language: '언어 선택',
     },
     hero: {
       title: '기여할 오픈소스 레포를 찾아보세요',
@@ -209,6 +211,7 @@ export const messages = {
       bookmarks: 'Bookmarks',
       signIn: 'Sign in',
       signOut: 'Sign out',
+      language: 'Select language',
     },
     hero: {
       title: 'Find an open source repository to contribute to',

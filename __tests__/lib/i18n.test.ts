@@ -4,6 +4,7 @@ import {
   isLocale,
   localeConfig,
   locales,
+  replacePathLocale,
 } from '../../app/_i18n/config';
 import { formatMessage, getMessages } from '../../app/_i18n/messages';
 import {
@@ -34,6 +35,14 @@ describe('i18n config', () => {
     expect(getLocalizedPath('ko')).toBe('/ko');
     expect(getLocalizedPath('en', '/search/react')).toBe('/en/search/react');
     expect(getLocalizedPath('en', 'mypage')).toBe('/en/mypage');
+  });
+
+  test('현재 경로를 유지하며 locale prefix만 교체한다', () => {
+    expect(replacePathLocale('/ko', 'en')).toBe('/en');
+    expect(replacePathLocale('/ko/search/react', 'en')).toBe(
+      '/en/search/react'
+    );
+    expect(replacePathLocale('/repo/1', 'en')).toBe('/en/repo/1');
   });
 
   test('번역 메시지의 placeholder를 치환한다', () => {
