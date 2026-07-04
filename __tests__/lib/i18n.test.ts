@@ -5,7 +5,7 @@ import {
   localeConfig,
   locales,
 } from '../../app/_i18n/config';
-import { getMessages } from '../../app/_i18n/messages';
+import { formatMessage, getMessages } from '../../app/_i18n/messages';
 
 describe('i18n config', () => {
   test('지원 locale과 기본 locale을 제공한다', () => {
@@ -30,5 +30,13 @@ describe('i18n config', () => {
     expect(getLocalizedPath('ko')).toBe('/ko');
     expect(getLocalizedPath('en', '/search/react')).toBe('/en/search/react');
     expect(getLocalizedPath('en', 'mypage')).toBe('/en/mypage');
+  });
+
+  test('번역 메시지의 placeholder를 치환한다', () => {
+    expect(
+      formatMessage(getMessages('en').repoList.skillHeadingTemplate, {
+        skill: 'React',
+      })
+    ).toBe('React open source repositories');
   });
 });

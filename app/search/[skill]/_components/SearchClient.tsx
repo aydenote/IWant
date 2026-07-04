@@ -7,6 +7,7 @@ import RepoListClient from '../../../(home)/_components/RepoListClient';
 import { toSearchSkillSlug } from '../../../_utils/searchSkill';
 import type { RepoListResponse, RepoType } from '../../../_types/repo';
 import { getLocalizedPath } from '../../../_i18n/config';
+import { formatMessage, getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
 
 interface SearchClientProps {
@@ -21,6 +22,7 @@ const SearchClient = ({
   skill,
 }: SearchClientProps) => {
   const locale = useLocale();
+  const messages = getMessages(locale);
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(skill);
   const [bookmarkList, setBookmarkList] =
@@ -49,7 +51,9 @@ const SearchClient = ({
         repoList={initialRepoList}
         query=""
         techStack={[skill]}
-        heading={`${skill} 오픈소스 레포`}
+        heading={formatMessage(messages.repoList.skillHeadingTemplate, {
+          skill,
+        })}
         bookmarkList={bookmarkList}
         setBookmarkList={setBookmarkList}
       />

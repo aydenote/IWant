@@ -10,6 +10,7 @@ import UsersIcon from '../icons/UsersIcon';
 import BasicButton from '../buttons/BasicButton';
 import { useSession } from 'next-auth/react';
 import { getLocalizedPath } from '../../_i18n/config';
+import { getMessages } from '../../_i18n/messages';
 import { useLocale } from '../../_hooks/useLocale';
 
 interface RepoCardProps extends RepoType {
@@ -31,6 +32,7 @@ const RepoCard = ({
   priorityImage = false,
 }: RepoCardProps) => {
   const locale = useLocale();
+  const messages = getMessages(locale);
   const repoHref = getLocalizedPath(locale, `/repo/${repoId}`);
   const safeSrc =
     imageSrc && imageSrc.length > 0
@@ -47,7 +49,7 @@ const RepoCard = ({
           src={safeSrc}
           width={400}
           height={400}
-          alt="레포지토리 소유자 이미지"
+          alt={messages.repoCard.ownerImageAlt}
           className="w-full h-full object-cover"
           loading={priorityImage ? 'eager' : 'lazy'}
           priority={priorityImage}
@@ -99,7 +101,7 @@ const RepoCard = ({
           </div>
           <Link href={repoHref}>
             <BasicButton className="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-gradient-hero">
-              자세히 보기
+              {messages.repoCard.details}
             </BasicButton>
           </Link>
         </div>

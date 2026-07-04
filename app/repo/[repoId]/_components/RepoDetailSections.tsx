@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
+import { getMessages } from '../../../_i18n/messages';
+import { useLocale } from '../../../_hooks/useLocale';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getTranslate, TranslateTarget } from '../../../_services/client/translate';
@@ -124,15 +126,27 @@ const getTranslationKey = (sectionTitle: string, target: TranslateTarget) =>
 const hasContent = (section: DetailSection) => section.content.trim().length > 0;
 
 const getSectionTitle = (title: string, mode: TranslateMode) => {
-  if (mode !== 'en') return title;
+  if (mode === 'original') return title;
 
-  const titleMap: Record<string, string> = {
-    README: 'README',
-    '기여 이슈': 'Contribution Issues',
-    '기여 방법': 'Contribution Guide',
-  };
+  const koMessages = getMessages('ko').repoDetail;
+  const enMessages = getMessages('en').repoDetail;
+  const targetMessages = getMessages(mode).repoDetail;
 
-  return titleMap[title] ?? title;
+  if (
+    title === koMessages.contributionIssues ||
+    title === enMessages.contributionIssues
+  ) {
+    return targetMessages.contributionIssues;
+  }
+
+  if (
+    title === koMessages.contributionGuide ||
+    title === enMessages.contributionGuide
+  ) {
+    return targetMessages.contributionGuide;
+  }
+
+  return title;
 };
 
 const RepoDetailSections = ({
@@ -140,6 +154,8 @@ const RepoDetailSections = ({
   repoFullName,
   sections,
 }: RepoDetailSectionsProps) => {
+  const locale = useLocale();
+  const messages = getMessages(locale);
   const [modes, setModes] = useState<Record<string, TranslateMode>>({});
   const [translatedSections, setTranslatedSections] = useState<
     Record<string, string>
@@ -167,7 +183,7 @@ const RepoDetailSections = ({
       console.error(err);
       setErrorKeys((prev) => ({
         ...prev,
-        [key]: '번역에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+        [key]: messages.repoDetail.translationFailed,
       }));
       setModes((prev) => ({ ...prev, [section.title]: 'original' }));
     } finally {
@@ -210,7 +226,7 @@ const RepoDetailSections = ({
                     }))
                   }
                 >
-                  원문
+                  {messages.repoDetail.original}
                 </BasicButton>
                 <BasicButton
                   type="button"
@@ -219,7 +235,7 @@ const RepoDetailSections = ({
                   disabled={Boolean(isLoading)}
                   onClick={() => handleTranslate(section, 'ko')}
                 >
-                  한국어
+                  {messages.repoDetail.korean}
                 </BasicButton>
                 <BasicButton
                   type="button"
@@ -228,13 +244,15 @@ const RepoDetailSections = ({
                   disabled={Boolean(isLoading)}
                   onClick={() => handleTranslate(section, 'en')}
                 >
-                  English
+                  {messages.repoDetail.english}
                 </BasicButton>
               </div>
             </div>
 
             {isLoading && (
-              <p className="text-sm text-muted-foreground">번역 중...</p>
+              <p className="text-sm text-muted-foreground">
+                {messages.repoDetail.translating}
+              </p>
             )}
             {errorMessage && <p className="text-sm text-destructive">{errorMessage}</p>}
 

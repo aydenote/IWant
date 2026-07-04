@@ -6,6 +6,8 @@ import {
 } from '../../../_services/server/repo';
 import { getProfileServer } from '../../../_services/server/profile';
 import RepoDetailClient from '../../../repo/[repoId]/_components/RepoDetailClient';
+import { defaultLocale, isLocale } from '../../../_i18n/config';
+import { getMessages } from '../../../_i18n/messages';
 
 interface RepoDetailPageProps {
   params: Promise<{ locale: string; repoId: string }>;
@@ -106,7 +108,9 @@ export const generateMetadata = async ({
 };
 
 export default async function Page({ params }: RepoDetailPageProps) {
-  const { repoId } = await params;
+  const { locale: localeParam, repoId } = await params;
+  const locale = isLocale(localeParam) ? localeParam : defaultLocale;
+  const messages = getMessages(locale);
   const parsedRepoId = toValidRepoId(repoId);
 
   if (parsedRepoId === null) {
@@ -116,10 +120,10 @@ export default async function Page({ params }: RepoDetailPageProps) {
         <main className="container mx-auto px-4 py-16">
           <div className="rounded-lg border bg-card p-8 text-card-foreground shadow-lg">
             <h1 className="text-2xl font-semibold">
-              레포 정보를 불러오지 못했습니다.
+              {messages.errors.repoLoadTitle}
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              올바른 레포 ID로 다시 접근해 주세요.
+              {messages.errors.invalidRepoId}
             </p>
           </div>
         </main>
@@ -145,11 +149,10 @@ export default async function Page({ params }: RepoDetailPageProps) {
         <main className="container mx-auto px-4 py-16">
           <div className="rounded-lg border bg-card p-8 text-card-foreground shadow-lg">
             <h1 className="text-2xl font-semibold">
-              레포 정보를 불러오지 못했습니다.
+              {messages.errors.repoLoadTitle}
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              GitHub API 응답 또는 배포 환경 변수를 확인한 뒤 다시 시도해
-              주세요.
+              {messages.errors.repoLoadDescription}
             </p>
           </div>
         </main>

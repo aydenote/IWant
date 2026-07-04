@@ -7,6 +7,8 @@ import {
 import { ProfileResponse } from '../../../_types/profile';
 import { RepoDetailResponse } from '../../../_types/repo';
 import SkillAlert from './SkillAlert';
+import { getMessages } from '../../../_i18n/messages';
+import { useLocale } from '../../../_hooks/useLocale';
 
 interface ProfileSidebarProps {
   repo: RepoDetailResponse;
@@ -14,6 +16,8 @@ interface ProfileSidebarProps {
 }
 
 const ProfileSidebar = ({ repo, profile }: ProfileSidebarProps) => {
+  const locale = useLocale();
+  const messages = getMessages(locale);
   const extracted = extractSkillKeywords(repo);
   const { matchRate, matchedSkills, missingSkills } = calculateSkillMatchRate(
     extracted,
@@ -23,36 +27,38 @@ const ProfileSidebar = ({ repo, profile }: ProfileSidebarProps) => {
   return (
     <div className="rounded-lg border p-6 space-y-4 bg-gradient-card shadow-card sticky top-24">
       <h3 className="text-lg font-semibold text-foreground">
-        레포 언어 매칭 결과
+        {messages.repoDetail.skillMatchTitle}
       </h3>
       <SkillAlert
         icon={<CircleCheckIcon />}
-        title="보유기술"
+        title={messages.repoDetail.mySkills}
         skills={profile?.techStack ?? []}
         type="success"
-        emptyMessage="프로필에서 기술을 등록해 주세요."
+        emptyMessage={messages.repoDetail.registerSkills}
       />
       <SkillAlert
         icon={<CircleCheckIcon />}
-        title="매칭기술"
+        title={messages.repoDetail.matchedSkills}
         skills={matchedSkills}
         type="accent"
-        emptyMessage="매칭된 기술이 없습니다."
+        emptyMessage={messages.repoDetail.noMatchedSkills}
       />
       <SkillAlert
         icon={<CircleAlertIcon />}
-        title="레포 사용 기술"
+        title={messages.repoDetail.repoSkills}
         skills={missingSkills}
         type="warning"
-        emptyMessage="현재 기술스택과 모두 매칭됩니다."
+        emptyMessage={messages.repoDetail.allSkillsMatched}
       />
       <div className="pt-4 space-y-3 text-sm">
         <div className="flex justify-between text-muted-foreground">
-          <span>주 언어</span>
-          <span className="font-medium">{repo.language ?? '알 수 없음'}</span>
+          <span>{messages.repoDetail.primaryLanguage}</span>
+          <span className="font-medium">
+            {repo.language ?? messages.repoDetail.unknown}
+          </span>
         </div>
         <div className="flex justify-between text-muted-foreground">
-          <span>매칭률</span>
+          <span>{messages.repoDetail.matchRate}</span>
           <span className="font-medium text-primary">{matchRate}%</span>
         </div>
       </div>

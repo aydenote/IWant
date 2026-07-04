@@ -8,6 +8,8 @@ import RepoDetailSections from './RepoDetailSections';
 import RepoSummaryCard from './RepoSummaryCard';
 import { ArrowLeftIcon } from '../../../_components/icons/ArrowLeftIcon';
 import { useRouter } from 'next/navigation';
+import { getMessages } from '../../../_i18n/messages';
+import { useLocale } from '../../../_hooks/useLocale';
 
 interface RepoDetailClientProps {
   repoId: number;
@@ -16,36 +18,39 @@ interface RepoDetailClientProps {
 }
 
 const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
+  const locale = useLocale();
+  const messages = getMessages(locale);
   const router = useRouter();
 
   const detailSections = [
     {
       title: 'README',
-      content: repo.readme?.slice(0, 6000) ?? 'README를 불러올 수 없습니다.',
+      content:
+        repo.readme?.slice(0, 6000) ?? messages.repoDetail.readmeUnavailable,
       sourcePath: repo.readmePath,
     },
     {
-      title: '기여 이슈',
+      title: messages.repoDetail.contributionIssues,
       content:
         repo.issues.length > 0
           ? repo.issues
               .map(
                 (issue) =>
                   `### Issue #${issue.number}\n\n${issue.title}\n\n${issue.htmlUrl}\n\nLabels: ${
-                    issue.labels.join(', ') || '없음'
+                    issue.labels.join(', ') || messages.repoDetail.noLabels
                   }`
               )
               .join('\n\n')
-          : 'good first issue 또는 help wanted 이슈가 없습니다.',
+          : messages.repoDetail.noContributionIssues,
     },
     {
-      title: '기여 방법',
+      title: messages.repoDetail.contributionGuide,
       content: repo.contributing?.slice(0, 6000) ?? '',
       fallbackContent: {
         original:
           'No CONTRIBUTING document was found. Please check the README and open issues.',
-        ko: 'CONTRIBUTING 문서를 찾을 수 없습니다. README와 이슈 내용을 확인해 주세요.',
-        en: 'No CONTRIBUTING document was found. Please check the README and open issues.',
+        ko: getMessages('ko').repoDetail.contributionGuideUnavailable,
+        en: getMessages('en').repoDetail.contributionGuideUnavailable,
       },
       sourcePath: repo.contributingPath,
     },
@@ -60,7 +65,7 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
         className="cursor-pointer mb-6 gap-2"
       >
         <ArrowLeftIcon />
-        목록으로
+        {messages.repoDetail.backToList}
       </BasicButton>
 
       <div className="grid gap-8 lg:grid-cols-3">
@@ -79,7 +84,7 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
                 rel="noreferrer"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-gradient-hero px-4 text-sm font-medium text-primary-foreground"
               >
-                GitHub에서 보기
+                {messages.repoDetail.viewOnGitHub}
               </a>
             </div>
           </div>

@@ -6,18 +6,29 @@ import UsersIcon from '../icons/UsersIcon';
 import Link from 'next/link';
 import BasicButton from './BasicButton';
 import { getLocalizedPath } from '../../_i18n/config';
+import { getMessages } from '../../_i18n/messages';
 import { useLocale } from '../../_hooks/useLocale';
 
 const AuthToggleButton = () => {
   const locale = useLocale();
+  const messages = getMessages(locale);
   const { status, data: session } = useSession();
   const [open, setOpen] = useState(false);
 
   const isAuthed = status === 'authenticated';
   const menuList = [
-    { label: '오픈소스 레포', href: getLocalizedPath(locale) },
-    { label: '마이페이지', href: getLocalizedPath(locale, '/mypage') },
-    { label: '관심 레포', href: getLocalizedPath(locale, '/bookmark') },
+    {
+      label: messages.navigation.repositories,
+      href: getLocalizedPath(locale),
+    },
+    {
+      label: messages.navigation.myPage,
+      href: getLocalizedPath(locale, '/mypage'),
+    },
+    {
+      label: messages.navigation.bookmarks,
+      href: getLocalizedPath(locale, '/bookmark'),
+    },
   ];
 
   return (
@@ -55,14 +66,14 @@ const AuthToggleButton = () => {
                 }
                 className="cursor-pointer w-full rounded-md px-2 py-1 text-left text-red-600 hover:bg-red-50"
               >
-                로그아웃
+                {messages.navigation.signOut}
               </BasicButton>
             ) : (
               <BasicButton
                 onClick={() => signIn('kakao')}
                 className="cursor-pointer w-full rounded-md px-2 py-1 text-left text-primary hover:bg-primary/10"
               >
-                로그인
+                {messages.navigation.signIn}
               </BasicButton>
             )}
           </div>

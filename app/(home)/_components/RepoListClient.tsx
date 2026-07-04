@@ -6,6 +6,9 @@ import useRepoFilter from '../../_hooks/useRepoFilter';
 import { RepoType } from '../../_types/repo';
 import { useInfiniteScroll } from '../../_hooks/useInfiniteScroll';
 import RepoCard from '../../_components/repo/RepoCard';
+import { getMessages } from '../../_i18n/messages';
+import { localeConfig } from '../../_i18n/config';
+import { useLocale } from '../../_hooks/useLocale';
 
 interface RepoListClientProps {
   repoList: RepoListResponse[];
@@ -24,6 +27,11 @@ const RepoListClient = ({
   bookmarkList,
   setBookmarkList,
 }: RepoListClientProps) => {
+  const locale = useLocale();
+  const messages = getMessages(locale);
+  const numberFormatter = new Intl.NumberFormat(
+    localeConfig[locale].languageTag
+  );
   const { repos, isLoading, anchorRef } = useInfiniteScroll(
     repoList,
     query,
@@ -32,10 +40,10 @@ const RepoListClient = ({
   const filteredRepoList = useRepoFilter(repos, query);
   const hasTechStack = techStack.length > 0;
   const defaultHeading = query.trim()
-    ? '검색 결과'
+    ? messages.repoList.searchResults
     : hasTechStack
-    ? '관심 기술 레포'
-    : '전체 레포';
+    ? messages.repoList.recommended
+    : messages.repoList.all;
 
   return (
     <section className="p-12">
@@ -51,9 +59,9 @@ const RepoListClient = ({
             repoName={repo.fullName}
             ownerName={repo.owner.login}
             imageSrc={repo.owner.avatarUrl}
-            stars={`${repo.stars.toLocaleString()} stars`}
-            language={repo.language ?? 'Language unknown'}
-            openIssues={`${repo.openIssues.toLocaleString()} open issues`}
+            stars={`${numberFormatter.format(repo.stars)} ${messages.repoCard.stars}`}
+            language={repo.language ?? messages.repoCard.unknownLanguage}
+            openIssues={`${numberFormatter.format(repo.openIssues)} ${messages.repoCard.openIssues}`}
             bookmarkList={bookmarkList}
             setBookmarkList={setBookmarkList}
             priorityImage={index < 3}
@@ -61,7 +69,9 @@ const RepoListClient = ({
         ))}
       </div>
       <div ref={anchorRef} className="h-8" />
-      {isLoading && <p className="text-center text-sm">불러오는 중...</p>}
+      {isLoading && (
+        <p className="text-center text-sm">{messages.repoList.loading}</p>
+      )}
     </section>
   );
 };

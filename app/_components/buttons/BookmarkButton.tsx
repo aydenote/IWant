@@ -4,6 +4,8 @@ import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
 import { RepoType } from '../../_types/repo';
 import { useToast } from '../toast/Toast';
+import { getMessages } from '../../_i18n/messages';
+import { useLocale } from '../../_hooks/useLocale';
 import {
   addBookmarkClient,
   deleteBookmarkClient,
@@ -20,6 +22,8 @@ const BookmarkButton = ({
   bookmarkList,
   setBookmarkList,
 }: BookmarkButtonProps) => {
+  const locale = useLocale();
+  const messages = getMessages(locale);
   const bookmarkRepoIds = bookmarkList.map(
     (bookmark: RepoType) => bookmark.repoId
   );
@@ -33,17 +37,17 @@ const BookmarkButton = ({
         prev.filter((bookmark) => bookmark.repoId !== repo.repoId)
       );
       if (success) {
-        showToast('관심 레포에서 제거되었습니다.', 'success');
+        showToast(messages.bookmark.removed, 'success');
       } else {
-        showToast('관심 레포 제거에 실패했습니다.', 'error');
+        showToast(messages.bookmark.removeFailed, 'error');
       }
     } else {
       const success = await addBookmarkClient(repo);
       setBookmarkList((prev) => [...prev, repo]);
       if (success) {
-        showToast('관심 레포로 저장되었습니다.', 'success');
+        showToast(messages.bookmark.added, 'success');
       } else {
-        showToast('관심 레포 저장에 실패했습니다.', 'error');
+        showToast(messages.bookmark.addFailed, 'error');
       }
     }
   };

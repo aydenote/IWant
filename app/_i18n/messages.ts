@@ -34,6 +34,7 @@ export interface AppMessages {
     recommended: string;
     all: string;
     loading: string;
+    skillHeadingTemplate: string;
   };
   repoCard: {
     ownerImageAlt: string;
@@ -53,6 +54,7 @@ export interface AppMessages {
     contributionGuideUnavailable: string;
     original: string;
     korean: string;
+    english: string;
     translating: string;
     translationFailed: string;
     skillMatchTitle: string;
@@ -70,6 +72,12 @@ export interface AppMessages {
     repoLoadTitle: string;
     invalidRepoId: string;
     repoLoadDescription: string;
+  };
+  bookmark: {
+    added: string;
+    addFailed: string;
+    removed: string;
+    removeFailed: string;
   };
 }
 
@@ -112,6 +120,7 @@ export const messages = {
       recommended: '관심 기술 레포',
       all: '전체 레포',
       loading: '불러오는 중...',
+      skillHeadingTemplate: '{skill} 오픈소스 레포',
     },
     repoCard: {
       ownerImageAlt: '레포지토리 소유자 이미지',
@@ -133,6 +142,7 @@ export const messages = {
         'CONTRIBUTING 문서를 찾을 수 없습니다. README와 이슈 내용을 확인해 주세요.',
       original: '원문',
       korean: '한국어',
+      english: 'English',
       translating: '번역 중...',
       translationFailed: '번역에 실패했습니다. 잠시 후 다시 시도해 주세요.',
       skillMatchTitle: '레포 언어 매칭 결과',
@@ -151,6 +161,12 @@ export const messages = {
       invalidRepoId: '올바른 레포 ID로 다시 접근해 주세요.',
       repoLoadDescription:
         'GitHub API 응답 또는 배포 환경 변수를 확인한 뒤 다시 시도해 주세요.',
+    },
+    bookmark: {
+      added: '관심 레포로 저장되었습니다.',
+      addFailed: '관심 레포 저장에 실패했습니다.',
+      removed: '관심 레포에서 제거되었습니다.',
+      removeFailed: '관심 레포 제거에 실패했습니다.',
     },
   },
   en: {
@@ -193,6 +209,7 @@ export const messages = {
       recommended: 'Repositories for your skills',
       all: 'All repositories',
       loading: 'Loading...',
+      skillHeadingTemplate: '{skill} open source repositories',
     },
     repoCard: {
       ownerImageAlt: 'Repository owner avatar',
@@ -214,6 +231,7 @@ export const messages = {
         'No CONTRIBUTING guide was found. Check the README and issues for guidance.',
       original: 'Original',
       korean: 'Korean',
+      english: 'English',
       translating: 'Translating...',
       translationFailed: 'Translation failed. Please try again later.',
       skillMatchTitle: 'Repository skill match',
@@ -233,7 +251,23 @@ export const messages = {
       repoLoadDescription:
         'Check the GitHub API response or deployment environment variables and try again.',
     },
+    bookmark: {
+      added: 'Repository added to bookmarks.',
+      addFailed: 'Failed to bookmark the repository.',
+      removed: 'Repository removed from bookmarks.',
+      removeFailed: 'Failed to remove the repository from bookmarks.',
+    },
   },
 } as const satisfies Record<Locale, AppMessages>;
 
 export const getMessages = (locale: Locale): AppMessages => messages[locale];
+
+export const formatMessage = (
+  template: string,
+  values: Record<string, string | number>
+) =>
+  Object.entries(values).reduce(
+    (message, [key, value]) =>
+      message.replaceAll(`{${key}}`, String(value)),
+    template
+  );
