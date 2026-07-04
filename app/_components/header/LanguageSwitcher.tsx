@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import {
   localeConfig,
+  localeCookieName,
   locales,
   replacePathLocale,
   type Locale,
@@ -19,6 +20,7 @@ const LanguageSwitcher = () => {
     if (nextLocale === locale) return;
 
     const nextPath = replacePathLocale(pathname, nextLocale);
+    document.cookie = `${localeCookieName}=${nextLocale}; Max-Age=31536000; Path=/; SameSite=Lax`;
     window.location.assign(
       `${nextPath}${window.location.search}${window.location.hash}`
     );

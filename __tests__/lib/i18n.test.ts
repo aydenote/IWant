@@ -1,6 +1,7 @@
 import {
   defaultLocale,
   getLocalizedPath,
+  getPreferredLocale,
   isLocale,
   localeConfig,
   locales,
@@ -43,6 +44,13 @@ describe('i18n config', () => {
       '/en/search/react'
     );
     expect(replacePathLocale('/repo/1', 'en')).toBe('/en/repo/1');
+  });
+
+  test('Accept-Language 우선순위에 맞는 locale을 선택한다', () => {
+    expect(getPreferredLocale('en-US,en;q=0.9,ko;q=0.8')).toBe('en');
+    expect(getPreferredLocale('en;q=0.5,ko-KR;q=0.9')).toBe('ko');
+    expect(getPreferredLocale('ja-JP,zh;q=0.9')).toBe(defaultLocale);
+    expect(getPreferredLocale(null)).toBe(defaultLocale);
   });
 
   test('번역 메시지의 placeholder를 치환한다', () => {
