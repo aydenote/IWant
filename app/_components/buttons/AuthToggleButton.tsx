@@ -5,16 +5,19 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import UsersIcon from '../icons/UsersIcon';
 import Link from 'next/link';
 import BasicButton from './BasicButton';
+import { getLocalizedPath } from '../../_i18n/config';
+import { useLocale } from '../../_hooks/useLocale';
 
 const AuthToggleButton = () => {
+  const locale = useLocale();
   const { status, data: session } = useSession();
   const [open, setOpen] = useState(false);
 
   const isAuthed = status === 'authenticated';
   const menuList = [
-    { label: '오픈소스 레포', href: '/' },
-    { label: '마이페이지', href: '/mypage' },
-    { label: '관심 레포', href: '/bookmark' },
+    { label: '오픈소스 레포', href: getLocalizedPath(locale) },
+    { label: '마이페이지', href: getLocalizedPath(locale, '/mypage') },
+    { label: '관심 레포', href: getLocalizedPath(locale, '/bookmark') },
   ];
 
   return (
@@ -47,7 +50,9 @@ const AuthToggleButton = () => {
 
             {session ? (
               <BasicButton
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() =>
+                  signOut({ callbackUrl: getLocalizedPath(locale) })
+                }
                 className="cursor-pointer w-full rounded-md px-2 py-1 text-left text-red-600 hover:bg-red-50"
               >
                 로그아웃

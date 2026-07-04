@@ -9,6 +9,8 @@ import MapPinIcon from '../icons/MapPinIcon';
 import UsersIcon from '../icons/UsersIcon';
 import BasicButton from '../buttons/BasicButton';
 import { useSession } from 'next-auth/react';
+import { getLocalizedPath } from '../../_i18n/config';
+import { useLocale } from '../../_hooks/useLocale';
 
 interface RepoCardProps extends RepoType {
   bookmarkList: RepoType[];
@@ -28,6 +30,8 @@ const RepoCard = ({
   setBookmarkList,
   priorityImage = false,
 }: RepoCardProps) => {
+  const locale = useLocale();
+  const repoHref = getLocalizedPath(locale, `/repo/${repoId}`);
   const safeSrc =
     imageSrc && imageSrc.length > 0
       ? imageSrc
@@ -52,7 +56,7 @@ const RepoCard = ({
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-2 flex-1">
-            <Link href={`/repo/${repoId}`}>
+            <Link href={repoHref}>
               <h3 className="text-lg font-semibold text-foreground hover:text-primary transition-colors line-clamp-1">
                 {repoName}
               </h3>
@@ -93,7 +97,7 @@ const RepoCard = ({
           <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-accent text-accent">
             {language}
           </div>
-          <Link href={`/repo/${repoId}`}>
+          <Link href={repoHref}>
             <BasicButton className="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-gradient-hero">
               자세히 보기
             </BasicButton>

@@ -26,3 +26,9 @@ export const localeConfig = {
 
 export const isLocale = (value: string): value is Locale =>
   locales.includes(value as Locale);
+
+export const getLocalizedPath = (locale: Locale, path = '/') => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+  return normalizedPath === '/' ? `/${locale}` : `/${locale}${normalizedPath}`;
+};

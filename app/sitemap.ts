@@ -9,13 +9,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url: siteUrl,
+      url: `${siteUrl}/ko`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 1,
     },
     ...PUBLIC_SEARCH_SKILLS.map((skill) => ({
-      url: `${siteUrl}/search/${skill}`,
+      url: `${siteUrl}/ko/search/${skill}`,
       lastModified: now,
       changeFrequency: 'daily' as const,
       priority: 0.8,

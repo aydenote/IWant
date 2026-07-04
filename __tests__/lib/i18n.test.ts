@@ -1,5 +1,6 @@
 import {
   defaultLocale,
+  getLocalizedPath,
   isLocale,
   localeConfig,
   locales,
@@ -23,5 +24,11 @@ describe('i18n config', () => {
     expect(localeConfig.en.openGraphLocale).toBe('en_US');
     expect(getMessages('ko').hero.reset).toBe('초기화');
     expect(getMessages('en').hero.reset).toBe('Reset');
+  });
+
+  test('locale prefix가 포함된 내부 경로를 생성한다', () => {
+    expect(getLocalizedPath('ko')).toBe('/ko');
+    expect(getLocalizedPath('en', '/search/react')).toBe('/en/search/react');
+    expect(getLocalizedPath('en', 'mypage')).toBe('/en/mypage');
   });
 });

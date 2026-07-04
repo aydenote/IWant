@@ -1,14 +1,5 @@
-import Header from '../_components/header/Header';
-import BookmarkClient from './_components/BookmarkClient';
-import { getBookmarkServer } from '../_services/server/bookmark';
+import { permanentRedirect } from 'next/navigation';
 
-export default async function Page() {
-  const bookmarkRepoList = await getBookmarkServer();
-
-  return (
-    <div className="bg-[#f8fafc] min-h-screen">
-      <Header />
-      <BookmarkClient bookmarkRepoList={bookmarkRepoList} />
-    </div>
-  );
+export default function Page() {
+  permanentRedirect('/ko/bookmark');
 }

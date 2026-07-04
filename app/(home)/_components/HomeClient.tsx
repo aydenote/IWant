@@ -8,6 +8,8 @@ import type { RepoListResponse } from '../../_types/repo';
 import { RepoType } from '../../_types/repo';
 import { ProfileResponse } from '../../_types/profile';
 import { toSearchSkillSlug } from '../../_utils/searchSkill';
+import { getLocalizedPath } from '../../_i18n/config';
+import { useLocale } from '../../_hooks/useLocale';
 
 interface HomeClientProps {
   initialRepoList: RepoListResponse[];
@@ -19,6 +21,7 @@ const HomeClient = ({
   bookmarkRepoList,
   profile,
 }: HomeClientProps) => {
+  const locale = useLocale();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
   const [bookmarkList, setBookmarkList] =
@@ -29,7 +32,7 @@ const HomeClient = ({
     const skillSlug = toSearchSkillSlug(value);
     if (!skillSlug) return;
 
-    router.push(`/search/${skillSlug}`);
+    router.push(getLocalizedPath(locale, `/search/${skillSlug}`));
   };
 
   return (
