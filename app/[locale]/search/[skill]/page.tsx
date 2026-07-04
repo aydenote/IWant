@@ -4,6 +4,12 @@ import { getBookmarkServer } from '../../../_services/server/bookmark';
 import { getRepoListServer } from '../../../_services/server/repo';
 import { toSearchSkillLabel } from '../../../_utils/searchSkill';
 import SearchClient from '../../../search/[skill]/_components/SearchClient';
+import {
+  defaultLocale,
+  isLocale,
+  localeConfig,
+} from '../../../_i18n/config';
+import { formatMessage, getMessages } from '../../../_i18n/messages';
 
 interface SearchPageProps {
   params: Promise<{ locale: string; skill: string }>;
@@ -12,15 +18,32 @@ interface SearchPageProps {
 export const generateMetadata = async ({
   params,
 }: SearchPageProps): Promise<Metadata> => {
-  const { skill: skillSlug } = await params;
+  const { locale: localeParam, skill: skillSlug } = await params;
+  const locale = isLocale(localeParam) ? localeParam : defaultLocale;
+  const messages = getMessages(locale);
   const skill = toSearchSkillLabel(skillSlug);
+  const title = formatMessage(messages.metadata.search.titleTemplate, {
+    skill,
+  });
+  const description = formatMessage(
+    messages.metadata.search.descriptionTemplate,
+    { skill }
+  );
 
   return {
-    title: `${skill} 오픈소스 기여 레포 추천 | IWant`,
-    description: `${skill} 기술로 기여하기 좋은 오픈소스 레포와 good first issue를 찾아보세요.`,
+    title,
+    description,
     openGraph: {
-      title: `${skill} 오픈소스 기여 레포 추천 | IWant`,
-      description: `${skill} 기반으로 참여하기 좋은 오픈소스 레포를 모아 보여줍니다.`,
+      title,
+      description,
+      siteName: 'IWant',
+      type: 'website',
+      locale: localeConfig[locale].openGraphLocale,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
     },
   };
 };

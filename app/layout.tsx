@@ -1,17 +1,18 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
+import { headers } from 'next/headers';
 import Provider from './(home)/provider';
 import './_styles/global.css';
 import { Analytics } from '@vercel/analytics/next';
 import { ToastProvider } from './_components/toast/Toast';
 import { authOptions } from './api/auth/[...nextauth]/route';
+import { defaultLocale, isLocale, localeConfig } from './_i18n/config';
+import { getSiteUrl } from './_utils/siteUrl';
 
-export const metadata = {
-  title: {
-    default: 'IWant',
-  },
-  description:
-    '개인이 입력한 기술스택으로 기여 가능한 오픈소스 레포를 찾도록 도와주는 서비스입니다',
+export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
+  title: 'IWant',
 };
 
 export default async function RootLayout({
@@ -19,10 +20,16 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const [session, requestHeaders] = await Promise.all([
+    getServerSession(authOptions),
+    headers(),
+  ]);
+  const localeHeader = requestHeaders.get('x-iwant-locale');
+  const locale =
+    localeHeader && isLocale(localeHeader) ? localeHeader : defaultLocale;
 
   return (
-    <html lang="ko">
+    <html lang={localeConfig[locale].languageTag}>
       <body>
         <Analytics />
         <Provider session={session}>

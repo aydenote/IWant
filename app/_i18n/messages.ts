@@ -14,6 +14,9 @@ export interface AppMessages {
       fallbackTitle: string;
       fallbackDescription: string;
       titleTemplate: string;
+      summaryFallbackTemplate: string;
+      descriptionTemplate: string;
+      topicsTemplate: string;
     };
   };
   navigation: {
@@ -99,6 +102,11 @@ export const messages = {
         fallbackDescription:
           '오픈소스 레포의 README, 기여 가이드, good first issue를 확인해보세요.',
         titleTemplate: '{repo} 오픈소스 기여 이슈 | IWant',
+        summaryFallbackTemplate:
+          '{language} 기반으로 기여할 수 있는 GitHub 레포입니다.',
+        descriptionTemplate:
+          '{summary} 열린 이슈 {openIssues}개와 README 정보를 IWant에서 확인해보세요.{topics}',
+        topicsTemplate: ' 주요 토픽: {topics}.',
       },
     },
     navigation: {
@@ -188,6 +196,11 @@ export const messages = {
           'Explore open source repository READMEs, contribution guides, and good first issues.',
         titleTemplate:
           '{repo} Open Source Issues & Contribution Guide | IWant',
+        summaryFallbackTemplate:
+          'An open source GitHub repository built with {language}.',
+        descriptionTemplate:
+          '{summary} Explore {openIssues} open issues, README details, and contribution opportunities on IWant.{topics}',
+        topicsTemplate: ' Topics: {topics}.',
       },
     },
     navigation: {

@@ -6,16 +6,17 @@ import {
 } from '../../../_services/server/repo';
 import { getProfileServer } from '../../../_services/server/profile';
 import RepoDetailClient from '../../../repo/[repoId]/_components/RepoDetailClient';
-import { defaultLocale, isLocale } from '../../../_i18n/config';
-import { getMessages } from '../../../_i18n/messages';
+import {
+  defaultLocale,
+  isLocale,
+  localeConfig,
+  type Locale,
+} from '../../../_i18n/config';
+import { formatMessage, getMessages } from '../../../_i18n/messages';
 
 interface RepoDetailPageProps {
   params: Promise<{ locale: string; repoId: string }>;
 }
-
-const FALLBACK_TITLE = 'IWant 레포 상세 | IWant';
-const FALLBACK_DESCRIPTION =
-  'IWant에서 오픈소스 레포의 README, 기여 가이드, good first issue를 확인해보세요.';
 
 const toValidRepoId = (repoId: string) => {
   const parsedRepoId = Number(repoId);
@@ -30,31 +31,49 @@ const buildRepoDescription = ({
   language,
   openIssues,
   topics,
+  locale,
 }: {
   description: string | null;
   language: string | null;
   openIssues: number;
   topics: string[];
+  locale: Locale;
 }) => {
+  const metadataMessages = getMessages(locale).metadata.repo;
+  const numberFormatter = new Intl.NumberFormat(
+    localeConfig[locale].languageTag
+  );
   const repoSummary =
     description ??
-    `${language ?? '오픈소스'} 기반으로 기여할 수 있는 GitHub 레포입니다.`;
+    formatMessage(metadataMessages.summaryFallbackTemplate, {
+      language: language ?? getMessages(locale).repoDetail.unknown,
+    });
   const topicText =
-    topics.length > 0 ? ` 주요 토픽: ${topics.slice(0, 4).join(', ')}.` : '';
+    topics.length > 0
+      ? formatMessage(metadataMessages.topicsTemplate, {
+          topics: topics.slice(0, 4).join(', '),
+        })
+      : '';
 
-  return `${repoSummary} 열린 이슈 ${openIssues.toLocaleString()}개와 README 정보를 IWant에서 확인해보세요.${topicText}`;
+  return formatMessage(metadataMessages.descriptionTemplate, {
+    summary: repoSummary,
+    openIssues: numberFormatter.format(openIssues),
+    topics: topicText,
+  });
 };
 
 export const generateMetadata = async ({
   params,
 }: RepoDetailPageProps): Promise<Metadata> => {
-  const { repoId } = await params;
+  const { locale: localeParam, repoId } = await params;
+  const locale = isLocale(localeParam) ? localeParam : defaultLocale;
+  const messages = getMessages(locale);
   const parsedRepoId = toValidRepoId(repoId);
 
   if (parsedRepoId === null) {
     return {
-      title: FALLBACK_TITLE,
-      description: FALLBACK_DESCRIPTION,
+      title: messages.metadata.repo.fallbackTitle,
+      description: messages.metadata.repo.fallbackDescription,
     };
   }
 
@@ -62,13 +81,15 @@ export const generateMetadata = async ({
 
   if (!repo) {
     return {
-      title: FALLBACK_TITLE,
-      description: FALLBACK_DESCRIPTION,
+      title: messages.metadata.repo.fallbackTitle,
+      description: messages.metadata.repo.fallbackDescription,
     };
   }
 
-  const title = `${repo.fullName} 오픈소스 기여 이슈 | IWant`;
-  const description = buildRepoDescription(repo);
+  const title = formatMessage(messages.metadata.repo.titleTemplate, {
+    repo: repo.fullName,
+  });
+  const description = buildRepoDescription({ ...repo, locale });
 
   return {
     title,
@@ -79,15 +100,16 @@ export const generateMetadata = async ({
       repo.owner.login,
       repo.language,
       ...repo.topics,
-      '오픈소스 기여',
+      locale === 'ko' ? '오픈소스 기여' : 'open source contribution',
       'good first issue',
     ].filter((keyword): keyword is string => Boolean(keyword)),
     openGraph: {
       title,
       description,
-      url: `/repo/${repo.id}`,
+      url: `/${locale}/repo/${repo.id}`,
       siteName: 'IWant',
       type: 'article',
+      locale: localeConfig[locale].openGraphLocale,
       images: [
         {
           url: repo.owner.avatarUrl,
@@ -100,9 +122,6 @@ export const generateMetadata = async ({
       title,
       description,
       images: [repo.owner.avatarUrl],
-    },
-    alternates: {
-      canonical: `/repo/${repo.id}`,
     },
   };
 };
