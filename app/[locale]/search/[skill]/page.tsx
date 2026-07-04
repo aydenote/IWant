@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import Header from '../../../_components/header/Header';
 import { getBookmarkServer } from '../../../_services/server/bookmark';
 import { getRepoListServer } from '../../../_services/server/repo';
-import { toSearchSkillLabel } from '../../../_utils/searchSkill';
+import {
+  toSearchSkillLabel,
+  toSearchSkillSlug,
+} from '../../../_utils/searchSkill';
+import { getLocaleAlternates } from '../../../_utils/localeSeo';
 import SearchClient from '../../../search/[skill]/_components/SearchClient';
 import {
   defaultLocale,
@@ -22,6 +26,8 @@ export const generateMetadata = async ({
   const locale = isLocale(localeParam) ? localeParam : defaultLocale;
   const messages = getMessages(locale);
   const skill = toSearchSkillLabel(skillSlug);
+  const canonicalSkillSlug = toSearchSkillSlug(skillSlug);
+  const canonicalPath = `/search/${canonicalSkillSlug}`;
   const title = formatMessage(messages.metadata.search.titleTemplate, {
     skill,
   });
@@ -33,9 +39,11 @@ export const generateMetadata = async ({
   return {
     title,
     description,
+    alternates: getLocaleAlternates(locale, canonicalPath),
     openGraph: {
       title,
       description,
+      url: `/${locale}${canonicalPath}`,
       siteName: 'IWant',
       type: 'website',
       locale: localeConfig[locale].openGraphLocale,

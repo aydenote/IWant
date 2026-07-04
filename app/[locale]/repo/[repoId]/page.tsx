@@ -13,6 +13,7 @@ import {
   type Locale,
 } from '../../../_i18n/config';
 import { formatMessage, getMessages } from '../../../_i18n/messages';
+import { getLocaleAlternates } from '../../../_utils/localeSeo';
 
 interface RepoDetailPageProps {
   params: Promise<{ locale: string; repoId: string }>;
@@ -90,10 +91,12 @@ export const generateMetadata = async ({
     repo: repo.fullName,
   });
   const description = buildRepoDescription({ ...repo, locale });
+  const canonicalPath = `/repo/${repo.id}`;
 
   return {
     title,
     description,
+    alternates: getLocaleAlternates(locale, canonicalPath),
     keywords: [
       repo.name,
       repo.fullName,
@@ -106,7 +109,7 @@ export const generateMetadata = async ({
     openGraph: {
       title,
       description,
-      url: `/${locale}/repo/${repo.id}`,
+      url: `/${locale}${canonicalPath}`,
       siteName: 'IWant',
       type: 'article',
       locale: localeConfig[locale].openGraphLocale,

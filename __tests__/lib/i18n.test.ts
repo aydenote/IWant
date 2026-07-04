@@ -6,6 +6,10 @@ import {
   locales,
 } from '../../app/_i18n/config';
 import { formatMessage, getMessages } from '../../app/_i18n/messages';
+import {
+  getAbsoluteLanguageAlternates,
+  getLocaleAlternates,
+} from '../../app/_utils/localeSeo';
 
 describe('i18n config', () => {
   test('지원 locale과 기본 locale을 제공한다', () => {
@@ -38,5 +42,26 @@ describe('i18n config', () => {
         skill: 'React',
       })
     ).toBe('React open source repositories');
+  });
+
+  test('현재 locale의 canonical과 언어별 대체 경로를 생성한다', () => {
+    expect(getLocaleAlternates('en', '/search/react')).toEqual({
+      canonical: '/en/search/react',
+      languages: {
+        ko: '/ko/search/react',
+        en: '/en/search/react',
+        'x-default': '/ko/search/react',
+      },
+    });
+  });
+
+  test('사이트맵용 절대 언어 URL을 생성한다', () => {
+    expect(
+      getAbsoluteLanguageAlternates('https://iwant.example', '/repo/1')
+    ).toEqual({
+      ko: 'https://iwant.example/ko/repo/1',
+      en: 'https://iwant.example/en/repo/1',
+      'x-default': 'https://iwant.example/ko/repo/1',
+    });
   });
 });
