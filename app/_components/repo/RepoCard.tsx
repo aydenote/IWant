@@ -34,10 +34,7 @@ const RepoCard = ({
   const locale = useLocale();
   const messages = getMessages(locale);
   const repoHref = getLocalizedPath(locale, `/repo/${repoId}`);
-  const safeSrc =
-    imageSrc && imageSrc.length > 0
-      ? imageSrc
-      : 'https://static.wanted.co.kr/images/profile_default.png';
+  const safeSrc = imageSrc?.trim() || null;
 
   const { status, data: session } = useSession();
   const isAuthed = status === 'authenticated';
@@ -45,15 +42,21 @@ const RepoCard = ({
   return (
     <div className="rounded-lg text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-border hover:border-primary/30 bg-gradient-card">
       <div className="relative h-40 bg-muted">
-        <Image
-          src={safeSrc}
-          width={400}
-          height={400}
-          alt={messages.repoCard.ownerImageAlt}
-          className="w-full h-full object-cover"
-          loading={priorityImage ? 'eager' : 'lazy'}
-          priority={priorityImage}
-        />
+        {safeSrc ? (
+          <Image
+            src={safeSrc}
+            width={400}
+            height={400}
+            alt={messages.repoCard.ownerImageAlt}
+            className="w-full h-full object-cover"
+            loading={priorityImage ? 'eager' : 'lazy'}
+            priority={priorityImage}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-muted">
+            <BuildingIcon className="h-12 w-12 text-muted-foreground" />
+          </div>
+        )}
       </div>
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
