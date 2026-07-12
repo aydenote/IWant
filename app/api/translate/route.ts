@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateCsrfRequest } from '../../_services/server/csrf';
 
 export async function POST(request: NextRequest) {
+  const csrfError = validateCsrfRequest(request);
+  if (csrfError) return csrfError;
+
   const { text, target } = await request.json();
 
   if (typeof text !== 'string' || !['ko', 'en'].includes(target)) {

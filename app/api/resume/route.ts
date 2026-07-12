@@ -4,8 +4,12 @@ import { supabase } from '../../_lib/supabase';
 import { prisma } from '../../_lib/prisma';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { checkAuth } from '../../_services/server/common';
+import { validateCsrfRequest } from '../../_services/server/csrf';
 
 export const POST = async (req: Request) => {
+  const csrfError = validateCsrfRequest(req);
+  if (csrfError) return csrfError;
+
   const { isAuth, userId } = await checkAuth();
 
   if (!isAuth || !userId) {
@@ -66,7 +70,10 @@ export const POST = async (req: Request) => {
   });
 };
 
-export const DELETE = async () => {
+export const DELETE = async (req: Request) => {
+  const csrfError = validateCsrfRequest(req);
+  if (csrfError) return csrfError;
+
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 

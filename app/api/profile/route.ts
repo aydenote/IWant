@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../_lib/prisma';
 import { checkAuth } from '../../_services/server/common';
+import { validateCsrfRequest } from '../../_services/server/csrf';
 
 export const PUT = async (req: Request) => {
+  const csrfError = validateCsrfRequest(req);
+  if (csrfError) return csrfError;
+
   const { isAuth, email } = await checkAuth();
 
   if (!isAuth) {
