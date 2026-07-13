@@ -7,7 +7,6 @@ import BuildingIcon from '../icons/BuildingIcon';
 import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
 import UsersIcon from '../icons/UsersIcon';
-import BasicButton from '../buttons/BasicButton';
 import { useSession } from 'next-auth/react';
 import { getLocalizedPath } from '../../_i18n/config';
 import { getMessages } from '../../_i18n/messages';
@@ -35,6 +34,7 @@ const RepoCard = ({
   const messages = getMessages(locale);
   const repoHref = getLocalizedPath(locale, `/repo/${repoId}`);
   const safeSrc = imageSrc?.trim() || null;
+  const detailLinkLabel = `${repoName} ${messages.repoCard.details}`;
 
   const { status, data: session } = useSession();
   const isAuthed = status === 'authenticated';
@@ -102,10 +102,12 @@ const RepoCard = ({
           <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-accent text-accent">
             {language}
           </div>
-          <Link href={repoHref}>
-            <BasicButton className="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-gradient-hero">
-              {messages.repoCard.details}
-            </BasicButton>
+          <Link
+            aria-label={detailLinkLabel}
+            className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md bg-gradient-hero px-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            href={repoHref}
+          >
+            {messages.repoCard.details}
           </Link>
         </div>
       </div>
