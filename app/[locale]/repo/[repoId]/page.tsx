@@ -14,6 +14,8 @@ import {
 } from '../../../_i18n/config';
 import { formatMessage, getMessages } from '../../../_i18n/messages';
 import { getLocaleAlternates } from '../../../_utils/localeSeo';
+import { getSiteUrl } from '../../../_utils/siteUrl';
+import type { RepoDetailResponse } from '../../../_types/repo';
 
 interface RepoDetailPageProps {
   params: Promise<{ locale: string; repoId: string }>;
@@ -63,6 +65,68 @@ const buildRepoDescription = ({
   });
 };
 
+const getRepoKeywords = ({
+  name,
+  fullName,
+  owner,
+  language,
+  topics,
+  locale,
+}: {
+  name: string;
+  fullName: string;
+  owner: { login: string };
+  language: string | null;
+  topics: string[];
+  locale: Locale;
+}) =>
+  [
+    name,
+    fullName,
+    owner.login,
+    language,
+    ...topics,
+    locale === 'ko' ? '오픈소스 기여' : 'open source contribution',
+    'good first issue',
+  ].filter((keyword): keyword is string => Boolean(keyword));
+
+const escapeJsonLd = (data: Record<string, unknown>) =>
+  JSON.stringify(data).replace(/</g, '\\u003c');
+
+const buildRepoStructuredData = (
+  repo: RepoDetailResponse,
+  locale: Locale
+) => {
+  const description = buildRepoDescription({ ...repo, locale });
+  const keywords = getRepoKeywords({ ...repo, locale });
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: repo.fullName,
+    headline: repo.fullName,
+    description,
+    url: `${getSiteUrl()}/${locale}/repo/${repo.id}`,
+    codeRepository: repo.htmlUrl,
+    image: repo.owner.avatarUrl,
+    programmingLanguage: repo.language ?? undefined,
+    keywords: keywords.join(', '),
+    license: repo.license ?? undefined,
+    dateModified: repo.updatedAt,
+    isAccessibleForFree: true,
+    author: {
+      '@type': 'Organization',
+      name: repo.owner.login,
+      url: repo.owner.htmlUrl,
+    },
+    interactionStatistic: {
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/CommentAction',
+      userInteractionCount: repo.openIssues,
+    },
+  };
+};
+
 export const generateMetadata = async ({
   params,
 }: RepoDetailPageProps): Promise<Metadata> => {
@@ -92,20 +156,20 @@ export const generateMetadata = async ({
   });
   const description = buildRepoDescription({ ...repo, locale });
   const canonicalPath = `/repo/${repo.id}`;
+  const keywords = getRepoKeywords({ ...repo, locale });
 
   return {
     title,
     description,
     alternates: getLocaleAlternates(locale, canonicalPath),
-    keywords: [
-      repo.name,
-      repo.fullName,
-      repo.owner.login,
-      repo.language,
-      ...repo.topics,
-      locale === 'ko' ? '오픈소스 기여' : 'open source contribution',
-      'good first issue',
-    ].filter((keyword): keyword is string => Boolean(keyword)),
+    authors: [{ name: repo.owner.login, url: repo.owner.htmlUrl }],
+    category: 'open source',
+    creator: repo.owner.login,
+    keywords,
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title,
       description,
@@ -113,6 +177,9 @@ export const generateMetadata = async ({
       siteName: 'IWant',
       type: 'article',
       locale: localeConfig[locale].openGraphLocale,
+      modifiedTime: repo.updatedAt,
+      authors: [repo.owner.htmlUrl],
+      tags: keywords,
       images: [
         {
           url: repo.owner.avatarUrl,
@@ -182,8 +249,14 @@ export default async function Page({ params }: RepoDetailPageProps) {
     );
   }
 
+  const structuredData = buildRepoStructuredData(repoDetail, locale);
+
   return (
     <div className="bg-[#f8fafc] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
+      />
       <Header />
       <RepoDetailClient
         repoId={parsedRepoId}
