@@ -104,9 +104,11 @@ const RepoCard = ({
           </div>
           <Link
             aria-label={detailLinkLabel}
-            className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md bg-gradient-hero px-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md bg-gradient-hero px-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             href={repoHref}
+            title={detailLinkLabel}
           >
+            <span className="sr-only">{repoName} </span>
             {messages.repoCard.details}
           </Link>
         </div>
