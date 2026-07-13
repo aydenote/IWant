@@ -8,8 +8,6 @@ export interface SaveProfileType {
 
 export interface ProfileResponse {
   id: string;
-  resumeName: string | null;
-  resumeUrl: string | null;
   techStack: string[];
   updatedAt: Date | null;
   user: {

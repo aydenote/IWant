@@ -1,22 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import Text from '../../_components/commons/Text';
 import Profile from './Profile';
-import Resume from './Resume';
-import TabButton from './TabButton';
 import { ProfileResponse } from '../../_types/profile';
-import { ResumeResponse } from '../../_types/resume';
 
 interface MyPageClientProps {
   profile: ProfileResponse | null;
-  resume: ResumeResponse;
 }
 
-const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
-  const [activeTab, setActiveTab] = useState('profile');
-  const [resumeData, setResumeData] = useState(resume);
-
+const MyPageClient = ({ profile }: MyPageClientProps) => {
   return (
     <div className="container mx-auto px-4 pt-12">
       <div className="max-w-4xl mx-auto">
@@ -30,29 +22,8 @@ const MyPageClient = ({ profile, resume }: MyPageClientProps) => {
           마이페이지
         </Text>
 
-        <section className="space-y-6">
-          <div className="h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-2">
-            <TabButton
-              isActive={activeTab === 'profile'}
-              onClick={() => setActiveTab('profile')}
-            >
-              프로필
-            </TabButton>
-            <TabButton
-              isActive={activeTab === 'resume'}
-              onClick={() => setActiveTab('resume')}
-            >
-              이력서
-            </TabButton>
-          </div>
-
-          <div className="mt-2 outline-none space-y-6">
-            {activeTab === 'profile' ? (
-              <Profile profile={profile} />
-            ) : (
-              <Resume resume={resumeData} setResume={setResumeData} />
-            )}
-          </div>
+        <section className="mt-2 outline-none space-y-6">
+          <Profile profile={profile} />
         </section>
       </div>
     </div>
