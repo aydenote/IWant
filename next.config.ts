@@ -72,6 +72,8 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Keep dynamic route metadata in the initial HTML for SEO checks and hard refreshes.
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: IMAGE_REMOTE_PATTERNS,
   },

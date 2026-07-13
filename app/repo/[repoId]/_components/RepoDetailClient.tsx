@@ -1,13 +1,13 @@
 'use client';
 
-import BasicButton from '../../../_components/buttons/BasicButton';
+import Link from 'next/link';
 import { ProfileResponse } from '../../../_types/profile';
 import { RepoDetailResponse } from '../../../_types/repo';
 import ProfileSidebar from './ProfileSidebar';
 import RepoDetailSections from './RepoDetailSections';
 import RepoSummaryCard from './RepoSummaryCard';
 import { ArrowLeftIcon } from '../../../_components/icons/ArrowLeftIcon';
-import { useRouter } from 'next/navigation';
+import { getLocalizedPath } from '../../../_i18n/config';
 import { getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
 
@@ -20,7 +20,7 @@ interface RepoDetailClientProps {
 const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
   const locale = useLocale();
   const messages = getMessages(locale);
-  const router = useRouter();
+  const listHref = getLocalizedPath(locale);
 
   const detailSections = [
     {
@@ -58,15 +58,13 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <BasicButton
-        onClick={() => router.back()}
-        variant="ghost"
-        size="sm"
-        className="cursor-pointer mb-6 gap-2"
+      <Link
+        href={listHref}
+        className="mb-6 inline-flex h-9 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       >
         <ArrowLeftIcon />
         {messages.repoDetail.backToList}
-      </BasicButton>
+      </Link>
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
