@@ -1,202 +1,23 @@
 'use client';
 
-import type { CSSProperties } from 'react';
-import { useState } from 'react';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
+import rehypeSanitize from 'rehype-sanitize';
 import { getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getTranslate, TranslateTarget } from '../../../_services/client/translate';
 import BasicButton from '../../../_components/buttons/BasicButton';
-
-type TranslateMode = 'original' | TranslateTarget;
-
-interface DetailSection {
-  title: string;
-  content: string;
-  fallbackContent?: Partial<Record<TranslateMode, string>>;
-  sourcePath?: string | null;
-}
+import { useRepoDetailSections } from '../_hooks/useRepoDetailSections';
+import type { DetailSection } from '../_types/repoDetailSection';
+import { resolveMarkdownSrcSet } from '../_utils/markdownImage';
+import { markdownSanitizeSchema } from '../_utils/markdownSanitizeSchema';
+import MarkdownImage from './MarkdownImage';
 
 interface RepoDetailSectionsProps {
   defaultBranch: string;
   repoFullName: string;
   sections: DetailSection[];
 }
-
-const isAbsoluteUrl = (src: string) =>
-  /^https?:\/\//i.test(src) || src.startsWith('//') || src.startsWith('data:');
-
-const getDirectoryPath = (path?: string | null) => {
-  if (!path || !path.includes('/')) return '';
-  return path.split('/').slice(0, -1).join('/');
-};
-
-const normalizeRelativePath = (path: string) => {
-  const parts: string[] = [];
-
-  path.split('/').forEach((part) => {
-    if (!part || part === '.') return;
-    if (part === '..') {
-      parts.pop();
-      return;
-    }
-    parts.push(part);
-  });
-
-  return parts.join('/');
-};
-
-const resolveMarkdownImageSrc = ({
-  src,
-  sourcePath,
-  repoFullName,
-  defaultBranch,
-}: {
-  src?: string;
-  sourcePath?: string | null;
-  repoFullName: string;
-  defaultBranch: string;
-}) => {
-  if (!src || isAbsoluteUrl(src)) return src;
-
-  const normalizedSrc = src.startsWith('/') ? src.slice(1) : src;
-  const basePath = src.startsWith('/') ? '' : getDirectoryPath(sourcePath);
-  const imagePath = normalizeRelativePath(
-    [basePath, normalizedSrc].filter(Boolean).join('/')
-  );
-
-  return `https://raw.githubusercontent.com/${repoFullName}/${defaultBranch}/${imagePath}`;
-};
-
-const resolveMarkdownSrcSet = ({
-  srcSet,
-  sourcePath,
-  repoFullName,
-  defaultBranch,
-}: {
-  srcSet?: string;
-  sourcePath?: string | null;
-  repoFullName: string;
-  defaultBranch: string;
-}) => {
-  if (!srcSet) return srcSet;
-
-  return srcSet
-    .split(',')
-    .map((candidate) => {
-      const trimmedCandidate = candidate.trim();
-      const [, src = '', descriptor = ''] =
-        trimmedCandidate.match(/^(\S+)(.*)$/) ?? [];
-      const resolvedSrc = resolveMarkdownImageSrc({
-        src,
-        sourcePath,
-        repoFullName,
-        defaultBranch,
-      });
-
-      return [resolvedSrc, descriptor.trim()].filter(Boolean).join(' ');
-    })
-    .join(', ');
-};
-
-const toPositiveNumber = (value: unknown) => {
-  if (typeof value === 'number') return value > 0 ? value : null;
-  if (typeof value !== 'string') return null;
-
-  const parsedValue = Number.parseInt(value, 10);
-
-  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null;
-};
-
-const isBadgeLikeMarkdownImage = ({
-  src,
-  alt,
-}: {
-  src: string;
-  alt?: string;
-}) => {
-  const normalizedSrc = src.toLowerCase();
-  const normalizedAlt = alt?.toLowerCase() ?? '';
-  const badgeSrcIndicators = [
-    'shields.io',
-    'badgen.net',
-    'badge.svg',
-    '/badge/',
-    'codecov.io',
-    'coveralls.io',
-    'travis-ci',
-  ];
-  const badgeAltIndicators = [
-    'badge',
-    'build',
-    'coverage',
-    'license',
-    'version',
-    'status',
-    'npm',
-    'download',
-  ];
-
-  return (
-    badgeSrcIndicators.some((indicator) =>
-      normalizedSrc.includes(indicator)
-    ) ||
-    badgeAltIndicators.some((indicator) =>
-      normalizedAlt.includes(indicator)
-    )
-  );
-};
-
-const markdownSanitizeSchema = {
-  ...defaultSchema,
-  tagNames: [...(defaultSchema.tagNames ?? []), 'picture', 'source'],
-  attributes: {
-    ...defaultSchema.attributes,
-    '*': [...(defaultSchema.attributes?.['*'] ?? []), 'align'],
-    img: [
-      ...(defaultSchema.attributes?.img ?? []),
-      'src',
-      'alt',
-      'title',
-      'width',
-      'height',
-      'loading',
-    ],
-    source: ['srcSet', 'srcset', 'media', 'type', 'sizes'],
-  },
-};
-
-const getTranslationKey = (sectionTitle: string, target: TranslateTarget) =>
-  `${sectionTitle}:${target}`;
-
-const hasContent = (section: DetailSection) => section.content.trim().length > 0;
-
-const getSectionTitle = (title: string, mode: TranslateMode) => {
-  if (mode === 'original') return title;
-
-  const koMessages = getMessages('ko').repoDetail;
-  const enMessages = getMessages('en').repoDetail;
-  const targetMessages = getMessages(mode).repoDetail;
-
-  if (
-    title === koMessages.contributionIssues ||
-    title === enMessages.contributionIssues
-  ) {
-    return targetMessages.contributionIssues;
-  }
-
-  if (
-    title === koMessages.contributionGuide ||
-    title === enMessages.contributionGuide
-  ) {
-    return targetMessages.contributionGuide;
-  }
-
-  return title;
-};
 
 const RepoDetailSections = ({
   defaultBranch,
@@ -205,75 +26,27 @@ const RepoDetailSections = ({
 }: RepoDetailSectionsProps) => {
   const locale = useLocale();
   const messages = getMessages(locale);
-  const [modes, setModes] = useState<Record<string, TranslateMode>>({});
-  const [translatedSections, setTranslatedSections] = useState<
-    Record<string, string>
-  >({});
-  const [loadingKeys, setLoadingKeys] = useState<Record<string, boolean>>({});
-  const [errorKeys, setErrorKeys] = useState<Record<string, string>>({});
-
-  const handleTranslate = async (
-    section: DetailSection,
-    target: TranslateTarget
-  ) => {
-    const key = getTranslationKey(section.title, target);
-
-    setModes((prev) => ({ ...prev, [section.title]: target }));
-    if (!hasContent(section) && section.fallbackContent?.[target]) return;
-    if (translatedSections[key]) return;
-
-    setLoadingKeys((prev) => ({ ...prev, [key]: true }));
-    setErrorKeys((prev) => ({ ...prev, [key]: '' }));
-
-    try {
-      const translated = await getTranslate(section.content, target);
-      setTranslatedSections((prev) => ({ ...prev, [key]: translated }));
-    } catch (err) {
-      console.error(err);
-      setErrorKeys((prev) => ({
-        ...prev,
-        [key]: messages.repoDetail.translationFailed,
-      }));
-      setModes((prev) => ({ ...prev, [section.title]: 'original' }));
-    } finally {
-      setLoadingKeys((prev) => ({ ...prev, [key]: false }));
-    }
-  };
+  const { getSectionState, selectOriginal, translateSection } =
+    useRepoDetailSections({
+      translationFailedMessage: messages.repoDetail.translationFailed,
+    });
 
   return (
     <div className="space-y-6">
       {sections.map((section) => {
-        const mode = modes[section.title] ?? 'original';
-        const translationKey =
-          mode === 'original' ? null : getTranslationKey(section.title, mode);
-        const displayContent =
-          !hasContent(section)
-            ? section.fallbackContent?.[mode] ??
-              section.fallbackContent?.original ??
-              ''
-            : translationKey && translatedSections[translationKey]
-            ? translatedSections[translationKey]
-            : section.content;
-        const isLoading = translationKey ? loadingKeys[translationKey] : false;
-        const errorMessage = translationKey ? errorKeys[translationKey] : '';
+        const { displayContent, errorMessage, isLoading, mode, title } =
+          getSectionState(section);
 
         return (
           <div className="space-y-3" key={section.title}>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-semibold">
-                {getSectionTitle(section.title, mode)}
-              </h2>
+              <h2 className="text-xl font-semibold">{title}</h2>
               <div className="flex flex-wrap gap-2">
                 <BasicButton
                   type="button"
                   size="sm"
                   variant={mode === 'original' ? 'secondary' : 'outline'}
-                  onClick={() =>
-                    setModes((prev) => ({
-                      ...prev,
-                      [section.title]: 'original',
-                    }))
-                  }
+                  onClick={() => selectOriginal(section.title)}
                 >
                   {messages.repoDetail.original}
                 </BasicButton>
@@ -282,7 +55,7 @@ const RepoDetailSections = ({
                   size="sm"
                   variant={mode === 'ko' ? 'secondary' : 'outline'}
                   disabled={Boolean(isLoading)}
-                  onClick={() => handleTranslate(section, 'ko')}
+                  onClick={() => translateSection(section, 'ko')}
                 >
                   {messages.repoDetail.korean}
                 </BasicButton>
@@ -291,7 +64,7 @@ const RepoDetailSections = ({
                   size="sm"
                   variant={mode === 'en' ? 'secondary' : 'outline'}
                   disabled={Boolean(isLoading)}
-                  onClick={() => handleTranslate(section, 'en')}
+                  onClick={() => translateSection(section, 'en')}
                 >
                   {messages.repoDetail.english}
                 </BasicButton>
@@ -303,11 +76,16 @@ const RepoDetailSections = ({
                 {messages.repoDetail.translating}
               </p>
             )}
-            {errorMessage && <p className="text-sm text-destructive">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="text-sm text-destructive">{errorMessage}</p>
+            )}
 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw, [rehypeSanitize, markdownSanitizeSchema]]}
+              rehypePlugins={[
+                rehypeRaw,
+                [rehypeSanitize, markdownSanitizeSchema],
+              ]}
               components={{
                 a: ({ children, ...props }) => (
                   <a
@@ -391,66 +169,18 @@ const RepoDetailSections = ({
 
                   return <source {...props} srcSet={resolvedSrcSet} />;
                 },
-                img: ({ src, alt, title, width, height }) => {
-                  const resolvedSrc = resolveMarkdownImageSrc({
-                    src: typeof src === 'string' ? src : undefined,
-                    sourcePath: section.sourcePath,
-                    repoFullName,
-                    defaultBranch,
-                  });
-
-                  if (!resolvedSrc) return null;
-
-                  const imageWidth = toPositiveNumber(width);
-                  const imageHeight = toPositiveNumber(height);
-                  const imageStyle: CSSProperties | undefined =
-                    imageWidth && imageHeight
-                      ? { aspectRatio: `${imageWidth} / ${imageHeight}` }
-                      : undefined;
-                  const commonImageProps = {
-                    src: resolvedSrc,
-                    alt: alt ?? '',
-                    title: typeof title === 'string' ? title : undefined,
-                    loading: 'lazy' as const,
-                    decoding: 'async' as const,
-                    width: imageWidth ?? undefined,
-                    height: imageHeight ?? undefined,
-                  };
-
-                  if (
-                    isBadgeLikeMarkdownImage({
-                      src: resolvedSrc,
-                      alt: alt ?? undefined,
-                    })
-                  ) {
-                    return (
-                      <img
-                        {...commonImageProps}
-                        className="my-1 inline-block h-5 max-w-full align-middle"
-                        style={imageStyle}
-                      />
-                    );
-                  }
-
-                  if (imageWidth && imageHeight) {
-                    return (
-                      <img
-                        {...commonImageProps}
-                        className="my-4 h-auto max-h-[520px] max-w-full rounded-md border border-border object-contain"
-                        style={imageStyle}
-                      />
-                    );
-                  }
-
-                  return (
-                    <span className="my-4 flex aspect-video w-full max-h-[520px] items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
-                      <img
-                        {...commonImageProps}
-                        className="h-full w-full object-contain"
-                      />
-                    </span>
-                  );
-                },
+                img: ({ src, alt, title: imageTitle, width, height }) => (
+                  <MarkdownImage
+                    alt={alt ?? undefined}
+                    defaultBranch={defaultBranch}
+                    height={height}
+                    repoFullName={repoFullName}
+                    sourcePath={section.sourcePath}
+                    src={typeof src === 'string' ? src : undefined}
+                    title={imageTitle}
+                    width={width}
+                  />
+                ),
               }}
             >
               {displayContent}

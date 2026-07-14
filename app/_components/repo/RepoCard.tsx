@@ -7,10 +7,7 @@ import BuildingIcon from '../icons/BuildingIcon';
 import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
 import UsersIcon from '../icons/UsersIcon';
-import { useSession } from 'next-auth/react';
-import { getLocalizedPath } from '../../_i18n/config';
-import { getMessages } from '../../_i18n/messages';
-import { useLocale } from '../../_hooks/useLocale';
+import { useRepoCard } from '../../_hooks/useRepoCard';
 
 interface RepoCardProps extends RepoType {
   bookmarkList: RepoType[];
@@ -30,21 +27,20 @@ const RepoCard = ({
   setBookmarkList,
   priorityImage = false,
 }: RepoCardProps) => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const repoHref = getLocalizedPath(locale, `/repo/${repoId}`);
-  const safeSrc = imageSrc?.trim() || null;
-  const detailLinkLabel = `${repoName} ${messages.repoCard.details}`;
-
-  const { status, data: session } = useSession();
-  const isAuthed = status === 'authenticated';
+  const {
+    detailLinkLabel,
+    isAuthed,
+    messages,
+    repoHref,
+    safeImageSrc,
+  } = useRepoCard({ repoId, repoName, imageSrc });
 
   return (
     <div className="rounded-lg text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-border hover:border-primary/30 bg-gradient-card">
       <div className="relative h-40 bg-muted">
-        {safeSrc ? (
+        {safeImageSrc ? (
           <Image
-            src={safeSrc}
+            src={safeImageSrc}
             width={400}
             height={400}
             alt={messages.repoCard.ownerImageAlt}
@@ -78,7 +74,7 @@ const RepoCard = ({
                   repoId,
                   repoName,
                   ownerName,
-                  imageSrc: safeSrc,
+                  imageSrc: safeImageSrc,
                   stars,
                   language,
                   openIssues,
