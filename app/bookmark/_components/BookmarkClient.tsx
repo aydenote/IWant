@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { RepoType } from '../../_types/repo';
 import RepoCard from '../../_components/repo/RepoCard';
+import { useBookmarkList } from '../../_hooks/useBookmarkList';
 
 interface BookmarkClientProps {
   bookmarkRepoList: RepoType[];
 }
 const BookmarkClient = ({ bookmarkRepoList }: BookmarkClientProps) => {
-  const [bookmarkList, setBookmarkList] = useState<RepoType[]>(bookmarkRepoList);
+  const { bookmarkList, setBookmarkList } = useBookmarkList(bookmarkRepoList);
 
   return (
     <div className="p-10 space-y-8">

@@ -3,13 +3,7 @@
 import { BookmarkIcon } from '../icons/BookmarkIcon';
 import BasicButton from './BasicButton';
 import { RepoType } from '../../_types/repo';
-import { useToast } from '../toast/Toast';
-import { getMessages } from '../../_i18n/messages';
-import { useLocale } from '../../_hooks/useLocale';
-import {
-  addBookmarkClient,
-  deleteBookmarkClient,
-} from '../../_services/client/bookmark';
+import { useBookmarkToggle } from '../../_hooks/useBookmarkToggle';
 
 interface BookmarkButtonProps {
   repo: RepoType;
@@ -22,35 +16,11 @@ const BookmarkButton = ({
   bookmarkList,
   setBookmarkList,
 }: BookmarkButtonProps) => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const bookmarkRepoIds = bookmarkList.map(
-    (bookmark: RepoType) => bookmark.repoId
-  );
-  const isBookmarked = bookmarkRepoIds.includes(repo.repoId);
-  const { showToast } = useToast();
-
-  const toggleBookmark = async () => {
-    if (isBookmarked) {
-      const success = await deleteBookmarkClient(repo.repoId);
-      setBookmarkList((prev) =>
-        prev.filter((bookmark) => bookmark.repoId !== repo.repoId)
-      );
-      if (success) {
-        showToast(messages.bookmark.removed, 'success');
-      } else {
-        showToast(messages.bookmark.removeFailed, 'error');
-      }
-    } else {
-      const success = await addBookmarkClient(repo);
-      setBookmarkList((prev) => [...prev, repo]);
-      if (success) {
-        showToast(messages.bookmark.added, 'success');
-      } else {
-        showToast(messages.bookmark.addFailed, 'error');
-      }
-    }
-  };
+  const { isBookmarked, toggleBookmark } = useBookmarkToggle({
+    bookmarkList,
+    repo,
+    setBookmarkList,
+  });
 
   return (
     <BasicButton

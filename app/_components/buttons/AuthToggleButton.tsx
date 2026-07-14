@@ -1,41 +1,27 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import UsersIcon from '../icons/UsersIcon';
 import Link from 'next/link';
 import BasicButton from './BasicButton';
-import { getLocalizedPath } from '../../_i18n/config';
-import { getMessages } from '../../_i18n/messages';
-import { useLocale } from '../../_hooks/useLocale';
+import { useAuthMenu } from '../../_hooks/useAuthMenu';
 
 const AuthToggleButton = () => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const { status, data: session } = useSession();
-  const [open, setOpen] = useState(false);
-
-  const isAuthed = status === 'authenticated';
-  const menuList = [
-    {
-      label: messages.navigation.repositories,
-      href: getLocalizedPath(locale),
-    },
-    {
-      label: messages.navigation.myPage,
-      href: getLocalizedPath(locale, '/mypage'),
-    },
-    {
-      label: messages.navigation.bookmarks,
-      href: getLocalizedPath(locale, '/bookmark'),
-    },
-  ];
+  const {
+    isAuthed,
+    isSignedIn,
+    menuList,
+    messages,
+    open,
+    signInWithKakao,
+    signOutToHome,
+    toggleOpen,
+  } = useAuthMenu();
 
   return (
     <div className="relative inline-block">
       <BasicButton
         className="cursor-pointer rounded-full border border-input bg-background p-2 shadow-sm transition hover:border-primary"
-        onClick={() => setOpen((value) => !value)}
+        onClick={toggleOpen}
       >
         <UsersIcon className="h-5 w-5" />
       </BasicButton>
@@ -59,18 +45,16 @@ const AuthToggleButton = () => {
               );
             })}
 
-            {session ? (
+            {isSignedIn ? (
               <BasicButton
-                onClick={() =>
-                  signOut({ callbackUrl: getLocalizedPath(locale) })
-                }
+                onClick={signOutToHome}
                 className="cursor-pointer w-full rounded-md px-2 py-1 text-left text-red-600 hover:bg-red-50"
               >
                 {messages.navigation.signOut}
               </BasicButton>
             ) : (
               <BasicButton
-                onClick={() => signIn('kakao')}
+                onClick={signInWithKakao}
                 className="cursor-pointer w-full rounded-md px-2 py-1 text-left text-primary hover:bg-primary/10"
               >
                 {messages.navigation.signIn}

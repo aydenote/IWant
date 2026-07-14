@@ -2,13 +2,9 @@
 
 import Text from '../../_components/commons/Text';
 import type { RepoListResponse } from '../../_types/repo';
-import useRepoFilter from '../../_hooks/useRepoFilter';
 import { RepoType } from '../../_types/repo';
-import { useInfiniteScroll } from '../../_hooks/useInfiniteScroll';
 import RepoCard from '../../_components/repo/RepoCard';
-import { getMessages } from '../../_i18n/messages';
-import { localeConfig } from '../../_i18n/config';
-import { useLocale } from '../../_hooks/useLocale';
+import { useRepoListView } from '../../_hooks/useRepoListView';
 
 interface RepoListClientProps {
   repoList: RepoListResponse[];
@@ -27,28 +23,24 @@ const RepoListClient = ({
   bookmarkList,
   setBookmarkList,
 }: RepoListClientProps) => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const numberFormatter = new Intl.NumberFormat(
-    localeConfig[locale].languageTag
-  );
-  const { repos, isLoading, anchorRef } = useInfiniteScroll(
-    repoList,
+  const {
+    anchorRef,
+    filteredRepoList,
+    formatNumber,
+    isLoading,
+    listHeading,
+    messages,
+  } = useRepoListView({
+    heading,
     query,
-    techStack
-  );
-  const filteredRepoList = useRepoFilter(repos, query);
-  const hasTechStack = techStack.length > 0;
-  const defaultHeading = query.trim()
-    ? messages.repoList.searchResults
-    : hasTechStack
-    ? messages.repoList.recommended
-    : messages.repoList.all;
+    repoList,
+    techStack,
+  });
 
   return (
     <section className="p-12">
       <Text textSize="2xl" textBold="lg" textColor="black">
-        {`${heading ?? defaultHeading}(${filteredRepoList.length})`}
+        {`${listHeading}(${filteredRepoList.length})`}
       </Text>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
@@ -59,9 +51,9 @@ const RepoListClient = ({
             repoName={repo.fullName}
             ownerName={repo.owner.login}
             imageSrc={repo.owner.avatarUrl}
-            stars={`${numberFormatter.format(repo.stars)} ${messages.repoCard.stars}`}
+            stars={`${formatNumber(repo.stars)} ${messages.repoCard.stars}`}
             language={repo.language ?? messages.repoCard.unknownLanguage}
-            openIssues={`${numberFormatter.format(repo.openIssues)} ${messages.repoCard.openIssues}`}
+            openIssues={`${formatNumber(repo.openIssues)} ${messages.repoCard.openIssues}`}
             bookmarkList={bookmarkList}
             setBookmarkList={setBookmarkList}
             priorityImage={index < 3}

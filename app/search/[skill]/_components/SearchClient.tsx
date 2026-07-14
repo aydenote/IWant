@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Hero from '../../../(home)/_components/Hero';
 import RepoListClient from '../../../(home)/_components/RepoListClient';
-import { toSearchSkillSlug } from '../../../_utils/searchSkill';
 import type { RepoListResponse, RepoType } from '../../../_types/repo';
-import { getLocalizedPath } from '../../../_i18n/config';
 import { formatMessage, getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
+import { useBookmarkList } from '../../../_hooks/useBookmarkList';
+import { useRepoSearchNavigation } from '../../../_hooks/useRepoSearchNavigation';
 
 interface SearchClientProps {
   initialRepoList: RepoListResponse[];
@@ -23,29 +21,17 @@ const SearchClient = ({
 }: SearchClientProps) => {
   const locale = useLocale();
   const messages = getMessages(locale);
-  const router = useRouter();
-  const [searchValue, setSearchValue] = useState(skill);
-  const [bookmarkList, setBookmarkList] =
-    useState<RepoType[]>(bookmarkRepoList);
-
-  useEffect(() => {
-    setSearchValue(skill);
-  }, [skill]);
-
-  const handleSearch = (value: string) => {
-    const skillSlug = toSearchSkillSlug(value);
-    if (!skillSlug) return;
-
-    router.push(getLocalizedPath(locale, `/search/${skillSlug}`));
-  };
+  const { resetSearch, searchValue, setSearchValue, submitSearch } =
+    useRepoSearchNavigation(skill);
+  const { bookmarkList, setBookmarkList } = useBookmarkList(bookmarkRepoList);
 
   return (
     <>
       <Hero
         value={searchValue}
         onChange={setSearchValue}
-        onSubmit={handleSearch}
-        onReset={() => setSearchValue('')}
+        onSubmit={submitSearch}
+        onReset={resetSearch}
       />
       <RepoListClient
         repoList={initialRepoList}

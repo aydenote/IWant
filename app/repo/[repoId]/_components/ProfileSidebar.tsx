@@ -1,14 +1,11 @@
 import { CircleAlertIcon } from '../../../_components/icons/CircleAlertIcon';
 import { CircleCheckIcon } from '../../../_components/icons/CircleCheckIcon';
-import {
-  calculateSkillMatchRate,
-  extractSkillKeywords,
-} from '../../../_hooks/useSkillComparison';
 import { ProfileResponse } from '../../../_types/profile';
 import { RepoDetailResponse } from '../../../_types/repo';
 import SkillAlert from './SkillAlert';
 import { getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
+import { useSkillMatch } from '../_hooks/useSkillMatch';
 
 interface ProfileSidebarProps {
   repo: RepoDetailResponse;
@@ -18,11 +15,10 @@ interface ProfileSidebarProps {
 const ProfileSidebar = ({ repo, profile }: ProfileSidebarProps) => {
   const locale = useLocale();
   const messages = getMessages(locale);
-  const extracted = extractSkillKeywords(repo);
-  const { matchRate, matchedSkills, missingSkills } = calculateSkillMatchRate(
-    extracted,
-    profile?.techStack
-  );
+  const { matchRate, matchedSkills, missingSkills } = useSkillMatch({
+    profile,
+    repo,
+  });
 
   return (
     <div className="rounded-lg border p-6 space-y-4 bg-gradient-card shadow-card sticky top-24">

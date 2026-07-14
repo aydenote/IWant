@@ -1,40 +1,18 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import {
-  localeConfig,
-  localeCookieName,
-  locales,
-  replacePathLocale,
-  type Locale,
-} from '../../_i18n/config';
-import { getMessages } from '../../_i18n/messages';
-import { useLocale } from '../../_hooks/useLocale';
+import { useLanguageSwitcher } from '../../_hooks/useLanguageSwitcher';
 
 const LanguageSwitcher = () => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const pathname = usePathname();
-
-  const switchLocale = (nextLocale: Locale) => {
-    if (nextLocale === locale) return;
-
-    const nextPath = replacePathLocale(pathname, nextLocale);
-    document.cookie = `${localeCookieName}=${nextLocale}; Max-Age=31536000; Path=/; SameSite=Lax`;
-    window.location.assign(
-      `${nextPath}${window.location.search}${window.location.hash}`
-    );
-  };
+  const { languageLabel, localeOptions, switchLocale } =
+    useLanguageSwitcher();
 
   return (
     <div
-      aria-label={messages.navigation.language}
+      aria-label={languageLabel}
       className="inline-flex h-9 shrink-0 items-center rounded-md border border-input bg-background p-0.5 shadow-sm"
       role="group"
     >
-      {locales.map((candidate) => {
-        const isActive = candidate === locale;
-
+      {localeOptions.map(({ isActive, label, text, value }) => {
         return (
           <button
             aria-pressed={isActive}
@@ -43,12 +21,12 @@ const LanguageSwitcher = () => {
                 ? 'bg-primary text-primary-foreground'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             }`}
-            key={candidate}
-            onClick={() => switchLocale(candidate)}
-            title={localeConfig[candidate].label}
+            key={value}
+            onClick={() => switchLocale(value)}
+            title={label}
             type="button"
           >
-            {candidate.toUpperCase()}
+            {text}
           </button>
         );
       })}

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Text from '../../_components/commons/Text';
 import Input from '../../_components/forms/Input';
 import Label from '../../_components/forms/Label';
@@ -8,42 +7,24 @@ import BasicButton from '../../_components/buttons/BasicButton';
 import CloseIcon from '../../_components/icons/CloseIcon';
 import PlusIcon from '../../_components/icons/PlusIcon';
 import Pill from '../../_components/commons/Pill';
-import { SaveProfileType, TechStackType } from '../../_types/profile';
-import { useToast } from '../../_components/toast/Toast';
 import { ProfileResponse } from '../../_types/profile';
-import { updateProfileClient } from '../../_services/client/profile';
+import { useProfileForm } from '../_hooks/useProfileForm';
 
 interface ProfileProps {
   profile: ProfileResponse | null;
 }
 
 const Profile = ({ profile }: ProfileProps) => {
-  const [name, setName] = useState(profile?.user.name ?? '');
-  const [newSkill, setNewSkill] = useState('');
-  const [techStack, setTechStack] = useState<TechStackType>(
-    profile?.techStack ?? []
-  );
-  const { showToast } = useToast();
-
-  const handleAddSkill = () => {
-    const value = newSkill.trim();
-    if (!value || techStack.includes(value)) return;
-    setTechStack((prev) => [...prev, value]);
-    setNewSkill('');
-  };
-
-  const handleRemoveSkill = (skill: string) => {
-    setTechStack((prev) => prev.filter((s) => s !== skill));
-  };
-
-  const handleUpdateProfile = async ({ techStack, name }: SaveProfileType) => {
-    const success = await updateProfileClient({ techStack, name });
-    if (success) {
-      showToast('프로필이 성공적으로 저장되었습니다!', 'success');
-    } else {
-      showToast('프로필 저장에 실패했습니다.', 'error');
-    }
-  };
+  const {
+    addSkill,
+    name,
+    newSkill,
+    removeSkill,
+    saveCurrentProfile,
+    setName,
+    setNewSkill,
+    techStack,
+  } = useProfileForm(profile);
 
   return (
     <section className="rounded-lg border bg-card text-card-foreground p-8 space-y-6 bg-gradient-card shadow-lg">
@@ -77,14 +58,14 @@ const Profile = ({ profile }: ProfileProps) => {
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                handleAddSkill();
+                addSkill();
               }
             }}
             placeholder="기술 스택 추가 (예: React, Python)"
           />
           <BasicButton
             variant="default"
-            onClick={handleAddSkill}
+            onClick={addSkill}
             className="gap-2 cursor-pointer"
           >
             <PlusIcon className="h-4 w-4" />
@@ -102,7 +83,7 @@ const Profile = ({ profile }: ProfileProps) => {
               <Pill key={skill} className="text-sm py-1.5 px-3 gap-2">
                 {skill}
                 <BasicButton
-                  onClick={() => handleRemoveSkill(skill)}
+                  onClick={() => removeSkill(skill)}
                   className="hover:text-destructive"
                 >
                   <CloseIcon className="h-3 w-3 cursor-pointer" />
@@ -116,7 +97,7 @@ const Profile = ({ profile }: ProfileProps) => {
       <div className="pt-6 border-t border-border">
         <BasicButton
           variant="default"
-          onClick={() => handleUpdateProfile({ techStack, name })}
+          onClick={saveCurrentProfile}
           className="w-full bg-gradient-hero cursor-pointer"
           size="lg"
         >
