@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
@@ -99,6 +100,54 @@ const resolveMarkdownSrcSet = ({
       return [resolvedSrc, descriptor.trim()].filter(Boolean).join(' ');
     })
     .join(', ');
+};
+
+const toPositiveNumber = (value: unknown) => {
+  if (typeof value === 'number') return value > 0 ? value : null;
+  if (typeof value !== 'string') return null;
+
+  const parsedValue = Number.parseInt(value, 10);
+
+  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null;
+};
+
+const isBadgeLikeMarkdownImage = ({
+  src,
+  alt,
+}: {
+  src: string;
+  alt?: string;
+}) => {
+  const normalizedSrc = src.toLowerCase();
+  const normalizedAlt = alt?.toLowerCase() ?? '';
+  const badgeSrcIndicators = [
+    'shields.io',
+    'badgen.net',
+    'badge.svg',
+    '/badge/',
+    'codecov.io',
+    'coveralls.io',
+    'travis-ci',
+  ];
+  const badgeAltIndicators = [
+    'badge',
+    'build',
+    'coverage',
+    'license',
+    'version',
+    'status',
+    'npm',
+    'download',
+  ];
+
+  return (
+    badgeSrcIndicators.some((indicator) =>
+      normalizedSrc.includes(indicator)
+    ) ||
+    badgeAltIndicators.some((indicator) =>
+      normalizedAlt.includes(indicator)
+    )
+  );
 };
 
 const markdownSanitizeSchema = {
@@ -342,7 +391,7 @@ const RepoDetailSections = ({
 
                   return <source {...props} srcSet={resolvedSrcSet} />;
                 },
-                img: ({ src, alt }) => {
+                img: ({ src, alt, title, width, height }) => {
                   const resolvedSrc = resolveMarkdownImageSrc({
                     src: typeof src === 'string' ? src : undefined,
                     sourcePath: section.sourcePath,
@@ -352,13 +401,54 @@ const RepoDetailSections = ({
 
                   if (!resolvedSrc) return null;
 
+                  const imageWidth = toPositiveNumber(width);
+                  const imageHeight = toPositiveNumber(height);
+                  const imageStyle: CSSProperties | undefined =
+                    imageWidth && imageHeight
+                      ? { aspectRatio: `${imageWidth} / ${imageHeight}` }
+                      : undefined;
+                  const commonImageProps = {
+                    src: resolvedSrc,
+                    alt: alt ?? '',
+                    title: typeof title === 'string' ? title : undefined,
+                    loading: 'lazy' as const,
+                    decoding: 'async' as const,
+                    width: imageWidth ?? undefined,
+                    height: imageHeight ?? undefined,
+                  };
+
+                  if (
+                    isBadgeLikeMarkdownImage({
+                      src: resolvedSrc,
+                      alt: alt ?? undefined,
+                    })
+                  ) {
+                    return (
+                      <img
+                        {...commonImageProps}
+                        className="my-1 inline-block h-5 max-w-full align-middle"
+                        style={imageStyle}
+                      />
+                    );
+                  }
+
+                  if (imageWidth && imageHeight) {
+                    return (
+                      <img
+                        {...commonImageProps}
+                        className="my-4 h-auto max-h-[520px] max-w-full rounded-md border border-border object-contain"
+                        style={imageStyle}
+                      />
+                    );
+                  }
+
                   return (
-                    <img
-                      src={resolvedSrc}
-                      alt={alt ?? ''}
-                      loading="lazy"
-                      className="my-4 max-h-[520px] max-w-full rounded-md border border-border object-contain"
-                    />
+                    <span className="my-4 flex aspect-video w-full max-h-[520px] items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
+                      <img
+                        {...commonImageProps}
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
                   );
                 },
               }}

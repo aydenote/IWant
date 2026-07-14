@@ -71,21 +71,23 @@ const RepoCard = ({
               <span className="font-medium">{ownerName}</span>
             </div>
           </div>
-          {isAuthed && (
-            <BookmarkButton
-              repo={{
-                repoId,
-                repoName,
-                ownerName,
-                imageSrc: safeSrc,
-                stars,
-                language,
-                openIssues,
-              }}
-              bookmarkList={bookmarkList}
-              setBookmarkList={setBookmarkList}
-            />
-          )}
+          <div className="flex h-10 w-14 shrink-0 justify-end">
+            {isAuthed && (
+              <BookmarkButton
+                repo={{
+                  repoId,
+                  repoName,
+                  ownerName,
+                  imageSrc: safeSrc,
+                  stars,
+                  language,
+                  openIssues,
+                }}
+                bookmarkList={bookmarkList}
+                setBookmarkList={setBookmarkList}
+              />
+            )}
+          </div>
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
