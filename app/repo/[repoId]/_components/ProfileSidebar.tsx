@@ -6,6 +6,7 @@ import SkillAlert from './SkillAlert';
 import { getMessages } from '../../../_i18n/messages';
 import { useLocale } from '../../../_hooks/useLocale';
 import { useSkillMatch } from '../_hooks/useSkillMatch';
+import Surface from '../../../_components/commons/Surface';
 
 interface ProfileSidebarProps {
   repo: RepoDetailResponse;
@@ -21,7 +22,7 @@ const ProfileSidebar = ({ repo, profile }: ProfileSidebarProps) => {
   });
 
   return (
-    <div className="rounded-lg border p-6 space-y-4 bg-gradient-card shadow-card sticky top-24">
+    <Surface className="space-y-4 sticky top-24">
       <h3 className="text-lg font-semibold text-foreground">
         {messages.repoDetail.skillMatchTitle}
       </h3>
@@ -58,7 +59,7 @@ const ProfileSidebar = ({ repo, profile }: ProfileSidebarProps) => {
           <span className="font-medium text-primary">{matchRate}%</span>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 };
 

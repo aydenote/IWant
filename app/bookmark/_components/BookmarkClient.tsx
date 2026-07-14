@@ -3,6 +3,8 @@
 import { RepoType } from '../../_types/repo';
 import RepoCard from '../../_components/repo/RepoCard';
 import { useBookmarkList } from '../../_hooks/useBookmarkList';
+import EmptyState from '../../_components/commons/EmptyState';
+import RepoGrid from '../../_components/commons/RepoGrid';
 
 interface BookmarkClientProps {
   bookmarkRepoList: RepoType[];
@@ -20,11 +22,9 @@ const BookmarkClient = ({ bookmarkRepoList }: BookmarkClientProps) => {
       </div>
 
       {bookmarkList.length === 0 ? (
-        <div className="py-16 text-center text-muted-foreground">
-          저장한 관심 레포가 없습니다.
-        </div>
+        <EmptyState message="저장한 관심 레포가 없습니다." />
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
+        <RepoGrid className="mt-10">
           {bookmarkList.map((bookmark: RepoType) => (
             <RepoCard
               key={bookmark.repoId}
@@ -39,7 +39,7 @@ const BookmarkClient = ({ bookmarkRepoList }: BookmarkClientProps) => {
               setBookmarkList={setBookmarkList}
             />
           ))}
-        </div>
+        </RepoGrid>
       )}
     </div>
   );

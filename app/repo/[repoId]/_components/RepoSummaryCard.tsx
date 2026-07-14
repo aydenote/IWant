@@ -6,6 +6,7 @@ import MapPinIcon from '../../../_components/icons/MapPinIcon';
 import UsersIcon from '../../../_components/icons/UsersIcon';
 import { RepoDetailResponse } from '../../../_types/repo';
 import { useRepoSummaryCard } from '../_hooks/useRepoSummaryCard';
+import RepoStat from '../../../_components/repo/RepoStat';
 
 const RepoSummaryCard = ({ repo }: { repo: RepoDetailResponse }) => {
   const {
@@ -32,18 +33,12 @@ const RepoSummaryCard = ({ repo }: { repo: RepoDetailResponse }) => {
         </p>
       )}
       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <MapPinIcon className="h-4 w-4" />
-          <span>
-            {formattedStars} {messages.repoCard.stars}
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <UsersIcon className="h-4 w-4" />
-          <span>
-            {formattedOpenIssues} {messages.repoCard.openIssues}
-          </span>
-        </div>
+        <RepoStat icon={<MapPinIcon className="h-4 w-4" />}>
+          {formattedStars} {messages.repoCard.stars}
+        </RepoStat>
+        <RepoStat icon={<UsersIcon className="h-4 w-4" />}>
+          {formattedOpenIssues} {messages.repoCard.openIssues}
+        </RepoStat>
       </div>
     </div>
   );

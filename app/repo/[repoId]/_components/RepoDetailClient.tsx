@@ -7,9 +7,8 @@ import ProfileSidebar from './ProfileSidebar';
 import RepoDetailSections from './RepoDetailSections';
 import RepoSummaryCard from './RepoSummaryCard';
 import { ArrowLeftIcon } from '../../../_components/icons/ArrowLeftIcon';
-import { getLocalizedPath } from '../../../_i18n/config';
-import { getMessages } from '../../../_i18n/messages';
-import { useLocale } from '../../../_hooks/useLocale';
+import Surface from '../../../_components/commons/Surface';
+import { useRepoDetailClient } from '../_hooks/useRepoDetailClient';
 
 interface RepoDetailClientProps {
   repoId: number;
@@ -18,43 +17,7 @@ interface RepoDetailClientProps {
 }
 
 const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
-  const locale = useLocale();
-  const messages = getMessages(locale);
-  const listHref = getLocalizedPath(locale);
-
-  const detailSections = [
-    {
-      title: 'README',
-      content:
-        repo.readme?.slice(0, 6000) ?? messages.repoDetail.readmeUnavailable,
-      sourcePath: repo.readmePath,
-    },
-    {
-      title: messages.repoDetail.contributionIssues,
-      content:
-        repo.issues.length > 0
-          ? repo.issues
-              .map(
-                (issue) =>
-                  `### Issue #${issue.number}\n\n${issue.title}\n\n${issue.htmlUrl}\n\nLabels: ${
-                    issue.labels.join(', ') || messages.repoDetail.noLabels
-                  }`
-              )
-              .join('\n\n')
-          : messages.repoDetail.noContributionIssues,
-    },
-    {
-      title: messages.repoDetail.contributionGuide,
-      content: repo.contributing?.slice(0, 6000) ?? '',
-      fallbackContent: {
-        original:
-          'No CONTRIBUTING document was found. Please check the README and open issues.',
-        ko: getMessages('ko').repoDetail.contributionGuideUnavailable,
-        en: getMessages('en').repoDetail.contributionGuideUnavailable,
-      },
-      sourcePath: repo.contributingPath,
-    },
-  ];
+  const { listHref, messages, sections } = useRepoDetailClient(repo);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -68,12 +31,12 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-lg border text-card-foreground p-8 space-y-6 bg-gradient-card shadow-lg">
+          <Surface className="space-y-6" padding="lg" shadow="lg">
             <RepoSummaryCard repo={repo} />
             <RepoDetailSections
               defaultBranch={repo.defaultBranch}
               repoFullName={repo.fullName}
-              sections={detailSections}
+              sections={sections}
             />
             <div className="pt-6 border-t">
               <a
@@ -85,7 +48,7 @@ const RepoDetailClient = ({ repo, profile }: RepoDetailClientProps) => {
                 {messages.repoDetail.viewOnGitHub}
               </a>
             </div>
-          </div>
+          </Surface>
         </div>
         <div className="space-y-6">
           <ProfileSidebar repo={repo} profile={profile} />

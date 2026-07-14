@@ -1,13 +1,15 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
 import { RepoType } from '../../_types/repo';
-import BuildingIcon from '../icons/BuildingIcon';
 import BookmarkButton from '../buttons/BookmarkButton';
 import MapPinIcon from '../icons/MapPinIcon';
 import UsersIcon from '../icons/UsersIcon';
 import { useRepoCard } from '../../_hooks/useRepoCard';
+import Surface from '../commons/Surface';
+import RepoCardFooter from './RepoCardFooter';
+import RepoCardHeader from './RepoCardHeader';
+import RepoCardImage from './RepoCardImage';
+import RepoStat from './RepoStat';
 
 interface RepoCardProps extends RepoType {
   bookmarkList: RepoType[];
@@ -36,39 +38,20 @@ const RepoCard = ({
   } = useRepoCard({ repoId, repoName, imageSrc });
 
   return (
-    <div className="rounded-lg text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-border hover:border-primary/30 bg-gradient-card">
-      <div className="relative h-40 bg-muted">
-        {safeImageSrc ? (
-          <Image
-            src={safeImageSrc}
-            width={400}
-            height={400}
-            alt={messages.repoCard.ownerImageAlt}
-            className="w-full h-full object-cover"
-            loading={priorityImage ? 'eager' : 'lazy'}
-            priority={priorityImage}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-muted">
-            <BuildingIcon className="h-12 w-12 text-muted-foreground" />
-          </div>
-        )}
-      </div>
+    <Surface
+      className="overflow-hidden hover:shadow-lg transition-all duration-300 border-border hover:border-primary/30"
+      padding="none"
+      shadow="sm"
+    >
+      <RepoCardImage
+        alt={messages.repoCard.ownerImageAlt}
+        priorityImage={priorityImage}
+        src={safeImageSrc}
+      />
       <div className="p-6 space-y-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-2 flex-1">
-            <Link href={repoHref}>
-              <h3 className="text-lg font-semibold text-foreground hover:text-primary transition-colors line-clamp-1">
-                {repoName}
-              </h3>
-            </Link>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <BuildingIcon className="h-4 w-4" />
-              <span className="font-medium">{ownerName}</span>
-            </div>
-          </div>
-          <div className="flex h-10 w-14 shrink-0 justify-end">
-            {isAuthed && (
+        <RepoCardHeader
+          bookmarkSlot={
+            isAuthed ? (
               <BookmarkButton
                 repo={{
                   repoId,
@@ -82,36 +65,28 @@ const RepoCard = ({
                 bookmarkList={bookmarkList}
                 setBookmarkList={setBookmarkList}
               />
-            )}
-          </div>
-        </div>
+            ) : null
+          }
+          ownerName={ownerName}
+          repoHref={repoHref}
+          repoName={repoName}
+        />
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <MapPinIcon className="h-4 w-4" />
-            <span>{stars}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <UsersIcon className="h-4 w-4" />
-            <span>{openIssues}</span>
-          </div>
+          <RepoStat icon={<MapPinIcon className="h-4 w-4" />}>{stars}</RepoStat>
+          <RepoStat icon={<UsersIcon className="h-4 w-4" />}>
+            {openIssues}
+          </RepoStat>
         </div>
         <div className="pt-2 border-t border-border" />
-        <div className="flex items-center justify-between pt-2">
-          <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-accent text-accent">
-            {language}
-          </div>
-          <Link
-            aria-label={detailLinkLabel}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md bg-gradient-hero px-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            href={repoHref}
-            title={detailLinkLabel}
-          >
-            <span className="sr-only">{repoName} </span>
-            {messages.repoCard.details}
-          </Link>
-        </div>
+        <RepoCardFooter
+          detailLabel={detailLinkLabel}
+          detailText={messages.repoCard.details}
+          language={language}
+          repoHref={repoHref}
+          repoName={repoName}
+        />
       </div>
-    </div>
+    </Surface>
   );
 };
 

@@ -20,6 +20,14 @@ interface UseRepoDetailSectionsParams {
   translationFailedMessage: string;
 }
 
+export interface RepoDetailSectionState {
+  displayContent: string;
+  errorMessage: string;
+  isLoading: boolean;
+  mode: TranslateMode;
+  title: string;
+}
+
 export const useRepoDetailSections = ({
   translationFailedMessage,
 }: UseRepoDetailSectionsParams) => {
@@ -67,7 +75,7 @@ export const useRepoDetailSections = ({
     }
   };
 
-  const getSectionState = (section: DetailSection) => {
+  const getSectionState = (section: DetailSection): RepoDetailSectionState => {
     const mode = modes[section.title] ?? 'original';
     const translationKey =
       mode === 'original' ? null : getTranslationKey(section.title, mode);

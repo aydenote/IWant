@@ -5,6 +5,7 @@ import type { RepoListResponse } from '../../_types/repo';
 import { RepoType } from '../../_types/repo';
 import RepoCard from '../../_components/repo/RepoCard';
 import { useRepoListView } from '../../_hooks/useRepoListView';
+import RepoGrid from '../../_components/commons/RepoGrid';
 
 interface RepoListClientProps {
   repoList: RepoListResponse[];
@@ -43,7 +44,7 @@ const RepoListClient = ({
         {`${listHeading}(${filteredRepoList.length})`}
       </Text>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
+      <RepoGrid className="mt-10">
         {filteredRepoList.map((repo, index) => (
           <RepoCard
             key={repo.id}
@@ -59,7 +60,7 @@ const RepoListClient = ({
             priorityImage={index < 3}
           />
         ))}
-      </div>
+      </RepoGrid>
       <div ref={anchorRef} className="h-8" />
       {isLoading && (
         <p className="text-center text-sm">{messages.repoList.loading}</p>
